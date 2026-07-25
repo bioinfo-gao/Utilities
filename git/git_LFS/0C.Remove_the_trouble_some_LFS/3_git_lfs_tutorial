@@ -1,0 +1,38 @@
+步骤 1：确保已安装 Git LFS
+git lfs install
+
+步骤 2：上传所有 LFS 文件
+git lfs push --all origin master
+
+步骤 3：再次推送普通 Git 提交
+git push origin master
+
+
+✅ 预防措施
+1.推送前统一命令：
+
+git add .
+git commit -m "update"
+git lfs push --all origin master  # 先推 LFS
+git push origin master             # 再推 Git
+
+
+2.检查哪些文件被 LFS 跟踪：
+git lfs ls-files
+
+3.若不再需要 LFS，可取消跟踪：
+git lfs untrack "*.ipynb"
+git add .gitattributes
+git add --renormalize .  # 重新生成指针 → 普通文件
+
+✅ 现在运行 git lfs push --all origin master 即可解决！
+
+
+# 查看当前规则
+git sparse-checkout list
+
+# 添加新路径（注意：路径需相对于仓库根）
+git sparse-checkout add git_LFS/0C.Remove_the_trouble_some_LFS/
+
+# 或更精确：
+git sparse-checkout add git_LFS/0C.Remove_the_trouble_some_LFS/3_git_lfs_tutorial

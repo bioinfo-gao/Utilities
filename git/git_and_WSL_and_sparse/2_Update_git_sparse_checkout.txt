@@ -1,0 +1,23 @@
+
+步骤一：查看当前稀疏检出模式（可选）
+您可以先查看当前设置了哪些目录：
+
+Bash
+
+cat .git/info/sparse-checkout
+
+
+步骤二：将目标目录添加到稀疏检出模式
+
+
+# 激活稀疏检出模式（如果尚未激活）
+git sparse-checkout init 
+
+# 添加目标目录。
+
+
+git sparse-checkout add Linux_Code_LampBrother/
+git sparse-checkout add Linux_Code_Other_and_SystemSetting/
+git sparse-checkout add git/
+git sparse-checkout add linux_and_Mac_system_setting/
+git sparse-checkout add run_code_and_formatting_in_vsCode/

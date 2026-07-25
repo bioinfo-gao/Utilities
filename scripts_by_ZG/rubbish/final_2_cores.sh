@@ -1,0 +1,17 @@
+nextflow run /home/songz/gaoz/GZ_Project_2026/rnaseq-3.12.0/main.nf \
+    --input ./samplesheet_full.csv \
+    --outdir ./results \
+    --fasta /home/songz/lhn_work/database/02.genome/mouse_reference/Mus_musculus.fasta \
+    --gtf /home/songz/lhn_work/database/02.genome/mouse_reference/Mus_musculus.gtf \
+    -work-dir /home/songz/gaoz/work/01_Junqiang_Ding_0216 \
+    --aligner star_salmon \
+    --max_cpus 2 \
+    --max_memory '16.GB' \
+    --skip_trimming \
+    --skip_qualimap \
+    --skip_dupradar \
+    --skip_rseqc \
+    --skip_biotype_qc \
+    --skip_preseq \
+    --skip_bigwig \
+    -resume

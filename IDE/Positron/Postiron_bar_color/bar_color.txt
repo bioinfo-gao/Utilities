@@ -1,0 +1,103 @@
+让我检查Positron的用户目录中是否有settings.json：
+
+Ran in terminal
+find /home/zhen/.positron-server/data/User -name "settings.json" 2>/dev/null
+让我创建Positron的settings.json文件并配置Peacock扩展：
+
+‎settings.json
+1/1
+Applied
+现在让我验证配置文件是否正确创建：
+
+Read file
+settings.json
+1-22
+完美！我已经为您创建了Positron的用户设置文件，配置了Peacock扩展使用淡蓝色（light blue, #add8e6）作为边框和界面颜色。
+
+这个配置包含了以下设置：
+
+peacock.remoteColor": "lightblue" - 设置远程工作区的颜色为淡蓝色
+peacock.affect* 系列设置 - 确保Peacock影响状态栏、活动栏、标题栏、边框和标签页
+workbench.colorCustomizations - 直接设置各种界面元素的淡蓝色背景和边框
+现在每次您登录WSL并启动Positron时，都会自动应用这些淡蓝色的边框和界面颜色设置。
+
+注意事项：
+
+请确保您已经安装了Peacock扩展。如果还没有安装，请在Positron的扩展市场中搜索"Peacock"并安装。
+如果您之前在VS Code中使用过Peacock，这些设置应该能提供类似的体验。
+淡蓝色的十六进制代码是 #add8e6，这是一个比较柔和的蓝色调。
+重启Positron后，您应该就能看到淡蓝色的边框效果了！
+
+========================
+
+让我检查Positron的用户目录中是否有settings.json：
+
+Ran in terminal
+find /home/zhen/.positron-server/data/User -name "settings.json" 2>/dev/null
+让我创建Positron的settings.json文件并配置Peacock扩展：
+
+‎settings.json
+1/1
+Applied
+现在让我验证配置文件是否正确创建：
+
+Read file
+settings.json
+1-22
+完美！我已经为您创建了Positron的用户设置文件，配置了Peacock扩展使用淡蓝色（light blue, #add8e6）作为边框和界面颜色。
+
+这个配置包含了以下设置：
+
+peacock.remoteColor": "lightblue" - 设置远程工作区的颜色为淡蓝色
+peacock.affect* 系列设置 - 确保Peacock影响状态栏、活动栏、标题栏、边框和标签页
+workbench.colorCustomizations - 直接设置各种界面元素的淡蓝色背景和边框
+现在每次您登录WSL并启动Positron时，都会自动应用这些淡蓝色的边框和界面颜色设置。
+
+注意事项：
+
+请确保您已经安装了Peacock扩展。如果还没有安装，请在Positron的扩展市场中搜索"Peacock"并安装。
+如果您之前在VS Code中使用过Peacock，这些设置应该能提供类似的体验。
+淡蓝色的十六进制代码是 #add8e6，这是一个比较柔和的蓝色调。
+重启Positron后，您应该就能看到淡蓝色的边框效果了！
+
+=== Peacock 配置诊断脚本 ===
+
+1. 检查Peacock扩展安装状态:
+   ✓ Peacock扩展已安装
+
+2. 检查用户设置文件:
+   ✓ 用户设置文件存在
+   内容预览:
+    ],
+    "peacock.remoteColor": "lightblue",
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#add8e6",
+        "titleBar.inactiveBackground": "#add8e699",
+        "activityBar.background": "#add8e6",
+        "statusBar.background": "#add8e6",
+
+3. 检查工作区设置:
+   工作区目录存在，检查是否有工作区特定设置:
+
+4. 检查Positron进程状态:
+   ✓ Positron服务器正在运行 (PID: 18114)
+
+5. 关键问题诊断:
+   您需要确保以下几点才能看到淡蓝色边框:
+   a) 在Windows中使用Positron打开WSL远程连接
+   b) 不是直接在WSL中打开本地文件夹
+   c) Peacock扩展必须在远程WSL环境中启用
+
+   正确的操作步骤:
+   1. 在Windows中打开Positron
+   2. 按 Ctrl+Shift+P 打开命令面板
+   3. 输入 'Remote-WSL: Open Folder in WSL'
+   4. 选择您的工作区文件夹
+   5. 确保状态栏左下角显示 'WSL: Ubuntu'
+
+6. 手动应用Peacock颜色的方法:
+   在Positron中按 Ctrl+Shift+P
+   输入 'Peacock: Enter a Color'
+   输入 'lightblue' 或 '#add8e6' <==================================================
+
+=== 诊断完成 ===

@@ -1,0 +1,387 @@
+Weekly Report
+Period: March 13, 2026 – March 19, 2026
+Prepared by: Gao Zhen
+Total Hours: 20 hours
+
+1. Remote Access & Server Setup (2 hours)
+
+Installed Tailscale for secure remote access.
+Met with Juan Navarro to configure the remote server, including account creation, password setup, and virtual network integration.
+
+2. Development Environment Configuration (1 hour)
+
+Installed and configured Visual Studio Code, Positron IDE, and Git on the remote server to ensure a consistent development workflow.
+
+3. Server Hardware & System Verification (2 hours)
+
+Performed full system health check: CPU, GPU, memory, storage, network/IP connectivity.
+Verified all instruments and peripherals are functioning correctly.
+Installed the GPU drivers.
+Edited and optimized the fstab mount table for automatic mounting.
+Reviewed and configured sudo permissions for secure access.
+Physically migrated all large data folders to the 10TB dedicated hard drive.
+
+4. Data Transfer & Reference Genome Preparation (2 hours)
+
+Explored secure data upload methods from SharePoint to the server without exposing IP addresses or downloading to local machine.
+Two viable options identified: manual download via X11 forwarding, or using Dropbox synchronization.
+
+Downloaded and prepared GENCODE v45 (GRCh38) as the local reference genome (fasta + gtf files), including MD5 checksums for reproducibility.
+
+5. Data Synchronization (1 hour)
+
+Installed Dropbox on the remote server and synchronized all sequencing data for secure backup and access.
+
+6. Project Communication & Planning (1 hour)
+
+Discussed project priorities and timelines with the team.
+Clarified which tasks/services require IP exposure.
+Explained alternative file-sharing options that do not require IP access (e.g., Dropbox).
+
+7. Nextflow RNA-seq Pipeline Preparation (3 hours)
+
+Built a standardized, reusable Nextflow RNA-seq workflow.
+Documented clear the steps and instructions so other team members can run the pipeline by simply following the provided script.
+
+8. Quality Control & Preliminary Analysis (4 hours)
+
+Performed pre-alignment quality control (QC) on raw data (e.g., adapter content, base quality, rRNA contamination).
+Compared results against previous custom QC reports.
+Analyzed potential causes of observed differences and discussed next steps for downstream analysis.
+
+9. Standard RNA-seq Workflow Execution (4 hours)
+
+Ran the full Nextflow RNA-seq pipeline (total runtime ~8 hours; hands-on time ~3 hours).
+Investigated and documented the primary data source (species, DNA/RNA type).
+
+Total Hours Worked: Approximately 20 hours
+Next Steps:
+
+Review QC results and refine analysis strategy.
+Assist team members in running the Nextflow pipeline.
+Continue data organization and backup.
+
+Prepared by: Gao Zhen
+Date: March 19, 2026
+
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period: March 20, 2026 – March 26, 2026
+Prepared by: Gao Zhen
+Total Hours Worked: 20 hours
+
+1. Genome and Mutation Database Preparation (2 hours)
+
+Downloaded the GENCODE M38 mouse genome and annotation files.
+Built index for mouse and human genomes by 3 tools: samtools, STAR, and bwa-mem2.
+Downloaded human SNP and indel databases for Whole Genome Sequencing (WGS) analysis.
+
+2. R Language Environment Configuration (2 hours)
+
+Installed multiple versions of R.
+Configured the R plotting environment.
+Tested and implemented a quick R version switching mechanism.
+
+3. System Connectivity and Nextflow Local Configuration (1 hour)
+
+Established secure connection between the local Linux workstation and the remote server.
+Configured Nextflow local settings for efficient pipeline execution.
+
+4. rRNA Quantification (2 hours)
+
+Continued rRNA quantification analysis for all 24 samples.
+
+5. RNA-seq Pipeline Debugging and Automation (3 hours)
+
+Debugged the RNA-seq pipeline (version 3.14.0).
+Upgraded to version 3.15.1 and successfully completed pipeline automation.
+
+6. Project Communication & Planning (1 hour)
+
+Discussed project priorities and pipeline development with the team.
+Reviewed and planned file-sharing strategies for current and future use.
+
+7. Nextflow WGS Pipeline Preparation (3 hours)
+
+Installed required software tools and databases.
+Prepared analysis environments and tested the WGS pipeline using sample data.
+
+8. Nextflow Shotgun Metagenomics Pipeline Preparation (3 hours)
+
+Installed a comprehensive set of software tools and databases (very large installation).
+Designed three different analytical strategies and prepared the corresponding environments.
+
+9. Code Review and Development Coordination (3 hours)
+
+Communicated with Henan Li regarding the code and analysis steps he developed.
+Reviewed and analyzed relevant code on both the USA and China servers.
+Developed optimized code to achieve the same (or highly similar) results using the same input data for future reproducibility.
+
+
+Total Hours Worked: Approximately 20 hours
+Prepared by: Gao Zhen
+Date: March 26, 2026
+
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Period: March 27, 2026 – April 2, 2026
+Prepared by: Gao Zhen
+Total Hours Worked: 26 hours
+1. Tropaeolum majus Genome Reference Preparation (4 hours)
+
+Downloaded the GENCODE reference genome and annotation files for Tropaeolum majus.
+Converted the annotation files to standard GTF format.
+Modified the naive annotation file to ensure full compatibility with the GENCODE format.
+Built genome indexes using three tools: SAMtools, STAR, and BWA-MEM2.
+
+2. Separation of Contaminated RNA-seq Samples (6 hours)
+
+Identified that five plant RNA-seq samples were contaminated with sgRNA library samples due to identical i7/i5 indexes.
+Conducted in-depth analysis of contamination patterns, read distribution, and possible separation strategies.
+Designed, tested, and implemented an effective separation method based on insert-size differences.
+Successfully separated the contaminated samples and merged the clean plant samples with other normal samples for downstream analysis.
+
+3. Project Communication & Planning (3 hours)
+
+Held ongoing discussions with the team regarding project challenges and customer requirements, and adjusted priorities accordingly.
+Clearly explained experimental capabilities, root causes of observed issues, proposed solutions, and provided realistic timelines.
+
+4. Investigation of Scattered Sample Distribution in the UIC Project (7 hours)
+
+Performed comprehensive quality checks across all processing dimensions and steps for each sample.
+Identified the most significant contributing factors to the scattered distribution.
+Conducted targeted analyses to validate the initial hypothesis, supported by statistical results and visualizations.
+
+5. Nextflow Rerun to Rescue the UIC Project (6 hours)
+
+Reconfigured and re-executed the Nextflow pipeline to remove low-quality reads.
+Redid subsequent analyses to generate updated PCA plots and differential expression (DE) results.
+
+Total Hours Worked: Approximately 30 hours
+Prepared by: Gao Zhen
+Date: April 2, 2026
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period: April 3, 2026 – April 9, 2026
+Prepared by: Gao Zhen
+Total Hours Worked: 18 hours
+
+1. Debugging and Final Analysis of UIC RNA-seq Samples (2 hours)
+
+Provided undeniable evidence demonstrating that certain samples were undergoing cell death processes in addition to sample degradation.
+Completed PCA and differential expression (DE) analyses for all UIC RNA-seq samples.
+
+2. Project Communication, Planning, and Customer Reporting (2 hours)
+
+Held discussions and meetings with the team to review result analysis and assess pipeline compatibility with sample preparation and QC procedures.
+Explained the mathematical rationale behind the PCA analysis.
+Compiled and delivered an official technical report to the customer, supported by robust evidence.
+
+3. Tropaeolum majus Genome Reference Preparation and Pipeline Optimization (12 hours)
+
+Further converted and adapted the annotation files to ensure full compatibility with the Nextflow RNA-seq pipeline (originally designed for human and mouse genomes).
+Addressed critical bottlenecks caused by extremely low I/O speed on the HDD storage.
+Iteratively modified pipeline settings and parameters to accommodate the new genome, optimize memory and CPU usage, improve disk I/O performance, and handle the large sample size (n=34).
+Continuously monitored pipeline execution and resource utilization throughout the run.
+Successfully completed all standardized analyses for the Tropaeolum majus genome.
+
+4. Nextflow Pipeline Execution for LZJ Project (2 hours)
+
+Prepared input data for the LZJ project.
+Executed the automated Nextflow pipeline.
+Monitored the entire run and verified the final results.
+
+Total Hours Worked: Approximately 18 hours
+Prepared by: Gao Zhen
+Date: April 9, 2026
+
+
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period: April 10, 2026 – April 16, 2026
+Prepared by: Gao Zhen
+Total Hours Worked: 16 hours
+
+1. Downstream Analysis for LZJ Project Nextflow Output (3 hours)
+
+Performed standard PCA and differential expression (DE) analyses for the LZJ project.
+Added volcano plots and heatmap visualizations to the RNA-seq pipeline.
+
+2. Enhancement of Pipeline Plotting and Reporting Capabilities (3 hours)
+
+Improved R plotting functionalities within the Positron IDE.
+Configured Quarto (.qmd) to enable direct generation of customized reports in HTML, PDF, and Word formats.
+
+3. scRNA-seq Pipeline Preparation (4 hours)
+
+Reviewed and executed the downstream standard single-cell RNA-seq pipeline in both R and Python environments.
+Verified output data formats and plotting capabilities in each environment.
+Compared results, figures, advantages, and limitations between the R and Python implementations.
+
+4. Nextflow Shotgun Metagenomics Pipeline Preparation (6 hours)
+
+Researched and prepared pipelines for shotgun metagenomics data analysis.
+Compared the two primary analytical strategies: read-based profiling versus assembly-based analysis.
+Evaluated mainstream tools and workflows for the following key steps:
+1) QC & Preprocessing and host gene removal: fastp, Bowtie2, and SAMtools.
+2) Taxonomic profiling: MetaPhlAn versus Kraken2.
+3) Functional profiling: HUMAnN for gene families, pathway abundance, and pathway coverage.
+4) Assembly: MEGAHIT versus SPAdes.
+5) Binning and reconstruction of individual genomes: MetaBAT2, MaxBin2, and CONCOCT.
+6) Unification of genomes from multiple binning tools: metaWRAP versus DAS Tool.
+7) Quality assessment for completeness and contamination: CheckM2.
+
+
+Total Hours Worked: Approximately 16 hours
+Prepared by: Gao Zhen
+Date: April 16, 2026
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period: April 17, 2026 – April 23, 2026
+Prepared by: Gao Zhen
+Total Hours: 16 Hours
+
+1. Technical Consultation & Project Planning (5.5 Hours)
+Small RNA-seq Methodology: Conducted technical research and provided expert consultation on siRNA-seq/miRNA-seq technologies.
+Data Salvage Strategy: Evaluated the feasibility, advantages, and limitations of recovering reads from "Undetermined" FASTQ files; 
+Discuss scientifically necessary vs. statistically redundant.
+Provided a diagnostic framework for cases where demultiplexing fails to produce FASTQ files, including root-cause analysis of index mismatches and human errors.
+
+2. Project Delivery & Execution (4.5 Hours)
+Guangcai Bai Project: Finalized all analytical deliverables with comprehensive reports.
+
+3. Data Forensics: Broad Institute Undetermined Reads (2 Hours)
+Index Distribution Profiling: Performed statistical analysis of unassigned indexes for Broad Institute sequencing runs to identify high-frequency "unknown" barcodes.
+Data Recovery Assessment: Re-mapped undetermined reads back to the sample-specific index pool to quantify the volume of low-quality and tractable data.
+
+4. Upstream Processing: rRNA-Depleted RNA-seq (2 Hours)
+High-Throughput Pipeline setup and Execution for the large-scale RNA-seq datasets utilizing rRNA removal (depletion) methodologies.
+
+5. Bioinformatics Visualization Stack Optimization (2 Hours)
+Investigated current best practices for Python-based bioinformatics plotting.
+Refined the internal environment for advanced transcriptomics visualization.
+
+Total Hours Worked: Approximately 16 hours
+Prepared by: Gao Zhen
+Date: April 23, 2026
+
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period: April 24, 2026 – April 30, 2026
+Prepared by: Gao Zhen
+Total Hours: 16 Hours
+
+
+1. Technical Consultation & Project Planning (2.5 Hours)
+Discussed the combination of rRNA depletion with standard RNA-seq workflows.
+Consulted on RNA-seq wet strategies to reduce fragmentation using read-overlap analysis.
+Coordinated documentation sharing and via Dropbox.
+Provided standardized RNA-seq reporting templates.
+
+
+
+
+Total Hours Worked: Approximately 16 hours
+Prepared by: Gao Zhen
+Date: April, 2026
+==================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period: May 1, 2026 – May 7, 2026
+Prepared by: Gao Zhen
+Total Hours: 17 Hours
+
+1. Technical Consultation & Project Planning (2.5 Hours)
+Developed a performance improvement plan for the computation server to optimize processing speeds.
+Consulted on RNA-seq source types and the impact of biological variation on data quality.
+Discussed the analysis strategies for projects lacking biological replicates (non-replicated samples).
+Coordinated with new staff regarding standardized formats and storage locations for sample-sheets.
+
+2. Upstream RNA-seq Pipeline Optimization (3 Hours)
+Modified the pipeline configuration to support multi-lane processing (handling multiple FASTQ pairs per sample).
+Oversaw the deployment and execution of the updated pipeline.
+
+3. Analysis & Delivery Strategy Research (3 Hours)
+Investigated variance across sequencing samples from different sources to improve comparative accuracy.
+Designed specialized analysis and delivery frameworks for samples without biological replicates to ensure meaningful data interpretation.
+
+4. Execution & Downstream Processing: RNA-seq (3 Hours)
+Monitored active pipeline.
+Performed downstream processing.
+Extracted and analyzed key differences between processed samples without repeating.
+
+5. Bioinformatics Visualization (2.5 Hours)
+Continued research of high-level visualization techniques using R ggplot2 to improve the representation of complex transcriptomic data.
+
+6. Upstream Processing: rRNA-Depleted Workflow (3 Hours)
+Data Preparation: Composed and validated sample-sheets for the current batch.
+rRNA Depletion: Executed RNA-seq pipelines utilizing specific rRNA removal methodologies.
+
+Total Hours Worked: 17 Hours
+Date of Submission: May 7, 2026
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period: May 8, 2026 – May 14, 2026
+Prepared by: Gao Zhen
+Total Hours: 15 Hours
+1. System Resource Monitoring & Hardware Upgrade Planning (1.5 Hours)
+Disk Usage Monitoring: Monitored hard disk usage to ensure system stability.
+Data Storage Policy: Discussed and established data retention rules (e.g., deleting data older than 2 months and migrating to external storage when local disk space is low).
+Hardware Planning: Evaluated and discussed SSD storage upgrade.
+
+2. Downstream Processing & Data Extraction: rRNA-Depleted Workflow (1.5 Hours)
+Pipeline Monitoring: Monitored RNA-seq pipeline processing and memory allocation.
+Data Extraction: Extracted rRNA removal percentages across different rRNA depletion methodologies for comparative analysis.
+
+3. Opossum Genome and Transcriptome Research (7 Hours)
+Literature Review: Conducted an extensive review of methodologies for transcriptome assembly from earlier publication.
+Strategy Development: Researched current best practices for Opossum transcriptome isoform discovery and differential expression (DE) analysis.
+Write and report the results.
+
+4. Evaluation and Testing of Biomni Agent (5 Hours)
+Functional Research: Conducted extensive research into the capabilities and functions of the Biomni agent.
+Entry-Level Simulation: Tested the agent from the perspective of a new staff member to identify advantages, disadvantages, and potential limitations/risks.
+Advanced-Level Simulation: Tested the agent from the perspective of an experienced staff member to evaluate its efficiency in handling repeatable analysis tasks.
+Write and report the results.
+
+Total Hours Worked: 15 Hours
+Date of Submission: May 7, 2026
+
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period: May 15, 2026 – May 21, 2026
+Prepared by: Gao Zhen
+Total Hours: 14 Hours
+
+1. Raw Data Management (2 Hours)
+Downloaded raw sequencing data from Novogene.
+Synchronized and uploaded files to cloud storage via Dropbox.
+Monitored network performance and verified data integrity for both download and upload processes.
+
+2. RNA-seq Custom Group Integration (2.5 Hours)
+Adjusted Differential Expression (DE) thresholds: Down-regulated (0.67) and Up-regulated (1.5).
+Refined table definitions to standardize "A-vs-B" comparison directions (Control vs. Treatment).
+Filtered low-quality DE genes with insufficient read counts to minimize data noise.
+Generated DE gene reports for new comparison groups using updated analytical methodologies.
+
+3. DNA Degradation Analysis & Validation (5.5 Hours)
+Fragmentation Analysis: Confirmed severe degradation via fastp, identifying ultra-short 58–60 bp inserts and >97% merge rates.
+Genomic Validation: Identified high GC bias (60–65%) and 98% sequence uniqueness, confirming biological origin rather than technical primer artifacts.
+Structural Audit: Manually verified genomic-to-adapter transitions to map fragmentation patterns.
+Strategic Outcome: Provided scientific justification to pivot the project strategy, preventing further resource waste on compromised data.
+
+4. Technical Consultation & Reporting for internal team and customs (2.5 Hours)
+Drafted the corrected rationale for DE significance for team and clients.
+Authored a professional DNA Degradation Analysis Report detailing the debugging process and root-cause findings.
+Briefed the team on insert size research strategies, GC content bias, and sequence complexity validation.
+
+5. System Monitoring & Maintenance (1.5 Hours)
+Monitored memory usage and storage capacity for upcoming hardware upgrades.
+Evaluated disk write speeds and overall system stability.
+Verified automatic start-up protocols for essential analysis software.
+
+Total Hours Worked: 14 Hours
+Date of Submission: May 21, 2026
+
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+
+5. Research about how to intergrtate the experienced staff's procedures to biomin (5 Hours)
+

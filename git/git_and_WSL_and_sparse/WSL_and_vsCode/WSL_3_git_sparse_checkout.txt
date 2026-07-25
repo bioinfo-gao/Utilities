@@ -1,0 +1,76 @@
+在 WDL (Windows Subsystem for Linux) 环境下的 Oracle Linux Terminal 中进行稀疏检出，
+操作流程和在任何标准的 Linux 终端中是完全一样的。
+
+场景：在一个全新的位置，只检出远程仓库的某一个文件夹
+这个流程适用于你第一次在这台电脑/这个位置克隆仓库，并且从一开始就只想下载特定文件夹的情况。
+假设：
+
+第一步：导航到你想要存放项目的目录
+首先，打开你的 Oracle Linux Terminal。
+
+# 切换到你的主目录 (home directory)
+cd ~
+
+# 创建一个用于存放项目的文件夹（如果它还不存在）
+mkdir -p projects
+
+# 进入这个文件夹
+cd projects
+
+
+第二步：克隆仓库骨架（不下载任何文件）
+这是最关键的一步，它避免了下载整个庞大的仓库
+
+
+# --depth 1: 只克隆最新的历史记录，加快速度
+# --filter=blob:none: 告诉Git先不要下载任何实际的文件内容
+# --no-checkout: 克隆后不要将文件填充到工作目录
+git clone --depth 1 --filter=blob:none --no-checkout https://github.com/bioinfo-gao/Linux_and_Cluster_for_Omics.git 
+
+
+
+第三步：进入仓库并设置稀疏检出规则
+现在，进入刚刚创建的仓库目录，并明确告诉 Git 你只想要哪一个文件夹。
+
+# 进入你的仓库目录
+cd your-repo
+
+# 设置你唯一感兴趣的文件夹
+# 将 "WGS_WES" 替换成你实际需要的文件夹路径, 此时并无文件夹下载
+git sparse-checkout set LinuxCodes 
+#git sparse-checkout set WGS_WES
+
+
+第四步：检出你指定的文件
+最后一步，让 Git 根据你刚刚设定的规则，把 LinuxCodes 文件夹里的内容真正下载下来。
+
+# 根据规则，检出文件到工作目录
+git checkout
+
+# show the git sparse-checkout folder list 
+git sparse-checkout list
+git sparse-checkout add git_and_WSL
+
+cd Code/Linux_and_Cluster_for_Omics
+git mv  git git_and_WSL
+
+
+大功告成！
+
+=====================
+
+
+现在，你的 your-repo 文件夹里就只有 WGS_WES 这个文件夹（以及像 .git 这样的必要配置文件）了。
+
+设置好之后，日常工作就和普通的 Git 仓库完全一样，非常简单：
+拉取更新：Git 会自动只更新 WGS_WES 文件夹内的内容。
+code
+Bash
+git pull
+提交修改：
+code
+Bash
+# 在 WGS_WES 文件夹内做了修改后...
+git add .
+git commit -m "Made some changes in LinuxCodes"
+git push

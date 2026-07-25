@@ -1,0 +1,720 @@
+---
+title: "ggplot2 Tutorial for Bioinformatics"
+author: "Zorin Gao <bioinfo.gaoi@gmail.com.com>"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+  pdf:
+    pdf-engine: xelatex
+    mainfont: "Noto Sans CJK SC"  # 或者使用你系统里有的字体，如 "WenQuanYi Micro Hei" 没有这行，无法显示中文  
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# ggplot2 Tutorial for Bioinformatics Analysis
+
+针对生物信息学研究（特别是你正在进行的 RNA-seq 和单细胞分析），ggplot2 不仅仅是一个绘图工具，它是一套基于"图形语法"（Grammar of Graphics）的逻辑系统。
+
+以下是一份为你定制的高度详细教程，涵盖了从基础逻辑到生信实战进阶的内容。
+
+## 1. ggplot2 的核心哲学：图层 (Layers)
+
+ggplot2 的绘图逻辑就像在透明胶片上叠画：
+
+- **数据层 (Data)**: 你要画什么？
+- **映射层 (Aesthetics)**: 数据中的变量对应到画面的什么位置、颜色、形状？ ========== 最关键！
+- **几何对象层 (Geometries)**: 用点、线还是柱状图展示？
+- **统计转换层 (Stats)**: 是否需要计算平均值、分位数？
+- **标尺控制层 (Scales)**: 颜色用什么色盘？轴的范围是多少？
+- **分面层 (Facets)**: 是否要按组分拆成小图？
+- **主题层 (Themes)**: 背景、字体、网格线等外观设置。
+
+## 2. 基础语法模板
+
+```{r, run=FALSE}
+library(ggplot2)
+
+```
+
+## 3. 核心要素详解
+
+### A. 审美映射 (Aesthetics - aes)
+
+`aes()` 负责将数据列映射到视觉属性。
+
+- `x`, `y`: 坐标轴。
+- `color`: 边框或点的颜色。
+- `fill`: 填充颜色（如柱状图、箱线图内部）。
+- `size`: 大小。
+- `shape`: 形状。
+- `alpha`: 透明度。
+
+### B. 几何对象 (Geoms)
+
+如果你希望表格有标题或引用编号，可以在表格下方紧接着添加：
+
+| 几何对象 (Geom) | 数据要求 | 生信典型应用场景 | 关键参数建议 |
+| :--- | :--- | :--- | :--- |
+| **`geom_point()`** | 连续型 x, y | PCA 主成分分析图、火山图 (Volcano Plot) | `alpha=0.5`, `size` |
+| **`geom_tile()`** | 离散型 x, y | 差异表达基因热图 (Heatmap) | `aes(fill = value)` |
+| **`geom_boxplot()`** | 离散型 x, 连续型 y | 比较不同组别间的基因表达量分布 | `outlier.shape = NA` |
+| **`geom_violin()`** | 离散型 x, 连续型 y | 单细胞测序中 Cluster 基因分布 | `trim = FALSE` |
+| **`geom_bar()`** | 离散型 x | GO/KEGG 富集分析条形图 | `stat = "identity"` |
+| **`geom_density2d()`** | 连续型 x, y | **[Wildcard]** 大样本量单细胞轨迹密度分布 | `color = "blue"` |
+| **`geom_jitter()`** | 离散型 x, 连续型 y | 叠加原始数据点 | `width = 0.2`, `alpha = 0.3` |
+
+
+## 4. Practical Examples
+
+### Example 1: Basic Scatter Plot (PCA-like)
+```{r}
+# Load required library
+library(ggplot2)
+
+# Create sample data similar to PCA results
+set.seed(123)
+pca_data <- data.frame(
+  PC1 = rnorm(100),
+  PC2 = rnorm(100),
+  group = factor(rep(c("Control", "Treatment"), each = 50))
+)
+
+print(pca_data |> head())
+print(pca_data |> dim())
+
+
+# Basic scatter plot
+# 但这种格式调试极其困难，因为 在 R 的 ggplot2 中，+ 操作符不能放在新行的开头，这会导致语法错误
+# 无法独立删除一行
+
+ggplot(pca_data, aes(x = PC1, y = PC2, color = group)) +
+  geom_point(alpha = 0.7, size = 3) +
+  labs(title = "PCA Plot", x = "PC1", y = "PC2") +
+  theme_minimal()  # +
+#   theme(
+#     plot.title = element_text(hjust = 0.5, size = 28)
+#   )
+
+# Use theme() to center the title and increase its size:
+
+# Debugging-friendly approach: Assign layers to a variable
+# This allows easy commenting out of individual layers for troubleshooting
+# 以后都应该采取这种方法 << =================================================
+p <- ggplot(pca_data, aes(x = PC1, y = PC2, color = group))
+p <- p + geom_point(alpha = 0.7, size = 3)
+p <- p + labs(title = "PCA Plot", x = "PC1", y = "PC2")
+p <- p + theme_minimal()
+p
+rm(p)  # 删除临时变量 p
+
+# Step-wide debugging: Assign each layer to a variable
+# 逐步调试的英文是 **step-by-step debugging**。
+# 其他相关的表达方式还包括：
+# - **incremental debugging**（增量调试）
+# - **layer-by-layer debugging**（逐层调试，特别适用于 ggplot2 这种图层叠加的情况）
+# - **interactive debugging**（交互式调试）
+# 以下是逐步调试: 
+p <- ggplot(pca_data, aes(x = PC1, y = PC2, color = group))             #  No point at all， BUT with default label 
+p             # 这个是显示图表的命令 
+p <- p + geom_point(alpha = 0.7, size = 3)                              #  with point AND Legned， size = 3 !
+p             # 这个是显示图表的命令 
+p <- p + labs(title = "PCA Plot", x = "PC1", y = "PC2")                 #  add title  in the TOP-Left
+p             # 这个是显示图表的命令 
+p <- p + guides(color = guide_legend(override.aes = list(size = 5)))    #  Customize legend point size to 5 for better visibility
+p <- p + theme_minimal()                                                # 去除了背景色，其实不美观
+p             # 这个是显示图表的命令 
+rm(p)         # 删除变量 用于反复调试test
+
+# ggplot(pca_data, aes(x = PC1, y = PC2, color = group)) + 
+#   geom_point(alpha = 0.7, size = 3) +
+#   labs(title = "PCA Plot", x = "PC1", y = "PC2") +
+#   guides(color = guide_legend(override.aes = list(size = 5))) +
+#   theme_minimal() +
+#   # scale_x_continuous(expand = expansion(mult = 0.08)) + # “图中数据点离坐标轴边框太近”，那要改的是：
+#   # scale_y_continuous(expand = expansion(mult = 0.08)) +
+#   theme(
+#     plot.title = element_text(
+#       hjust = 0.5,
+#       size = 18,
+#       face = "bold",
+#       family = "serif",
+#       margin = margin(t = 15, b=15)                   # 增大标题和图主体之间的下边距 plot.margin = margin(t = 15, r = 10, b = 10, l = 10)
+#     ),
+#     panel.border = element_rect(                # 注意这一行和 panel.border一样，都是设置边线, 所有只能二选一
+#       color = "black",
+#       fill = NA,
+#       linewidth = 1
+#     ),
+#     #axis.line = element_line(color = "black", linewidth = 1), # 注意这一行和 panel.border一样，都是设置边线, 所有只能二选一
+#     plot.margin = margin(t = 10, r = 15, b = 10, l = 15)   ,      #  扩大整张图四周留白
+#     axis.title = element_text(size =16, face = "bold"),            # x and y 轴标题 ， 这里是 PC1 PC2
+#     axis.title.x = element_text(                                  # 增加x 轴标注 PC1 离开 x轴这条线的距离
+#         margin = margin(t = 5)
+#       ),
+#     axis.text = element_text(size = 14, color = "black"),      # 坐标轴上的数字
+#     legend.title = element_text(size = 14, face = "plain"), # must one of "plain", "bold", "italic", "oblique", or "bold.italic".
+#     legend.text = element_text(size = 12),
+#     legend.background = element_rect(
+#       color = "black",
+#       linewidth = 0.5,                     # 
+#       fill = "white"
+#     )
+
+p <- ggplot(pca_data, aes(x = PC1, y = PC2, color = group))     # Initialize plot with data and basic aesthetics
+p  # Display the base plot
+p <- p + geom_point(alpha = 0.7, size = 3)                      # Add data points with specified transparency and size
+p  
+p <- p + labs(title = "PCA Plot", x = "PC1", y = "PC2")         # Add title and axis labels
+p  
+p <- p + guides(color = guide_legend(override.aes = list(size = 5)))  # Customize legend point size to 5 for better visibility
+p <- p + theme_minimal()  # Apply minimal theme (removes background grid and colors)
+p  
+# p <- p + scale_x_continuous(expand = expansion(mult = 0.08))  # Expand x-axis margins if needed
+# p <- p + scale_y_continuous(expand = expansion(mult = 0.08))  # Expand y-axis margins if needed
+p <- p + theme(
+  plot.title = element_text(                            #  设置标题各种格式 ==============================
+    hjust = 0.5,
+    size = 18,
+    face = "bold",
+    family = "serif",
+    margin = margin(t = 15, b = 15)                      # Increase margin between title and plot body
+  ),
+  panel.border = element_rect(                           # 注意这一行和 axis.line一样，都含设置边线, 所有只能二选一
+    color = "black",
+    fill = NA,
+    linewidth = 1                                        # Add black border around the plot panel
+  ),
+  # axis.line = element_line(color = "black", linewidth = 1),  # Alternative to panel.border for axis lines only # 注意这一行和 panel.border一样，都是设置边线, 所有只能二选一
+  plot.margin = margin(t = 10, r = 15, b = 10, l = 15),   # Increase overall plot margins
+  axis.title = element_text(size = 16, face = "bold"),    # Style for both x and y axis titles
+  axis.title.x = element_text(
+    margin = margin(t = 5)                                # Increase distance between x-axis title and axis line
+  ),
+  axis.text = element_text(size = 14, color = "black"),   # Style for axis tick labels
+  legend.title = element_text(size = 14, face = "plain"), # Style for legend title
+  legend.text = element_text(size = 12),                  # Style for legend text
+  legend.background = element_rect(
+    color = "black",
+    linewidth = 0.5,
+    fill = "white"  # Style for legend background box
+  )
+)
+
+p
+```
+
+### Example 2: Volcano Plot
+```{r}
+set.seed(120)
+log2 = c(
+  rnorm(800, mean = 0, sd = 1),
+  rnorm(100, mean = 0.5, sd = 1),
+  rnorm(100, mean = -0.5, sd = 0.8)
+)
+
+volcano_data <- data.frame(
+  log2FC = log2,
+  pvalue = runif(1000, min = 1e-10, max = 1)
+)
+
+
+volcano_data$neg_log10_pval <- -log10(volcano_data$pvalue)
+
+volcano_data$significant <- ifelse(  #
+  volcano_data$neg_log10_pval > 2 & volcano_data$log2FC > 1, "Significant Increased",
+  ifelse(
+    volcano_data$neg_log10_pval > 2 & volcano_data$log2FC < -1, "Significant Reduced",
+    "Not Significant"
+  )
+)
+head(volcano_data)
+
+ggplot(volcano_data, aes(x = log2FC, y = neg_log10_pval, color = significant)) +
+  geom_point(alpha = 0.6) +
+  scale_color_manual(values = c(
+    "Significant Increased" = "red",
+    "Significant Reduced" = "blue",
+    "Not Significant" = "black"
+  )) +
+  labs(title = "Volcano Plot", x = "Log2 Fold Change", y = "-Log10(P-value)") +
+  theme_minimal() +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "gray") +
+  geom_hline(yintercept = 2, linetype = "dashed", color = "gray")
+
+```
+
+```{r}
+# 当前 ifelse() 嵌套格式的特点：
+# 向量化操作：ifelse() 是向量化的，可以一次性处理整个向量
+# 简洁性：对于简单的多条件判断，嵌套 ifelse() 比较紧凑
+# 性能：对于大数据集，向量化操作通常更快
+# else if 结构的特点：
+# 可读性：对于复杂的逻辑，else if 通常更容易阅读和理解
+# 灵活性：可以处理更复杂的条件和操作
+# 非向量化：需要配合循环或 ifelse() 来处理向量
+# 针对你这段代码的建议：
+# 对于你当前的火山图显著性分类场景，现有的 ifelse() 嵌套格式实际上是更好的选择，原因如下：
+
+# 数据处理需求：volcano_data$neg_log10_pval 和 volcano_data$log2FC 都是向量，需要对每个元素进行分类
+# 简单逻辑：只有三个明确的分类条件，逻辑相对简单
+# 性能考虑：向量化操作比循环+条件判断更高效
+
+# 提高可读性的另一种方法是 dplyr::case_when() 函数，它专门为多条件向量化操作设计：
+
+# library(dplyr)
+# volcano_data$significant <- case_when(
+#   neg_log10_pval > 2 & log2FC > 1 ~ "Significant Increased",
+#   neg_log10_pval > 2 & log2FC < -1 ~ "Significant Reduced",
+#   TRUE ~ "Not Significant"
+# )
+
+ggplot(volcano_data, aes(x = log2FC, y = neg_log10_pval, color = significant)) +
+  geom_point(alpha = 0.6,size = 2.5) +                               # 在 ggplot2 中，geom_point() 的默认点大小（size）是 1.5。
+  scale_color_manual(values = c(
+    "Significant Increased" = "red",
+    "Significant Reduced" = "blue", 
+    "Not Significant" = "black"
+  )) +
+  labs(title = "Volcano Plot", x = "Log2 Fold Change", y = "-Log10(P-value)") +
+  theme(plot.title = element_text(size = 14, hjust = 0.5)) +                              # 比默认11pt大3号，hjust=0.5居中
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "gray") +
+  geom_hline(yintercept = 2, linetype = "dashed", color = "gray")
+
+# geom_point() 的默认参数
+# geom_point(
+#   size = 1.5,    # 默认点大小
+#   alpha = 1,     # 默认完全不透明
+#   color = "black", # 默认黑色
+#   stroke = 0.5   # 默认边框粗细
+# )
+```
+
+
+
+
+```{r}
+# Create volcano plot data
+library(ggplot2)
+library(ggrepel)
+set.seed(123)
+log2 <- c(
+  rnorm(700, mean = 0, sd = 0.6),
+  rnorm(150, mean = 2.5, sd = 0.4),
+  rnorm(150, mean = -1.5, sd = 0.5)
+)
+
+volcano_data <- data.frame(
+  gene = paste0("Gene", 1:1000),
+  log2FC = log2,
+  pvalue = runif(1000, min = 1e-10, max = 1)
+)
+
+volcano_data$neg_log10_pval <- -log10(volcano_data$pvalue)
+volcano_data$group <- ifelse(
+  volcano_data$neg_log10_pval > 2 & volcano_data$log2FC > 1, "Up",
+  ifelse(
+    volcano_data$neg_log10_pval > 2 & volcano_data$log2FC < -1, "Down",
+    "NS"
+  )
+)
+volcano_data$group <- factor(volcano_data$group, levels = c("Up", "Down", "NS"))
+
+# 选显著点中最显著的 top 10
+top10_genes <- volcano_data[volcano_data$group != "NS", ]
+top10_genes <- top10_genes[order(top10_genes$pvalue), ]
+top10_genes <- head(top10_genes, 10)
+
+head(top10_genes)
+
+# print("top10_genes ", "is above")
+p <- ggplot() +
+  geom_point(
+    data = subset(volcano_data, group == "NS"),
+    aes(x = log2FC, y = neg_log10_pval),
+    color = "gray50", size = 2, alpha = 0.55
+  ) +
+  geom_point(
+    data = subset(volcano_data, group == "Down"),
+    aes(x = log2FC, y = neg_log10_pval, color = group),    # 设置颜色 and size
+    size = 2.2, alpha = 0.85
+  ) +
+  geom_point(
+    data = subset(volcano_data, group == "Up"),
+    aes(x = log2FC, y = neg_log10_pval, color = group),
+    size = 2.2, alpha = 0.85
+  ) +
+  geom_text_repel(                                       # 添加标签 and non-overlapping
+    data = top10_genes,
+    aes(x = log2FC, y = neg_log10_pval, label = gene, color = group),
+    size = 4,
+    box.padding = 0.5,
+    point.padding = 0.3,
+    segment.color = "gray40",
+    segment.size = 0.5,
+    max.overlaps = Inf,
+    # show.legend =  TRUE #FALSE # 
+  ) +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "gray50", linewidth = 0.7) +
+  geom_hline(yintercept = 2, linetype = "dashed", color = "gray50", linewidth = 0.7) +
+  scale_color_manual(values = c(
+    "Up" = "#D73027",
+    "Down" = "#4575B4",
+    "NS" = "gray50"
+  )) +
+  labs(                            # <<<<<<<<<<<<<<<<<<=================================================== Text FORMAT =============
+    title = "Volcano Plot",
+    x = expression(log[2]~Fold~Change),
+    y = expression(-log[10]~italic(P-value)),
+    color = NULL
+  ) +
+  # theme_classic() +
+  theme(
+    plot.title = element_text(
+      hjust = 0.5,
+      size = 18,
+      face = "bold",
+      family = "serif",
+      margin = margin(b = 12)
+    ),
+    axis.title.x = element_text(size = 15, face = "bold", margin = margin(t = 12)),
+    axis.title.y = element_text(size = 15, face = "bold", margin = margin(r = 12)),
+    axis.text = element_text(size = 13, color = "black"),
+    axis.line = element_line(color = "black", linewidth = 0.8),
+    legend.position = c(0.88, 0.88),
+    legend.text = element_text(size = 12),
+    legend.background = element_rect(fill = "white", color = "black", linewidth = 0.6),
+    legend.key = element_blank(),
+    plot.margin = margin(t = 20, r = 25, b = 20, l = 25)
+  )
+
+p
+
+```
+
+### Example 3: Box Plot with Jitter Points
+```{r}
+# Gene expression data across groups
+gene_expr <- data.frame(
+  expression = c(rnorm(30, mean = 5), rnorm(30, mean = 7)),
+  group = factor(rep(c("Control", "Treatment"), each = 30))
+)
+
+# Box plot with jitter points
+ggplot(gene_expr, aes(x = group, y = expression, fill = group)) +  # data and aesthetics
+  geom_boxplot(outlier.shape = NA) +                                    # 箱线图 
+  geom_jitter(width = 0.2, alpha = 0.6, size = 2) +
+  scale_fill_manual(values = c("Control" = "#1f77b4", "Treatment" = "#ff7f0e")) +
+  labs(title = "Gene Expression by Group", x = "Group", y = "Expression Level") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+
+# Introduction to ggplot2
+
+ggplot2 is a powerful and flexible R package for creating elegant data visualizations based on the Grammar of Graphics. This tutorial will guide you through the fundamentals of ggplot2, from basic plots to more advanced customizations.
+
+## The Grammar of Graphics
+
+The Grammar of Graphics, developed by Leland Wilkinson, provides a structured approach to describing and building statistical graphics. In ggplot2, every plot is composed of:
+
+1. **Data**: The dataset being visualized
+2. **Aesthetics**: How variables map to visual properties (x, y, color, size, etc.)
+3. **Geoms**: Geometric objects that represent the data (points, lines, bars, etc.)
+4. **Stats**: Statistical transformations (binning, smoothing, etc.)
+5. **Scales**: How data values map to visual properties
+6. **Coordinate system**: The system used to position elements
+7. **Facets**: How to break data into subsets for separate panels
+8. **Themes**: Non-data ink (fonts, backgrounds, gridlines, etc.)
+
+## Basic Structure of ggplot2
+
+The basic structure of a ggplot2 plot follows this pattern:
+
+
+Let's start with a simple example using the built-in `mtcars` dataset:
+## Aesthetics Mapping
+  
+Aesthetics define how variables in your data are mapped to visual properties. Common aesthetics include:
+
+- `x` and `y`: Position on x and y axes
+- `color`/`colour`: Color of points, lines, or areas
+- `fill`: Fill color for areas
+- `size`: Size of points or areas
+- `alpha`: Transparency (0 = fully transparent, 1 = fully opaque)
+- `shape`: Shape of points
+- `linetype`: Type of line (solid, dashed, etc.)
+  
+
+### Points (`geom_point`)
+```{r}
+# Simple scatter plot
+ggplot(data = mtcars) +
+  geom_point(mapping = aes(x = wt, y = mpg)) # weight and mpg
+```
+
+两者等同
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()
+```
+
+### Example: Adding Color Based on Cylinders
+```{r}
+# Scatter plot with color mapped to number of cylinders
+ggplot(data = mtcars) +
+  geom_point(mapping = aes(x = wt, y = mpg, color = factor(cyl)))
+```
+
+Note that we use `factor(cyl)` to treat cylinder count as a categorical variable rather than continuous.
+
+## Common Geoms
+
+Here are some of the most commonly used geometric objects:
+
+### Lines (`geom_line`)
+```{r}
+# Create time series data
+time_data <- data.frame(
+  time = 1:10,
+  value = cumsum(rnorm(10))   # Generate 10 random normal values and compute their cumulative sum
+)
+
+time_data
+
+ggplot(time_data, aes(x = time, y = value)) +
+  geom_line()
+```
+
+### Bars (`geom_bar` and `geom_col`)
+```{r}
+# geom_bar counts occurrences  , 这个只计算频数，不需要y
+ggplot(mtcars, aes(x = factor(cyl))) +
+  geom_bar()
+```
+
+```{r}
+# geom_bar counts occurrences      # `geom_col()` requires the following missing aesthetics: y.
+ggplot(mtcars, aes(x = factor(cyl))) +
+  geom_col()                   
+```
+
+```{r}
+# geom_col uses values as heights
+bar_data <- data.frame(
+  category = c("A", "B", "C"),
+  value = c(10, 15, 7)
+)
+
+ggplot(bar_data, aes(x = category, y = value)) +
+  geom_col()
+```
+
+### Histograms (`geom_histogram`)
+```{r}
+ggplot(mtcars, aes(x = mpg)) +  # 只计算区间的数字，不需要y
+  geom_histogram(bins = 10)
+```
+
+### Boxplots (`geom_boxplot`)
+```{r}
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_boxplot()
+```
+
+## Layers and Multiple Geoms
+
+You can add multiple layers to a single plot:
+
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE, color = "red")
+```
+
+## Faceting
+
+Faceting creates multiple plots based on one or more variables:
+
+### `facet_wrap()`: Wraps facets into a grid ============================== 气缸数单因素
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  facet_wrap(~ cyl)
+```
+
+### `facet_grid()`: Creates a grid of rows and columns ， 含双因素，重量 * 手动-自动档 
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  facet_grid(vs ~ am)
+```
+
+## Scales and Labels
+
+
+Customize how data maps to visual properties and add informative labels:
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg, color = hp)) +
+  geom_point(size = 3) +
+  scale_color_gradient(low = "blue", high = "red") + ## ================= 渐变色
+  labs(                                              #  =============== 标题等各种标注，但不能设置格式
+    caption = "Data: mtcars"
+    title = "Fuel Efficiency vs Weight",
+    subtitle = "Colored by Horsepower",
+    x = "Weight (1000 lbs)",
+    y = "Miles per Gallon",
+    color = "Horsepower"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 28),
+    plot.subtitle = element_text(hjust = 0.5, size = 20)  # Center subtitle with size 20
+  )
+```
+
+## Themes
+
+Themes control the non-data elements of your plot: 【主题】控制图表中的非数据元素：
+
+```{r}
+# Using built-in themes
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()
+
+# Different theme options
+p + theme_bw()
+```
+
+```{r}
+# Custom theme
+p + theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    axis.title = element_text(size = 12),
+    panel.grid.minor = element_blank()
+  ) +
+  labs(title = "Custom Styled Plot")
+```
+
+## Saving Plots
+
+Save your plots to files:
+
+```{r}
+#| eval: false
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+
+setwd("/home/gao/projects/Utilities/R_tested_in_R4.5.2/ggplot2/Gemini")
+getwd()
+# Save as PNG
+ggsave("my_plot.png", plot = p, width = 8, height = 6, dpi = 300) # 保存p， 还是把ggplot 对象先保存为变量这种方式好，各种后续处理更方便
+
+# Save as PDF
+ggsave("my_plot.pdf", plot = p, width = 8, height = 6)
+```
+
+## Best Practices
+
+1. **Start simple**:               Begin with basic plots and add complexity gradually
+2. **Think about your audience**: Choose appropriate colors, labels, and scales
+3. **Use meaningful labels**: Always label axes and provide clear titles
+4. **Consider colorblindness**: Use color palettes that are accessible to all viewers
+5. **Avoid unnecessary elements**: Remove chart junk that doesn't add information
+
+## Advanced Example: Multi-panel Publication Quality Plot
+
+Let's create a more complex, publication-ready plot:
+
+```{r}
+# Create sample data
+set.seed(123)
+
+# 这三行代码共同构建了 sample_data 数据框中的 value 列，它们的关系如下：
+
+# 第一部分：基础值
+
+# c(rnorm(50, mean = 5), rnorm(50, mean = 7)) 创建了100个随机数值
+# 前50个来自均值为5的正态分布（Control组）
+# 后50个来自均值为7的正态分布（Treatment组）
+
+# 第二部分：时间趋势
+
+# rep(seq(0, 2, length.out = 10), times = 10) 创建了一个长度为100的序列
+# seq(0, 2, length.out = 10) 生成10个从0到2均匀分布的数值：0.0, 0.22, 0.44, ..., 2.0
+# rep(..., times = 10) 将这10个数值重复10次，形成100个值
+
+# 整体逻辑：
+
+# 每个时间点（1-10）都有10个重复观测值（5个Control + 5个Treatment）
+# 通过将基础随机值加上时间趋势值，使得数据随时间呈现上升趋势
+# 这样创建的数据既有组间差异（Control vs Treatment），又有时间效应（随时间增加）
+# 所以这三行代码是协同工作的：前两行提供组间的基础差异，第三行添加时间相关的趋势成分。
+
+sample_data <- data.frame(
+  group = rep(c("Control", "Treatment"), each = 50),
+  time = rep(1:10, times = 10),
+  value = c(rnorm(50, mean = 5), 
+            rnorm(50, mean = 7)) + 
+          rep(seq(0, 2, length.out = 10), times = 10)
+)
+
+sample_data
+
+# 关键概念解释：
+
+# interaction(group, rep(1:5, each = 10)):
+
+# 创建唯一的分组标识符，确保每个受试者（5个Control + 5个Treatment）都有独立的线条
+
+# rep(1:5, each = 10) 生成 [1,1,...,1, 2,2,...,2, ..., 5,5,...,5]（每个数字重复10次）
+# interaction() 将组别和受试者ID组合，形成10个唯一的组合 Control.1 Control.2 ... Control.10  <==  and   ==> Treatment.1 Treatment.2 ... Treatment.10
+# alpha = 0.3:
+
+# 设置线条透明度为30%，避免多条重叠线造成视觉混乱
+# 允许看到数据的整体模式而不是单个线条
+# geom_smooth(se = TRUE, method = "loess"):
+
+# 添加局部加权回归平滑线
+# se = TRUE 显示置信区间（阴影区域）
+# 自动为每个组别（Control/Treatment）分别计算平滑线
+# 颜色映射:
+
+# Control组使用灰色（"gray50"）
+# Treatment组使用钢蓝色（"steelblue"）
+# 这种配色方案提供良好的对比度且适合黑白打印
+# 这段代码展示了典型的纵向数据分析可视化：用半透明线条显示个体轨迹，用平滑线显示组别趋势。
+
+# Create the plot
+# Create line plot with individual trajectories and smoothed trends
+ggplot(sample_data, aes(x = time, y = value, color = group)) +            # Initialize plot with data and basic aesthetics
+  geom_line(aes(group = interaction(group, rep(1:5, each = 10))),         # Draw individual lines for each subject
+            alpha = 0.6) +                                                # Set transparency to 30% to reduce visual clutter, 我改成了0.6更好
+  geom_smooth(se = TRUE, method = "loess") +                              # Add smoothed trend lines with confidence intervals
+  scale_color_manual(values = c("Control" = "gray50", "Treatment" = "steelblue")) +  # Custom color scheme
+  labs(  # Define plot labels
+    title = "Treatment Effect Over Time",
+    x = "Time (hours)",  # X-axis label
+    y = "Response Value",  # Y-axis label  
+    color = "Group"  # Legend title for color mapping
+  ) +
+  theme_minimal() +  # Apply minimal theme (clean background, no grid lines)
+  theme(  # Customize specific theme elements
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),  # Center title, size 14pt, bold
+    legend.position = "bottom"  # Position legend at bottom of plot
+  )
+```
+
+## Resources for Further Learning
+
+- [ggplot2 official documentation](https://ggplot2.tidyverse.org/)
+- [R Graph Gallery](https://r-graph-gallery.com/)
+- ["R Graphics Cookbook" by Winston Chang](https://r-graphics.org/)
+- [Data Visualization: A Practical Introduction by Kieran Healy](https://socviz.co/)
+
+This tutorial covers the fundamentals of ggplot2. With practice, you'll be able to create sophisticated and publication-quality visualizations for your data analysis projects.

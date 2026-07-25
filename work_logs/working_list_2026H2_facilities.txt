@@ -1,0 +1,497 @@
+===============================================================================================================================================================================
+Weekly Work Report
+Period: May 15, 2026 – May 21, 2026
+Prepared by: Gao Zhen
+Total Hours: 14 Hours
+
+1. Raw Data Management (2 Hours)
+Downloaded raw sequencing data from Novogene.
+Synchronized and uploaded files to cloud storage via Dropbox.
+Monitored network performance and verified data integrity for both download and upload processes.
+
+2. RNA-seq Custom Group Integration (2.5 Hours)
+Adjusted Differential Expression (DE) thresholds: Down-regulated (0.67) and Up-regulated (1.5).
+Refined table definitions to standardize "A-vs-B" comparison directions (Control vs. Treatment).
+Filtered low-quality DE genes with insufficient read counts to minimize data noise.
+Generated DE gene reports for new comparison groups using updated analytical methodologies.
+
+3. DNA Degradation Analysis & Validation (5.5 Hours)
+Fragmentation Analysis: Confirmed severe degradation via fastp, identifying ultra-short 58–60 bp inserts and >97% merge rates.
+Genomic Validation: Identified high GC bias (60–65%) and 98% sequence uniqueness, confirming biological origin rather than technical primer artifacts.
+Structural Audit: Manually verified genomic-to-adapter transitions to map fragmentation patterns.
+Strategic Outcome: Provided scientific justification to pivot the project strategy, preventing further resource waste on compromised data.
+
+4. Technical Consultation & Reporting for internal team and customs (2.5 Hours)
+Drafted the corrected rationale for DE significance for team and clients.
+Authored a professional DNA Degradation Analysis Report detailing the debugging process and root-cause findings.
+Briefed the team on insert size research strategies, GC content bias, and sequence complexity validation.
+
+5. System Monitoring & Maintenance (1.5 Hours)
+Monitored memory usage and storage capacity for upcoming hardware upgrades.
+Evaluated disk write speeds and overall system stability.
+Verified automatic start-up protocols for essential analysis software.
+
+Total Hours Worked: 14 Hours
+Date of Submission: May 21, 2026
+
+===============================================================================================================================================================================================
+Weekly Work Report
+Period: May 22, 2026 – May 28, 2026
+Prepared by: Gao Zhen
+Total Hours: 23 Hours
+
+1. Research about how to intergrtate the experienced staff's procedures to agent (5 Hours)
+Providede the detailed procedures for the new staffs to use agent with aims:
+1.1 avoid the data loss or damage to system
+1.2 assure the data integrity
+1.3 fully usage of the expriences of senior staff in the beginging and reduce the dependency of the senior staffs later
+
+2. remote system manegement (1 Hour)
+
+3. local system mangement, hardware installation, and driver update (16 Hours)
+3.1 Totally reorganized the physical systems
+3.1 Installed the SSD drive
+3.2 updated some hardware drivers
+
+4. Technical Consultation & Reporting for internal team and customs (1 Hours)
+Briefed the team on on hardware, agents, and manegement.
+
+Total Hours Worked: 23 Hours
+Date of Submission: May 28, 2026
+===============================================================================================================================================================================================
+Weekly Work Report
+Period: May 22, 2026 – May 28, 2026
+Prepared by: Gao Zhen
+Total Hours: 23 Hours
+
+1. Agent Integration & SOP Standardization for new staff (5 Hours)
+Research and development on integrating expert Standard Operating Procedures (SOPs) into AI agents.
+1.1 Disaster Prevention: Developed detailed protocols to mitigate data loss and system-level damage for new staff when using the agent.
+1.2 Data Integrity: Established verification steps to ensure data integrity within agent workflows.
+1.3 Knowledge Transfer: Codified senior staff expertise into the agent usage to accelerate new staff onboarding and reduce long-term dependency on senior resources.
+
+2. Remote System Management (1 Hour)
+Performed routine maintenance and configuration via SSH.
+
+3. Infrastructure Stabilization & Hardware Management (16 Hours)
+3.1 Physical Infrastructure Reorganization: Conducted a comprehensive audit and reorganization of server hardware components to enhance system stability and airflow.
+3.2 Firmware Restoration: Successfully performed low-level firmware restoration.
+3.3 Storage Expansion: Integrated an 8-TB SSD subsystem and stabilized external HDD array for high-capacity data processing.
+3.4 Memory Optimization: Conducted high-load memory training and diagnostic testing to ensure 128GB RAM stability in a Quad-Channel configuration.
+
+4. Technical Consultation & Internal Briefing (1 Hour)
+Briefed the internal team on the latest hardware infrastructure status.
+Provided technical guidance on system management strategies.
+
+5. RNA-seq Custom Group Integration (4.5 Hours)
+upsteam sample setup
+Nextflow pipeline running
+downstream analysis with 15-20 files, plots, and reports(depends on the sample number and comparison number )
+
+Total Hours Worked: 23 Hours
+Date of Submission: May 28, 2026
+
+===============================================================================================================================================================================================
+
+scRNA 3 hours already done
+===============================================================================================================================================================================================
+Weekly Work Report
+Period: May 29, 2026 – June 4, 2026
+Prepared by: Gao Zhen
+Total Hours: 17
+
+1. Secure File Transfer (sFTP) Configuration (5 Hours)
+Successfully configured sFTP access for a headless server lacking a static public IP or domain name.
+Implemented a secure tunneling/gateway solution to ensure reliable file access for remote users.
+
+2. Remote System Management & User Administration (2 Hours)
+Performed routine system maintenance and security configuration via SSH.
+Conducted root-cause analysis for intermittent network instability.
+Provisioned a new user account for Dr. Shi Jing.
+
+3. Infrastructure Stabilization & Hardware Management (3.5 Hours)
+Emergency Response: Responded to two unplanned system shutdowns caused by power failures.
+Onsite Maintenance: Conducted two site visits to the server room to diagnose and resolve hardware issues.
+Redundancy Implementation: Performed a full system reset and established a robust triple-redundancy connection (2x wired Ethernet, 1x wireless) to prevent future downtime.
+
+4. Technical Consultation & Internal Briefing (2 Hours)
+Briefed the internal team on the current status of the hardware infrastructure and recent stabilization efforts.
+Provided technical guidance on system management strategies.
+Investigated and documented multiple diagnostic paths for resolving persistent internet connectivity failures.
+
+5. RNA-seq Data Integration & Bioinformatics Pipeline (4.5 Hours)
+Upstream: Managed sample configuration and metadata setup.
+Processing: Executed and monitored the Nextflow pipeline.
+Downstream: Conducted analysis on 15–20 files, including the generation of comparative plots and comprehensive reports.
+
+
+Total Hours Worked: 17 Hours
+Date of Submission: Jun 4, 2026
+
+===============================================================================================================================================================================================
+===============================================================================================================================================================================================
+Weekly Work Report
+Period: Jun 4, 2026 – Jun 11, 2026
+Prepared by: Gao Zhen
+Total Hours: 24 Hours
+
+1. RNA-seq Data Reanalysis & Answering Systemic Questions (4.5 Hours)
+Totally re-analyzed based on customer's refined requirements.
+Answered multiple questions about RNA-seq data strategies, design, and analysis.
+
+2. Project Communication, data delivery & Internal Briefing (2.5 Hours)
+Discussed with the internal team and outside customers for technical issues.
+Discussed the module finished, project priority, status, and plan.
+Provided the data for SFTP download and activated sFTP 
+
+3. Single-Cell RNA-seq Pipeline Development (8 Hours)
+Reviewed current mainstream scRNA-seq protocols, analysis strategy, and environments.
+Developed the Nextflow scRNA-seq pipeline: standard input and output, options in different steps.
+Researched the module developed by Henan Li.
+
+4. System Management and Data Reorganization (1.5 Hours)
+Moved all genome data to the new SSD for more frequent access.
+Deleted outdated data and set working project repository to the new SSD for better performance.
+
+5. Didelphis virginiana RNA-seq (7.5 Hours)
+System review and design the research strategies for the genome without annotation.
+Downloaded the newest Didelphis virginiana and Monodelphis domestica genomes and built 4 types of indexes by STAR, HISAT2.
+Annotated the Didelphis virginiana genome using the closely related species with clear genome annotation, Monodelphis domestica.
+
+Total Hours Worked: 24 Hours
+Date of Submission: Jun 11, 2026
+
+===============================================================================================================================================================================================
+===============================================================================================================================================================================================
+
+Weekly Work Report
+Period: Jun 11, 2026 – Jun 18, 2026
+Prepared by: Gao Zhen
+Total Hours:  14 hours  ==== + ==== 16 Hours (Do NOT count the 16 hours for Didelphis virginiana and AI tools)
+
+1. Jinpeng wgs project & explain Answering Systemic quality Questions (2.5 Hours)
+Analysis the sample quality and sytem review the quanlity of each samples.
+Answered multiple questions why each of samples are low quality.
+
+2. Identification of Chinese hamster species/cells and strains （5.5 hours）
+Downloade the CHO reference genome, annotation and peformed the 3 types of index 
+Determinated the sample belongs to Chinese hamster cells
+Determinated the sample belongs to CHO-K1 or CHO-s
+Communicated within internal team , Summary the results with evidence and Compose the Research Report for external customers. 
+
+3. Check all detailed outputs and Repeated the demo of li-henan single cell (2 Hours)
+run demon, check the details of outputs
+Compare the difference of the outputs with standard nf-core scRNAse.
+
+4. The integration of AI agent in Positron IDE (1 Hours)
+
+5. Report the details of rationale for projects within team (3 hours) 
+Report the serious techinical issue of for the Didelphis virginiana projects 
+Report the system requirement of 30x wgs and our server situation
+Suggest the modification of internal sample name and format
+
+========================== Do Not Count the following ============================= 
+6. Didelphis virginiana RNA-seq (7 Hours)
+Repeated the failed genome liftoff.
+Check all the details of outputs of each samples in each day 
+monitor the system burdon and other softwars running
+
+7. System review the price, the power, the performance of many AI tools (9 Hours)
+Including cli , sytem bar tools, standalone tools, the intergration front-end tools.
+The diffent token comsuption of each tool combination the cost
+Observe the quicky charging system and get the one mos cost-effective . 
+
+Total Hours Worked: 14 hours  ==== + ==== 16 Hours (Do NOT count the 16 hours for Didelphis virginiana and AI tools)
+Date of Submission: Jun 18, 2026
+
+
+===============================================================================================================================================================================================
+===============================================================================================================================================================================================
+Weekly Work Report
+Period: Jun 11, 2026 – Jun 18, 2026
+Prepared by: Gao Zhen
+
+Total Billable Hours: 14 Hours (Core Projects)
+Internal R&D / Tech Debt: 16 Hours ( Do Not count these two items please)
+
+1. WGS Project Quality Control & Root Cause Analysis (2.5 Hours)
+Performed systematic Quality Control (QC) for the Jinpeng WGS project.
+Provided technical justification and data-driven evidence explaining the low-quality metrics across multiple samples, 
+report the team the details of quality issues and the rationale.
+
+2. Genomic Profiling of Chinese Hamster Strains (5.5 Hours)
+Download for the CHO reference genome and annotations, and peformed the 3 types of index. 
+Successfully identified the cell line origin and differentiated between CHO-K1 and CHO-S strains.
+Authored a comprehensive Research Report for external clients, providing evidence-based verification of cell line authenticity.
+
+3. Single-Cell RNA-seq Benchmarking (2 Hours)
+Validated the Li-Henan single-cell pipeline by replicating demo runs and auditing detailed outputs.
+Conducted a gap analysis between the internal pipeline and the nf-core/scrnaseq standard, identifying specific output variances for future optimization.
+
+4. Workflow Optimization: AI Agent Integration (1 Hour)
+Integrated AI-driven coding agents into the Positron IDE to remote server management and R-based visualization workflows.
+
+5. Strategic Technical Briefing & Infrastructure Planning (3 Hours)
+Briefed the internal team on the high-complexity genomic challenges encountered in the Didelphis virginiana project.
+Defined system requirements for 30x WGS coverage and assessed current server capacity.
+Proposed a standardized modification for internal sample naming conventions and metadata formats to improve pipeline compatibility.
+
+========= [Internal Technical Tracking - do Not count hours] =========
+
+6. Didelphis virginiana RNA-seq Pipeline (7 Hours):
+Resolved failed genome liftoff tasks due to high scaffold fragmentation (500k+ scaffolds).
+Monitored system load and memory allocation and output everyday.
+Check all the details of outputs of each samples in each day.
+
+7. AI Ecosystem Performance & Cost Analysis (9 Hours):
+Benchmarked various AI Agents (CLI, IDE-integrated, standalone, local open-source AI tools, and frontend pair programming tools) for bioinformatic workflows.
+Conducted a cost-performance audit to identify the most cost-effective token-consumption model for long-running server-side tasks.
+
+Total Hours Worked: 14 hours  ==== + ==== 16 Hours (Do NOT count the 16 hours for Didelphis virginiana and AI tools)
+Date of Submission: Jun 18, 2026
+
+===============================================================================================================================================================================================
+===============================================================================================================================================================================================
+Weekly Work Report
+Period: Jun 18, 2026 – Jun 25, 2026
+Prepared by: Gao Zhen
+
+Total Billable Hours: 19 Hours (Core Projects)
+Internal R&D / Tech Debt: 4 Hours (Do Not count please)
+
+1. Genomic Profiling of Chinese Hamster Strains (4 Hours)
+Use all the 30X fastq data to rerun the identification CHO and differentiated between CHO-K1 and CHO-S strains.
+Get all unmapping reads, do denoval assemble, filteriing the CHO reads to get the external genes 
+(Still running and take large resources)
+
+2. WGS pipeline setup and test run (4 Hours)
+Set up all the enrienments
+Set the pipeline from nf-core/wgs and test run 
+Now the pipeline is ready to run real samples
+
+3. the rRNA,  dimer analysis, and unimapping gene analysis for mouse samples (7 Hours) 
+Composed the samples table and run the pipeline
+The inital run cost all resources due to the large rRNA content caused pipeline failed
+Figured the detaild reason for failure: the primary reason is memory is exhasued (OOM) and the second is the running time is way too long and been killed by the system
+(Both the reason is cuased by the large rRNA content as root cause of the failure)
+The second run was successful with 1/3 samples sucessed 
+Determined the all the dimer percentage
+Determined the all the unimapping gene analysis 
+Performed alld regular rRNA analysis but still hugne amout of samples cannot be Determinated the sourcess 
+Further detrmination of the rRNA content with the Metagenomec Methods () and detemined the species and the possible reasons of contaimination
+Send client analysis report
+
+4. Workflow Optimization:  Claude Code Cli coding agents (1 Hour)
+Integrated Claude Code Cli coding agents, created reugular setting markdown files for cross analysis general requrements.
+
+5. Strategic Technical Briefing & Infrastructure Planning (4 Hours)
+Briefed the internal team on the 4 types of Metagenomics pipeline.
+Briefed the internal team on the complex and mulitple RNAseq quality issues of mouse samples.
+Briefed the internal team on the cost of Cloud Based analysis without storage.
+Briefed the internal team on methods, machine time, and hand time of transgene discovery based on the CHO genes excluded fastq reads.
+
+Proposed a standardized modification for internal sample naming conventions and metadata formats to improve pipeline compatibility.
+
+========= [Internal Technical Tracking - do Not count hours] =========
+
+6. Didelphis virginiana RNA-seq Pipeline (4 Hours):
+Finished all the analysis of Didelphis virginiana RNA-seq Pipeline.
+Created the report about the mulitple steps and all known quality issues, as well as how to understanding of the plots
+Add all results and report for delivery. 
+
+
+Total Hours Worked: 19 hours  ==== + ==== 4 Hours (Do NOT count the 4 hours for Didelphis virginiana)
+Date of Submission: Jun 25, 2026
+
+===============================================================================================================================================================================================
+===============================================================================================================================================================================================
+Weekly Work Report
+Period: June 18, 2026 – June 25, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 19 Hours (Core Projects)
+Internal R&D / Tech Debt: 4 Hours (Do Not count please)
+Date of Submission: June 25, 2026
+
+1. Genomic Profiling of Chinese Hamster Strains (2.5 Hours)
+Utilized 30X coverage FASTQ data to rerun strain identification for CHO as well as CHO-K1 and CHO-S strains.
+Extracted unmapped reads for de novo assembly and filtered against CHO reference genomes to identify external/transgene sequences.
+Status: Ongoing; processing requires significant computational resources.
+
+2. WGS Pipeline Setup & Validation (4 Hours)
+Configured the complete environment for Whole Genome Sequencing (WGS) analysis.
+Deployed the nf-core/wgs pipeline and performed successful test runs to ensure workflow stability.
+
+3. rRNA, Dimer, and Unimapping Analysis of Mouse Samples (6.5 Hours)
+Understanding the analysis aims and design of the analysis strategies
+Composed the samples table and run the pipeline
+Resolved pipeline failures caused by exceptionally high rRNA content in initial runs.
+Figured the detaild reasons for the failure: the primary reason is memory is exhasued (OOM) and the second is the running time is way too long and been killed by the system
+(Both the reason is caused by the large rRNA content as root cause of the failure)
+The second run was successful with 1/3 samples loaded 
+Processed all samples; quantified dimer percentages, rRNA percentage and performed uni-mapping gene analysis.
+Executed metagenomic analysis (kraken2 contamination) on unclassified reads to identify specific contaminant species,
+as well as the possible source for contamination:  Mesomycoplasma hyorhinis, Vibrio furnissii, and Cutibacterium acnes
+Composed and Delivered comprehensive analysis report.
+
+4. Workflow Optimization: Coding Agents (2 Hour)
+Integrated Claude Code CLI coding agents into the development workflow.
+Developed standardized Markdown configuration files to streamline cross-analysis requirements and general project settings.
+Used the side agent to do work in parallel with the main agent.
+
+5. Strategic Technical Briefing & Infrastructure Planning (4 Hours)
+Technical Briefing: Presented four types of Metagenomics pipelines and addressed complex RNA-seq quality issues identified in recent mouse samples.
+Cost Analysis: Briefed the internal team on the cost-efficiency of Cloud-based analysis (excluding storage).
+Methodology: Outlined machine time, manual labor requirements, and specific methods for transgene discovery based on CHO-excluded FASTQ datasets.
+Contaimination Tracting: discuss the possible reasons of variable contaiminations
+
+
+[Internal Technical Tracking - Non-Billable]
+6. Didelphis virginiana RNA-seq Pipeline (4 Hours):
+Completed full analysis and generated technical reports detailing multi-step processing and quality control metrics.
+Finalized all deliverables and visualizations for delivery.
+
+
+Total Hours Worked: 19 hours  ==== + ==== 4 Hours (Do NOT count the 4 hours for Didelphis virginiana)
+Date of Submission: Jun 25, 2026
+
+
+
+===============================================================================================================================================================================================
+===============================================================================================================================================================================================
+Weekly Work Report
+Period: June 25, 2026 – July 02, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 20 Hours (Core Projects)
+
+1. Genomic Profiling of Chinese Hamster Strains (1 Hour)
+Wrapped up 30x WGS (Whole Genome Sequencing) for strain identification of CHO, CHO-K1, and CHO-S.
+Characterized the detailed structure of transgene inserted sequences.
+Delivered a comprehensive research report for strain and detailing the structure of transgene.
+
+2. rRNA, Dimer, and Unimapping Analysis of Human/Mouse Samples (3.5 Hours)
+Provided an enhanced customized version of the statistical analysis.
+Conducted extensive reading and communication regarding experimental design, workflow, and troubleshooting of failed runs (identifying potential contamination and high rRNA/dimer ratios).
+Discuss the analysis strategy for ultra-low input human samples, incorporating UMI (Unique Molecular Identifiers) integration to improve quantification accuracy.
+Custom meetings to discuss all kinds of technical characteristics and the reason for failure and improvement plan.
+
+3. Pathway Enrichment Analysis Setup: Standard & Customized (3.5 Hours)
+Completed installation and configuration of essential genomic databases.
+Performed top-level GO, KEGG, and GSEA (Gene Set Enrichment Analysis).
+Established a customized pathway analysis framework (currently a semi-automated version for bespoke requirements).
+
+4. Jinglong RNA-seq Project & Meeting (4 Hours)
+Completed standard RNA-seq processing and Top layer of GO KEGG GSEA analysis
+Three tiers of customized pathway enrichment analysis
+(including two iterative updates).
+Meeting Conducted a technical tutorial for the client on result interpretation, focusing on gene/pathway search strategies and the biological significance of various plots.
+
+
+5. Debugging of Low-Yield sgRNA-seq Project (4 Hours)
+Reviewed all project communications, experimental goals, and sequencing parameters.
+Investigated causes for low read counts in the sgRNA-seq project.
+Explored data recovery by analyzing Undetermined reads from the flow cell.
+Concluded that the issue was specific to the sgRNA library preparation, as all other samples in the same multiplexed run yielded normal read volumes.
+
+6. Project Communication & Internal Coordination/Meeting  (2.5 Hours)
+Coordinated internally to align with client failure reports and expectations.
+Presented an internal report on rRNA project failures, outlining root causes and mitigation plans.
+Negotiated service fees for customized pathway analysis and dedicated technical tutorials.
+Participated in a technical meeting with Zuo Song and Jin Shi to accelerate the WGS pipeline.
+
+7. Pipeline Optimization & Server Maintenance (1.5 Hour)
+Optimized the bioinformatics pipeline by removing redundant QC steps to improve throughput.
+Design the best parallel for the pipeline.
+Increased swap space on the server to handle memory-intensive genomic tasks.
+
+Total Hours Worked: 20 Hours
+Date of Submission: July 02, 2026
+
+===============================================================================================================================================================================================
+Weekly Work Report
+Period: July 03, 2026 – July 09, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 35 Hours
+
+1. Mapping-Based Metagenomics Pipeline Infrastructure Setup (2 Hours)
+Installed and test-validated nf-core/taxprofiler 2.0.1 (shotgun metagenomics taxonomic classification) in a dedicated environment;
+full test profile passed (103 processes succeeded, 0 failed).
+
+2. Assembly-Based Metagenomics Pipeline Infrastructure Setup (3 Hours)
+Installed and test-validated nf-core/mag 5.4.2 (assembly + multi-binner MAG recovery and classification);
+test profile passed (195 processes succeeded).
+
+3. RNA-seq Multi-Projects — 4 Clients (13.5 Hours)
+Lijian Wu (mouse) (2.5 h)
+Regular RNA-seq complete analysis from upstream to downstream analysis including the top-level pathway enrichment analysis.
+Yue Liu (2.5 + 2.5 h),
+Analyzed and integrated a legacy sequencing batch with a new NovaSeq batch for the Yue Liu time course.
+Splitting into independent same-batch models and combinations, and structured output into Reliable vs. Unreliable-CrossBatch folders.
+Qiuchen Li (2.5 + 1 h)
+Regular RNA-seq complete analysis from upstream to downstream analysis including the top-level pathway enrichment analysis.
+Full re-analysis after removal of a mislabeled sample (A5BKO_2)
+Zhen Yan (2.5 h)
+Regular RNA-seq complete analysis from upstream to downstream analysis including the top-level pathway enrichment analysis.
+Replied to the technical questions.
+
+4. Humanized Knock-in Mouse WGS — Ellen Chen / genetargeting.com (5 Hours, still running)
+Decoding three targeted knock-in constructs:
+RAGH (humanized cytokines into Rag2),
+MTTH (full human HTT replacing mouse Htt), and
+CD1A (ENTIRE human CD1 gene cluster).
+Test running with 1 sample to find the best setting as all samples were not available initially.
+Full 6-sample run currently in BWA-MEM2 alignment (~1/3 of tasks done), 0 failures.
+Downstream integration / copy-number / KI-integrity / zygosity / Neo-status scripts (11 total) queued to run after alignment and variant calling.
+
+5. Gene-Edited Tumor & Lats1/2 Ovarian Cancer Model WGS — Jinpeng Ruan / MGH (6 Hours, still running)
+Set up a 12-sample, two-study WGS project (463 GB):
+Study A = Trp53/Brca/Pten CRISPR tumor model with a matched parental normal;
+Study B = Lats1/2-flox Hippo mouse strains across 3/12/18-month ages.
+Researched the biological framework (HGSOC ovarian-cancer model; Lats1/2 loss and iHPV E6/E7 biology) and reframed Study B hypotheses after the client
+clarified the mice are flox-only with no Cre (constructs "loaded but not fired").
+Designed the no-control analysis strategy: control-free CNV/aneuploidy/ploidy calling plus Sanger Mouse Genomes Project VCFs as a surrogate germline filter,
+with within-batch mutual controls; recommended the client add a matched normal.
+Progress (Study A, ~23 h in): all 6 samples aligned and deduplicated; now in QC and Mutect2 tumor-vs-origin somatic calling, 0 failures. Study B (Lats1/2-flox) pending.
+
+6. Client Communication, Method Discussion & Material Requests (4 Hours)
+Conducted extended WeChat discussions on analysis strategy and client technical questions across the WGS projects.
+Requested and recovered critical missing materials via emails.
+Confirmed and documented client research objectives (integration verification, copy number, knock-in sequence integrity) in place of prior inference.
+Extensive internal team discussions on the WGS projects, including the client's research objectives, the pipeline's output, and the pipeline's methodologies.
+Review and report the system requirements for assembly based Metagenomics.
+The feasibility of running Metagenomics projects in a local server.
+Evaluate the cost of running Metagenomics projects in cloud environments.
+
+7. Methodology, AI Pipeline Improvements (1.5 Hours)
+Composed the AI methodologies for kinds of automation; installed quite a few plugins, MCP. Incubated 6 AI skills.
+Trained the harness rules for trustable output.
+Integrated the models for results interpretation and reporting.
+
+Total Hours Worked: 35 Hours
+Date of Submission: July 09, 2026
+
+===================
+Weekly Work Report
+Period: July 09, 2026 – July 16, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 18 Hours
+1. Humanized Knock-in Mouse WGS — Ellen Chen / genetargeting.com (3 Hours)
+Monitored pipeline execution in parallel with the Jinpeng project during a 48-hour continuous run.
+Successfully finalized the data analysis and generated the final report, covering targeted integration verification, copy-number estimation, Knock-In (KI) integrity, zygosity determination, and Neo-cassette status.
+2. Computational Resource Management — Jinpeng Ruan WGS Project (2 Hours)
+Actively monitored the 96-hour continuous pipeline execution for the large-scale MGH project.
+Dynamically reallocated and optimized server computational resources to prevent I/O bottlenecks, ensuring robust stability and maximizing processing speed for the 463 GB dataset.
+3. Gene-Edited Tumor & Lats1/2 Ovarian Cancer Model WGS — Jinpeng Ruan / MGH (10 Hours)
+Successfully completed and delivered the 12-sample, two-study WGS project (463 GB of raw fastq.gz data):
+Study A: Trp53/Brca/Pten CRISPR tumor model with a matched parental normal.
+Study B: Lats1/2-flox Hippo mouse strains across 3/12/18-month ages.
+Performed comprehensive data analysis tackling complex genomic challenges, including mutation profiling, copy number variation (CNV), and zygosity determination.
+Characterized structural rearrangements and mutations specifically targeting relevant oncogenes and tumor suppressor genes.
+Strategic adjustment: Upon discovering exceptionally high background variances during initial analysis, I strategically shifted the mapping pipeline to the most standard reference genome utilized in gene-editing projects. Re-executed the analysis, yielding highly accurate and biologically reasonable results.
+4. WGS Project Initialization — Wenliang Pan (2 Hours)
+Set up the computational environment and pipeline for Wenliang Pan's WGS project.
+Designed a targeted bioinformatics strategy for HLA (Human Leukocyte Antigen) typing and analysis.
+Status: Pipeline execution is nearly complete; final data interpretation and report generation are scheduled for tomorrow.
+5. Client Communication & Project Management (1 Hour)
+Conducted extensive technical communication via WeChat and email to support data analysis, discuss methodologies, and manage material requests across 4 active projects.
+Total Hours Worked: 18 Hours
+Date of Submission: July 17, 2026

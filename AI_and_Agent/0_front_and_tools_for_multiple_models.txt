@@ -1,0 +1,46 @@
+
+Aider / continue / Open Interpreter # 可以配合各种model ，但大多数需要付费获取token
+
+Claude Code CLI？ vs Cluade Code positron plugin
+
+Ollama download and installation tools # 可以下载多种模型，在本地跑
+
+
+
+. 为什么在生信（Bioinformatics）场景下，CLI 版完胜？
+你的工作流（STAR 索引、Liftoff 注释、8 个样本比对）是长路径、多依赖的。
+场景：处理 FATAL ERROR: limitGenomeGenerateRAM
+使用插件 (Positron/Continue)：你复制报错 
+ AI 告诉你改参数 
+ 你改完 
+ 运行又报别的错 
+ 你再复制。
+使用 Claude Code CLI (Agent)：你下令：“帮我跑通 STAR 索引”。它运行 
+ 发现内存报错 
+ 它直接查看你的 free -m 
+ 它算出来 genomeChrBinNbits 应该改到 11 
+ 它直接用 sed 改了你的脚本 
+ 它重新提交任务。
+结论：Agent 替你完成了“观察-决策-执行”的闭环。
+
+3. 那为什么不“只用” Claude Code CLI？ vs Cluade Code positron plugin？
+
+既然 CLI 这么强，为什么还要 Aider 或 Open Interpreter？
+Aider 的特殊优势（手术刀）：
+Aider 对 Git 的支持是目前所有 AI 工具里最强的。它修改代码后会自动撰写提交信息（Commit Message）。在生信分析中，如果你在不断调整差异分析的阈值，Aider 能帮你把每一次改动都记录得清清楚楚。
+Open Interpreter 的特殊优势（实验室主任）：
+
+OI 默认支持 R 语言和数据分析。它更倾向于“处理数据”而不是“写软件”。它能直接在终端画出 ASCII 图表，或者直接操作你的本地文件生成分析报告。
+Claude Code CLI 的局限（贵且封闭）：
+Claude Code 是 Anthropic 官方的，目前还在公测（Beta），它的 Token 消耗极其巨大。它每一步“思考”都会产生大量的上下文，这也就是为什么你 3 天能花掉 $41 的原因。
+
+
+c:/Users/zhen-/.continue/config.yaml
+name: Local Config
+version: 1.0.0
+schema: v1
+models:
+  - name: Claude Opus 4.6
+    provider: anthropic
+    model: claude-opus-4-6
+    apiKey: "s“

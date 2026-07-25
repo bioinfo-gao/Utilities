@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# 大文件自动拦截 —— /git skill 的核心目标：系统自动检测，免去手动逐次排查的痛苦。
+# 任何暂存文件 > LIMIT_MB 直接拒绝 commit，列出文件并提示如何处理。
+# 生效方式：git config core.hooksPath .githooks（本仓库已设）。
+# 紧急放行（确知无害）：git commit --no-verify
+LIMIT_MB=10
+LIMIT=$(( LIMIT_MB * 1024 * 1024 ))
+big=""
+# 只查将被提交的新增/修改文件（--diff-filter=AM），用暂存 blob 的真实大小
+while IFS= read -r -d '' f; do
+    [ -f "$f" ] || continue
+    sz=$(git cat-file -s ":$f" 2>/dev/null || stat -c %s "$f" 2>/dev/null || echo 0)
+    if [ "$sz" -gt "$LIMIT" ]; then
+        big+=$(printf '  %6.1f MB  %s\n' "$(echo "scale=1; $sz/1048576" | bc)" "$f")$'\n'
+    fi
+done < <(git diff --cached --name-only --diff-filter=AM -z)
+
+if [ -n "$big" ]; then
+    echo "❌ pre-commit 拦截：以下暂存文件超过 ${LIMIT_MB} MB —" >&2
+    printf '%s' "$big" >&2
+    echo "" >&2
+    echo "大文件（数据/中间结果/大交付表）不应进 git。请二选一：" >&2
+    echo "  1) 加进 .gitignore（可再生数据），然后 git rm --cached <file> 撤出暂存；" >&2
+    echo "  2) 确知必须入库且无害 → git commit --no-verify 放行。" >&2
+    exit 1
+fi
+exit 0

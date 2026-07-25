@@ -1,0 +1,59 @@
+
+Windows Subsystem for Linux (WSL)WSL Oracle Linux 上安装 Git 
+
+Oracle Linux 上安装 Git 非常简单，因为它和 CentOS/RHEL (红帽企业Linux) 的操作基本一样，都使用 yum 或 dnf 作为包管理器。
+我将为你提供最常用、最直接的安装方法。
+
+通过包管理器安装 Git (最推荐、最简单)
+这是在 Oracle Linux 上安装 Git 的标准和首选方法。它会自动处理所有依赖关系。
+
+第一步：更新你的系统包列表
+
+在安装任何新软件之前，最好先更新一下系统的包索引。这能确保你安装的是最新的可用版本。
+打开你的 Oracle Linux Terminal，运行以下命令：
+
+sudo yum update -y
+
+sudo: 以超级用户（管理员）权限运行命令。
+yum update: 检查所有已安装的软件包并更新到最新版本。
+-y: 自动对所有提示回答“是”，这样安装过程中就不会被打断。
+注意: 如果你的 Oracle Linux 版本较新（比如 Oracle Linux 8 或 9），你可能需要使用 dnf 而不是 yum。
+但 yum 实际上是 dnf 的一个链接。dnf 是新一代的包管理器，但 yum 命令仍然可以正常使用。你也可以直接使用 sudo dnf update -y。
+
+第二步：安装 Git
+更新完成后，现在可以直接安装 Git 了。
+运行以下命令：
+
+sudo yum install git -y # 喜欢用 dnf： sudo dnf install git -y
+
+这个命令会从 Oracle Linux 的官方软件仓库中找到 Git 并进行安装。
+
+第三步：验证安装
+安装完成后，你可以通过检查 Git 的版本来验证它是否已成功安装。运行以下命令：
+
+git --version
+
+如果你看到类似下面的输出，就说明 Git 已经成功安装在你的系统上了：
+
+git version 2.47.3
+
+
+首次使用 Git 的基本配置 (强烈建议)
+
+在你开始使用 Git 之前，你应该为它设置你的用户名和邮箱地址。这个信息会附加到你的每一次提交（commit）上，让其他人知道是谁做了这些修改。
+
+这个配置是全局的，你只需要在新系统上做一次。
+
+1. 设置你的用户名
+
+git config --global user.name "WSL gao" # 你喜爱名字或昵称 (需要用引号括起来)。
+
+2. 设置你的邮箱地址
+
+git config --global user.email "bioinfo.gao@example.com" #你注册 GitHub/GitLab使用的邮箱地址。
+
+3. （可选）检查你的配置 ==>看你刚刚设置的信息是否正确：
+git config --list
+
+# 所有的 Git 配置，such as user.name 和 user.email。
+现在，你的 Oracle Linux 系统就已经完全准备好使用 Git 了！ 你可以继续执行我们之前讨论过的 git clone 和 git sparse-checkout 等操作了。

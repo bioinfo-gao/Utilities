@@ -1,0 +1,10 @@
+
+第一步：导航到你想要存放项目的目录
+首先，打开你的 Oracle Linux Terminal。
+
+# 切换到你的主目录 (home directory)
+code .
+
+# vs code popup in host computer automatically
+
+

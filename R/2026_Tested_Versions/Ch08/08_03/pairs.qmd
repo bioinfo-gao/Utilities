@@ -1,0 +1,193 @@
+---
+title: "R语言散点图矩阵（pairs函数）详解教程"
+format: 
+  html:
+    code-fold: true
+    toc: true
+    toc-depth: 3
+editor: visual
+---
+
+qmd file can be right-click ==\> open with text editor or quarto visual editor
+
+# R语言散点图矩阵（pairs函数）详解
+
+`pairs` 函数在 R 语言中用于生成**散点图矩阵**（Scatterplot Matrix）。它能够一次性展示数据框或矩阵中所有数值变量两两之间的散点图，是探索性数据分析（EDA）中非常强大的工具，有助于快速发现变量间的相关性、聚类趋势或异常值。
+
+## pairs函数的核心功能
+
+1.  **成对绘图**：生成一个网格，其中每个单元格 $(i, j)$ 显示变量 $i$ 和变量 $j$ 之间的关系。
+2.  **面板自定义**：允许用户为不同区域定义绘图函数：
+    -   `panel`：主散点图区域（默认为散点）。
+    -   `diag.panel`：对角线单元格（通常用于绘制直方图或密度图，以展示单变量分布）。
+    -   `upper.panel` / `lower.panel`：矩阵的上三角和下三角区域。
+3.  **分组着色**：支持根据因子变量（如 `iris` 中的物种）对点进行着色。
+4.  **公式接口**：支持公式写法（如 `~ x + y + z`），方便选择特定变量进行绘图。
+
+下面通过多个示例详细演示 `pairs` 函数的各种用法。
+
+## 示例1：带有分组着色的基本散点图矩阵
+
+此示例使用著名的鸢尾花（iris）数据集，根据物种对点进行着色。
+
+```{r}
+# iris[1:4]: 选择前4列数值型变量（花萼长度、花萼宽度、花瓣长度、花瓣宽度）
+# main: 图表的主标题
+# pch = 21: plotting character（绘图字符）21 是一个填充圆圈，允许分别控制边框颜色(col)和填充颜色(bg)
+# bg: 点的填充颜色。
+#     c("red", "green3", "blue") 定义了颜色 palette。
+#     unclass(iris$Species) 将因子水平（1, 2, 3）转换为整数，用作颜色向量的索引。
+pairs(
+  iris[1:4],
+  main = "Anderson's Iris Data -- 3 species",
+  pch = 21,
+  bg = c("red", "green3", "blue")[unclass(iris$Species)]
+)
+```
+
+## 示例2：使用公式接口并控制布局
+
+此示例演示如何使用公式接口选择特定变量，并控制矩阵的布局方向。
+
+```{r}
+# 公式接口: ~ Fertility + Education + Catholic 指定要绘制的变量
+# data = swiss: 指定包含这些变量的数据框
+# row1attop = FALSE: 将公式中的第一个变量放在最底行（符合标准矩阵布局习惯）
+# subset = Education < 20: 数据子集筛选，仅包含 Education 小于 20 的行
+# main: 图表标题
+pairs(
+  ~ Fertility + Education + Catholic,
+  data = swiss,
+  row1attop = FALSE,
+  subset = Education < 20,
+  main = "Swiss data, Education < 20"
+)
+```
+
+## 示例3：控制面板间距
+
+通过调整 `gap` 参数可以控制子图之间的间距，更有效地利用绘图区域。
+
+```{r}
+# USJudgeRatings: R 内置数据集
+# gap = 1 / 10: 减小子图之间的间距，以更有效地利用绘图区域
+pairs(USJudgeRatings, gap = 1 / 10)
+```
+
+## 示例4：仅显示下三角矩阵
+
+有时我们只需要查看一半的矩阵来避免重复信息，可以通过设置 `upper.panel = NULL` 来实现。
+
+```{r}
+# text.panel = NULL: 抑制对角线上的变量名称显示
+# upper.panel = NULL: 抑制上三角区域的绘图
+# 结果：只显示下三角的散点图
+pairs(USJudgeRatings, text.panel = NULL, upper.panel = NULL)
+```
+
+## 示例5：自定义对角线面板（直方图）和平滑曲线
+
+我们可以自定义对角线面板来显示变量的分布情况，这里使用直方图。
+
+```{r}
+# 定义一个自定义函数，用于在对角线上绘制直方图
+panel.hist <- function(x, ...) {
+  usr <- par("usr") # 保存当前的用户坐标参数
+  # 修改 y 轴范围为 0 到 1.5（归一化高度），同时保持 x 轴范围不变
+  par(usr = c(usr[1:2], 0, 1.5)) 
+  h <- hist(x, plot = FALSE) # 计算直方图数据但不直接绘制
+  breaks <- h$breaks
+  nB <- length(breaks)
+  y <- h$counts
+  y <- y / max(y) # 将计数归一化到 [0, 1] 范围
+  # 绘制直方图的矩形条
+  rect(breaks[-nB], 0, breaks[-1], y, col = "cyan", ...)
+}
+
+# 使用自定义面板的 pairs 调用
+# USJudgeRatings[1:5]: 使用前5个变量
+# panel = panel.smooth: 使用默认的平滑拟合线（loess）绘制散点图
+# cex = 1.5: 点的放大倍数
+# pch = 24: 向上指的填充三角形
+# bg = "light blue": 点的填充颜色
+# horOdd = TRUE: 为行添加交替的水平阴影背景（视觉辅助）
+# diag.panel = panel.hist: 对角线使用我们自定义的直方图函数
+# cex.labels = 2: 变量标签的大小
+# font.labels = 2: 变量标签的字体样式（2代表粗体）
+pairs(
+  USJudgeRatings[1:5],
+  panel = panel.smooth,
+  cex = 1.5,
+  pch = 24,
+  bg = "light blue",
+  horOdd = TRUE,
+  diag.panel = panel.hist,
+  cex.labels = 2,
+  font.labels = 2
+)
+```
+
+## 示例6：自定义上方面板（显示相关系数）
+
+在上三角区域显示相关系数是一个常见的需求，这样可以同时看到散点图和数值相关性。
+
+```{r}
+# 定义一个自定义函数，用于显示相关系数
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
+  par(usr = c(0, 1, 0, 1)) # 将坐标系设置为 [0,1] x [0,1]，便于文本定位
+  r <- abs(cor(x, y)) # 计算绝对相关系数
+  # 将相关系数格式化为指定小数位数
+  txt <- format(c(r, 0.123456789), digits = digits)[1]
+  txt <- paste0(prefix, txt)
+  
+  # 如果未提供 cex.cor（文本大小扩展参数），则动态计算
+  # 使得文本大小与相关性强度成正比：相关性越强，字体越大
+  if (missing(cex.cor)) {
+    cex.cor <- 0.8 / strwidth(txt)
+  }
+  # 在面板中心绘制文本
+  # cex = cex.cor * r 根据相关系数缩放文本大小
+  text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+
+# 使用自定义下三角和上三角面板的 pairs 调用
+# lower.panel = panel.smooth: 下三角绘制带平滑线的散点图
+# upper.panel = panel.cor: 上三角显示相关系数
+# gap = 0: 面板间无间距，外观更紧凑
+# row1attop = FALSE: 标准矩阵布局
+pairs(
+  USJudgeRatings,
+  lower.panel = panel.smooth,
+  upper.panel = panel.cor,
+  gap = 0,
+  row1attop = FALSE
+)
+```
+
+## 示例7：对数刻度
+
+当数据跨越多个数量级时，使用对数刻度可以更好地展示数据分布。
+
+```{r}
+# log = "xy": 对所有图的 x 和 y 轴应用对数刻度
+# iris[-5]: 排除第5列（Species物种列），仅使用数值数据
+pairs(iris[-5], log = "xy")
+```
+
+```{r}
+# log = 1:4: 仅对前4个变量（索引1到4）应用对数刻度
+# main: 标题
+# line.main = 1.5: 将主标题向外移动一点，避免重叠
+# oma = c(2, 2, 3, 2): 设置外边距（下、左、上、右），以容纳标签和标题
+pairs(
+  iris,
+  log = 1:4, # 对前四个变量取对数
+  main = "Lengths and Widths in [log]",
+  line.main = 1.5,
+  oma = c(2, 2, 3, 2)
+)
+```
+
+## 总结
+
+`pairs` 函数是R语言中进行多变量探索性数据分析的强大工具。通过灵活运用其各种参数和自定义面板函数，我们可以创建信息丰富且视觉效果良好的散点图矩阵。掌握这些技巧将大大提升你的数据分析效率和可视化能力。

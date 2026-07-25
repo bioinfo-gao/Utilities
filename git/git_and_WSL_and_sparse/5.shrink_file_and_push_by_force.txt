@@ -1,0 +1,23 @@
+1. 清除输出的操作您可以在 $\text{VS Code}$ 或 $\text{Jupyter Lab}$ 中执行此操作：在 $\text{VS Code}$ 中：
+
+
+
+
+打开这个文件。点击顶部的命令面板 。输入并选择 
+Jupyter: Clear All Outputs 命令。保存文件（这会把清除后的版本写入磁盘）。
+
+
+
+2. 重新提交和推送清除输出并保存后，您需要对 $\text{Git}$ 历史进行两步操作：步骤 A：丢弃旧的，添加新的由于旧的提交历史中仍然包含大文件记录，您需要先清除您本地的暂存区和工作区，然后用新版本替换。Bash# 假设该文件在上一提交中就已存在
+
+
+git add <文件名>
+git commit --amend --no-edit 
+
+
+
+步骤 B：强制推送 因为您修改了最后一次提交的内容（无论是 amend 还是新的提交），您仍然需要强制推送来覆盖远程仓库的历史。
+
+Bash
+
+git push origin master --force

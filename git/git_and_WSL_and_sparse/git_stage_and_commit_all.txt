@@ -1,0 +1,7 @@
+#adds all tracked files to the staging area and commits them in one step.
+
+git commit -a -m "new message"
+
+# will commit any files that have already been added to the staging area. you add files to the staging area using the git add command.
+
+git commit -m "new message"

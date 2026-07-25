@@ -1,0 +1,11 @@
+Sparse Checkout also in git_and_WSL/
+
+cd ./Code/Linux_and_Cluster_for_Omics/
+
+git add --sparse git_LFS/
+
+git add . 
+
+git commit -m "LFS"
+
+git push 

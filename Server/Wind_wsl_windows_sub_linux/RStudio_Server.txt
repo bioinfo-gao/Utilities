@@ -1,0 +1,22 @@
+连接本地 WSL 中的 RStudio Server 非常直接，通常只需三个步骤即可完成。
+
+第一步：在 WSL 中启动 RStudio Server
+首先，打开你的 WSL 终端，确保 RStudio Server 服务已经启动。运行以下命令：
+
+Bash
+sudo rstudio-server start
+你可以通过以下命令确认服务是否正在正常运行（看到 active (running) 即表示成功）：
+
+Bash
+sudo rstudio-server status
+第二步：在浏览器中访问
+打开 Windows 环境下的任意浏览器（如 Chrome 或 Edge），在地址栏输入以下默认地址并回车：
+
+Plaintext
+http://localhost:8787
+(注：WSL 2 默认会自动将网络端口映射到宿主机，所以直接使用 localhost 即可。)
+
+第三步：登录系统
+在弹出的 RStudio 登录界面中，输入你的 WSL Linux 系统的用户名和密码（而不是 Windows 的系统密码）。
+
+如果你不确定当前的 Linux 用户名，可以在 WSL 终端中输入 whoami 查看；如果忘记了 Linux 密码，可以输入 passwd 重新设置一个。

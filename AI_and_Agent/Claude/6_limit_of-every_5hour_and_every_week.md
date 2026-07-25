@@ -1,0 +1,7 @@
+Claude Pro ($20/month) uses a dynamic, token-based usage system rather than a strict numerical message cap. Limits are enforced across both a rolling 5-hour window and a weekly quota.The 5-Hour Rolling LimitAllowance: 
+You can send roughly 45 messages in a 5-hour window.Reset: It operates as a continuous rolling window from the time you send your first message in a cycle, rather than a fixed daily reset.Factors: 
+Exact counts fluctuate based on conversation length, file uploads, and system demand.The Weekly LimitAllowance: Most Pro users get between 40 and 80 hours of active Sonnet model usage per week.Reset: 
+The 7-day calendar cycle resets weekly.Factors that Drain Your Limits FasterLong Context Windows: Pasting massive documents or codebases consumes large amounts of tokens instantly, accelerating your limit.Heavy Tools: 
+Keeping multiple Model Context Protocol (MCP) servers active can add tens of thousands of tokens of overhead to every single message.If you hit your limit, you can either wait for your rolling window to reset, purchase additional usage credits, 
+or upgrade to a Max tier for higher limits.Could you share how many messages or prompts you typically send per day, and whether you are using Claude for long coding projects or casual text generation? 
+I can give you specific tips on how to manage your workspace and avoid hitting the lockouts.

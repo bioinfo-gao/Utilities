@@ -1,0 +1,15 @@
+# Real credentials — never tracked, lives in this tree but stays out of git
+Server/FTP/client_credentials.env
+
+# OS / editor / notebook cruft
+.DS_Store
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+
+# Generic large/regenerable data types (belt-and-suspenders; pre-commit hook also blocks >10MB)
+*.bam
+*.cram
+*.bai
+*.fastq*
+*.fq*

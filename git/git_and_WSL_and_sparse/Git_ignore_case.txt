@@ -1,0 +1,78 @@
+Git 如何处理忽略规则的大小写，其行为取决于两个关键因素：
+你的操作系统 (OS) 的文件系统。
+Git 的一个核心配置项 core.ignorecase。
+我将为你详细解释这背后的原理，并提供在所有情况下都有效的最佳实践。
+核心原理：Git 默认会“适应”你的操作系统
+1. 在 Windows 和 macOS (默认) 上：自动忽略大小写
+文件系统：Windows (NTFS) 和 macOS (APFS, 默认) 的文件系统是不区分大小写的 (case-insensitive)。这意味着在这些系统上，File.txt 和 file.txt 被认为是同一个文件。
+Git 配置：在这些系统上安装 Git 时，core.ignorecase 这个配置项默认会被设置为 true。Git 这样做是为了适应不区分大小写的文件系统，避免混淆。
+结果就是：
+当 core.ignorecase 为 true 时，.gitignore 里的规则会自动忽略大小写。
+示例：
+如果你的 .gitignore 文件里有这样一行：
+code
+Gitignore
+debug.log
+那么以下文件全部都会被忽略：
+debug.log
+Debug.log
+DEBUG.LOG
+dEbUg.lOg
+如何验证你的配置？
+在你的终端里运行：
+code
+Bash
+git config core.ignorecase
+如果在 Windows/macOS 上，你很可能会看到输出 true。
+2. 在 Linux 上：默认区分大小写
+文件系统：几乎所有的 Linux 文件系统 (如 ext4) 都是严格区分大小写的 (case-sensitive)。这意味着 File.txt 和 file.txt 是两个完全不同的文件。
+Git 配置：在 Linux 上安装 Git 时，core.ignorecase 默认会被设置为 false。
+结果就是：
+当 core.ignorecase 为 false 时，.gitignore 里的规则是严格区分大小写的。
+示例：
+如果你的 .gitignore 文件里有这样一行：
+code
+Gitignore
+debug.log
+那么只有 debug.log 会被忽略。而 Debug.log 或 DEBUG.LOG 不会被忽略。
+最佳实践：如何编写跨平台、始终有效的忽略规则
+既然不同系统的默认行为不同，如果你在开发一个需要跨平台协作（比如团队里有人用 Windows，有人用 Linux）的项目，那么编写明确的、不依赖系统配置的忽略规则就变得至关重要。
+这里有两种最佳实践方法：
+方法一：使用字符集 [] 来匹配大小写 (最推荐)
+你可以在模式中使用方括号 [] 来定义一个字符集，让 Git 匹配其中的任意一个字符。
+示例 1：忽略 Temp 文件夹，无论大小写
+code
+Gitignore
+# 忽略 Temp, temp, TEmP 等所有形式
+[Tt]emp/
+[Tt] 的意思是“匹配 T 或者 t”。
+示例 2：忽略所有 .log 或 .LOG 文件
+code
+Gitignore
+# 忽略 debug.log, debug.LOG, Debug.Log 等所有形式
+*.[Ll][Oo][Gg]
+这个方法虽然看起来有点繁琐，但它是最健壮、最明确的方式，可以保证你的忽略规则在任何操作系统上都按预期工作。
+方法二：明确列出所有可能性 (简单直接)
+如果可能性不多，直接把它们都列出来也是一个清晰的方法。
+示例：
+code
+Gitignore
+# 忽略 build 文件夹的大小写变体
+build/
+Build/
+
+# 忽略日志文件的大小写变体
+*.log
+*.LOG
+⚠️ 重要警告：不要轻易手动修改 core.ignorecase
+你可能会想：“我能不能在 Linux 上把 core.ignorecase 设置成 true 来简化规则？”
+强烈建议不要这样做！
+手动修改这个配置项，让它与你的文件系统的原生行为不匹配，会导致 Git 的索引（暂存区）和你的工作目录之间出现严重的不一致。这会引发各种奇怪且难以诊断的问题，比如：
+你重命名一个文件的大小写（file.txt -> File.txt），Git 可能检测不到任何变化。
+你可能会在 git status 中看到一些“幽灵”文件。
+在与大小写敏感的系统（如 GitHub 服务器）交互时，可能会出现文件名冲突。
+黄金法则： 始终保持 core.ignorecase 的值与你的文件系统的行为一致，并使用明确的 .gitignore 模式来处理跨平台的大小写问题。
+总结
+你的环境	默认行为	如何编写跨平台规则
+Windows / macOS	忽略大小写 (core.ignorecase=true)	使用 [Aa] 模式确保在 Linux 上也有效
+Linux	区分大小写 (core.ignorecase=false)	使用 [Aa] 模式来匹配 Windows/macOS 的行为

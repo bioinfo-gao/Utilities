@@ -1,0 +1,82 @@
+Git 忽略规则的三个层次
+
+Git 会按照从高到低的优先级，综合考虑以下三个地方的忽略规则：
+
+1. 本地仓库的 .gitignore 文件 (优先级最高)
+
+2. 当前用户的全局 .gitignore 文件
+
+3. Git 系统级的配置文件 (优先级最低，很少使用)
+
+===============
+
+1. 查看本地仓库的 .gitignore 文件 (最常用)
+这是你最常打交道的忽略文件。它位于你的项目仓库的根目录下，并且会随着项目一起被提交和分享给其他协作者。
+如何查看：
+这个文件可能被隐藏了（因为文件名以 . 开头）。
+在你的仓库根目录下，打开终端并运行：
+
+# 使用 cat 命令来显示文件内容
+cat .gitignore
+
+如果你想确认文件是否存在（并查看其他隐藏文件），可以运行：
+
+ls -a
+
+作用：定义只针对当前这一个项目的忽略规则。例如，项目的编译产物 (/build)、依赖文件夹 (/node_modules)、日志文件 (*.log) 等。
+
+2. 查看你个人全局的 .gitignore 文件
+每个 Git 用户都可以在自己的电脑上设置一个全局的忽略文件，它会应用到你在这台电脑上操作的所有 Git 仓库。
+如何找到并查看：
+
+首先，找到你的全局配置文件名叫什么：
+Git 把这个全局忽略文件的路径保存在它的配置里。运行以下命令来查找这个路径：
+
+git config --get core.excludesfile
+这个命令通常会输出一个路径，例如 ~/.gitignore_global 或 ~/.config/git/ignore。
+
+然后，查看这个文件的内容：
+使用上一步得到的路径，用 cat 命令来查看它。
+
+
+# 假设上一步得到的路径是 ~/.gitignore_global
+cat ~/.gitignore_global
+
+如果第一步命令没有任何输出**，说明你还没有配置全局忽略文件，这也是正常的。
+
+作用：定义那些与你个人工作环境相关的忽略规则，而不是与具体项目相关的。例如：
+操作系统自动生成的文件 (如 macOS 的 .DS_Store，Windows 的 Thumbs.db)
+
+你个人使用的编辑器或 IDE 的配置文件 (如 .vscode/, .idea/, Vim 的 *~)
+
+
+
+终极工具：检查某个文件到底被哪条规则忽略了
+
+有时候，一个文件被忽略了，但你不知道是本地的 .gitignore 规则还是全局的规则导致的。这时，git check-ignore 命令就是你的“侦探”。
+
+如何使用：
+
+这个命令可以精确地告诉你，某个文件是否被忽略，以及是哪一个文件的哪一行规则导致了它的忽略。
+使用 -v (verbose，详细) 参数来获取详细信息。
+
+示例：
+假设你想知道为什么 node_modules/express/index.js 这个文件没有被追踪。
+
+# 语法: git check-ignore -v <文件路径>
+git check-ignore -v LinuxCodes/WSL_git_sparse_checkout.txt
+
+$ git check-ignore -v LinuxCodes/WSL_git_sparse_checkout.txt
+C:/Users/zhen-/.gitignore_global:23:*.txt       LinuxCodes/WSL_git_sparse_checkout.txt
+
+git check-ignore -v LinuxCodes/lampLinux/Chapter11_shell_programming/7_if_check_backup/
+.gitignore:5:*backup/   LinuxCodes/lampLinux/Chapter11_shell_programming/7_if_check_backup/
+
+如果一个文件没有被忽略，这个命令将不会有任何输出。
+
+总结清单
+级别 (Level)	作用范围 (Scope)	如何找到并查看	典型用途
+本地 (Local)	仅当前项目	在项目根目录运行 cat .gitignore	项目的编译产物、依赖、日志等。应提交到仓库。
+全局 (Global)	当前用户的所有项目	1. git config --get core.excludesfile 找到路径<br>2. cat <路径> 查看内容	操作系统、IDE/编辑器相关的配置文件。不应提交到仓库。
+系统 (System)	本机所有用户的所有项目	(不常用，通常无需关心)	企业级的统一忽略策略。
+最终诊断工具	任意文件	git check-ignore -v <文件路径>	检查某个文件被哪条规则忽略了。

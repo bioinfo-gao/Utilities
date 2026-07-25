@@ -1,0 +1,42 @@
+Positron IDE 是基于 VS Code（Visual Studio Code）底层构建的，因此它在左侧边栏（资源管理器 Explorer）中处理显示或隐藏文件的方式与 VS Code 完全一致。
+你可以通过修改 files.exclude 设置来控制哪些文件在左侧边栏中隐藏或显示。以下是具体的操作步骤：
+
+方法一：通过图形界面设置（推荐）
+打开设置界面：
+Windows / Linux: 按下 Ctrl + , （逗号）
+Mac: 按下 Cmd + , （逗号）
+或者通过顶部菜单栏选择：File（文件） -> Preferences（首选项） -> Settings（设置）。
+
+搜索设置项：
+
+在设置界面顶部的搜索框中，输入 files or file.exclude。
+
+修改隐藏规则：
+搜索后，你会看到一个名为 "Files: Exclude" 的列表。这个列表里定义了所有被隐藏的文件或文件夹的规则（例如 **/.git 代表隐藏所有 .git 文件夹）。
+如果你想显示某个被隐藏的文件：在列表中找到对应的规则（比如 **/.* 代表隐藏所有以点开头的隐藏文件），将鼠标悬停在上面，点击右侧出现的 “垃圾桶”图标（删除模式）。
+如果你想隐藏特定的文件：点击 “添加模式 (Add Pattern)”，然后输入你想隐藏的文件名或通配符。
+例如：输入 **/.* 会隐藏所有以点开头的文件（如 .Rhistory, .gitignore）。
+例如：输入 **/.RData 可以单独隐藏 R 的工作空间文件。
+例如：输入 **/__pycache__ 可以隐藏 Python 的缓存文件夹。
+
+方法二：通过 settings.json 文件修改（适合进阶用户）
+如果你更喜欢直接修改配置文件：
+打开命令面板：按下 Ctrl + Shift + P (Mac: Cmd + Shift + P)。
+搜索并选择 Preferences: Open Settings (JSON)（首选项：打开设置(JSON)）。
+在打开的 JSON 文件中，找到或添加 "files.exclude" 这一项，通过将值设置为 true（隐藏）或 false（显示）来控制：
+code
+JSON
+{
+    "files.exclude": {
+        "**/.git": true,          // 隐藏 .git 文件夹
+        "**/.svn": true,          // 隐藏 .svn 文件夹
+        "**/.hg": true,           // 隐藏 .hg 文件夹
+        "**/CVS": true,           // 隐藏 CVS 文件夹
+        "**/.DS_Store": true,     // 隐藏 Mac 的系统文件
+        "**/.*": false            // 设置为 false 会强制显示所有以点开头的文件（如 .Rprofile, .env）
+    }
+}
+修改并保存该文件（Ctrl+S / Cmd+S）后，左侧边栏会立即更新。
+补充提示：
+搜索排除 (Search Exclude)：在 files.exclude 下方，你通常还会看到一个 search.exclude 设置。这个设置是用来控制哪些文件在全局搜索（左侧放大镜图标）中被忽略的。通常隐藏的文件也会自动在搜索中被忽略。
+如果你修改了设置但左侧边栏没有变化，可以点击左侧边栏顶部工具栏的 “刷新”图标 重新加载目录树。

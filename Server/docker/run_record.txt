@@ -1,0 +1,8 @@
+已经在后台启动了 demo 验证流程（任务 ID bwadlh97s），具体安排：
+
+脚本：/Work_bio/gao_test/cellranger_demo_rerun/run_demo_rerun.sh
+输入：复用同事原始的 demo fastq（Demo2/demo_fq，只读挂载）和 humanized_rat 参考库
+输出：全部写到新目录 /Work_bio/gao_test/cellranger_demo_rerun/，完全不会动 Demo2/01.QC 和 Demo2/N2-SI_TT_D1_23575YLT4 里已有的测试结果
+资源：按你的要求降低为 --localcores=6 --localmem=12（原脚本是 20核/80G），并加了注释说明原因，避免和你正在跑的 STAR 任务抢资源
+日志：/Work_bio/gao_test/cellranger_demo_rerun/run.log
+跑完会自动通知你，预计耗时会比原版（约1小时）更长一些（核数减少）。

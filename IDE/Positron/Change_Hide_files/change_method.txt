@@ -1,0 +1,17 @@
+我的Pisitron IDE 设置了不显示某些文件，现在需要重新安排，把不显示的显示出来，如何做
+Model 20:11
+ThinkingThoughts
+Expand to view model thoughts
+
+chevron_right
+由于 Positron IDE 是基于 VS Code 框架构建的，所以它隐藏和显示文件的设置逻辑与 VS Code 完全一致。
+你之前应该是修改了 files.exclude 设置。要重新显示这些文件，你可以通过以下两种最常用的方法来操作：
+方法一：通过图形化设置界面（最直观）
+打开设置：
+Windows/Linux: 按下快捷键 Ctrl + ,（或者点击左下角齿轮 ⚙️ -> Settings）。
+Mac: 按下快捷键 Cmd + ,。
+搜索设置项： 在页面顶部的搜索框中，输入 files.exclude。
+选择作用域（关键）：
+在搜索框下方，你会看到 User (用户) 和 Workspace (工作区) 两个标签卡。
+提示：如果你只是在当前项目隐藏了文件，请点击 Workspace；如果是全局隐藏，请点击 User。建议两边都检查一下。
+删除排除规则：

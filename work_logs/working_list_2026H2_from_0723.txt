@@ -1,0 +1,42 @@
+===============================================================================================================================================================================================
+Weekly Work Report
+Period: July 16, 2026 – July 23, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 27 Hours
+
+1. WGS Project – Wenliang Pan (2 Hours)
+Completed final data interpretation and report generation.
+Conducted mutation harmonization and comparative analysis of variants across samples.
+
+2. Shotgun Metagenomics (Mapping & De Novo Assembly) – Daniel Mendes (12 Hours)
+Configured and completed taxonomic classification and functional annotation pipelines.
+Successfully executed de novo assembly for the shotgun metagenomics data.
+Continuously monitored pipeline running status and computational performance.
+Summarized the complex datasets into two comprehensive analytical reports.
+
+3. Shotgun Metagenomics (Mapping-based) – Pengpeng Zhou (2 Hours)
+Configured and completed taxonomic classification and functional annotation.
+Summarized the analysis results into a final report.
+
+4. RNA-seq Analysis – Lijian Wu (1.5 Hours)
+Set up and monitored the RNA-seq data processing pipeline for 24 mouse samples.
+
+5. Client Communication & Methodology Explanation (4 Hours)
+Conducted extensive email communications 
+Address and resolve complex technical questions from multiple clients.
+
+6. Methodology & Workflow Setup (3 Hours)
+Iteratively refined and significantly improved the sample submission table to streamline future workflows.
+
+7. Internal Strategy & Project Management (1.5 Hours)
+Participated in extensive internal discussions regarding project prioritization, server performance, and workload outsourcing.
+Ranked and prioritized all current projects based on urgency and resources.
+Reported on computational performance and estimated timelines for each project/sample for different assays.
+Continuously coordinated and monitored dropbox data availability for upcoming tasks.
+
+8. System Monitoring & Data Management (1 Hour)
+Monitored system resources and server performance to ensure optimal computing.
+move 3T data from sold disk to external hard disk
+
+Total Hours Worked: 27 Hours
+Date of Submission: July 23, 2026

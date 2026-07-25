@@ -1,0 +1,114 @@
+##### ================== 大文件报错处理步骤 
+# 原文件在 zhen-/Code/Python_code/Python_Omics_DS/0C.Remove_the_trouble_some_LFS/  
+# 第一拷贝在 C:\Users\zhen-\Code\R_code\R_Omics_DS\00_All_Utilities_and_Tools\005A.rm_troublesome_LFS/
+# 本文是第三拷贝
+
+################ 
+git push origin master:master
+
+remote: error: GH008: Your push referenced at least 2 unknown Git LFS objects:        
+
+remote:     653797532d0985b516ad0593906cb279a4af3b527b10a3ffce0a1bbe4331fc3e        
+
+remote:     6e0f58d8c61b46e956a95e6950a4cacd105b1684f48f125333a801bab83ce0c0        
+
+remote: Try to push them with 'git lfs push --all'.        
+
+To github.com:bioinfo-gao/Python_Omics_DS.git
+
+ ! [remote rejected] master -> master (pre-receive hook declined)
+
+error: failed to push some refs to 'github.com:bioinfo-gao/Python_Omics_DS.git'
+
+git lfs push --all origin
+
+Git LFS upload missing objects:2), 0 B | 0 B/s
+
+  (missing) 11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 3/Car detection for Autonomous Driving/font/SIL Open Font License.txt (653797532d0985b516ad0593906cb279a4af3b527b10a3ffce0a1bbe4331fc3e)
+
+  (missing) 11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 4/Neural Style Transfer/Pretrained_Model_LICENSE.txt (6e0f58d8c61b46e956a95e6950a4cacd105b1684f48f125333a801bab83ce0c0)
+
+Uploading LFS objects:   0% (0/2), 0 B | 0 B/s, done. 我并不需要这两个文件，删除也完全没问题
+
+##### 下面这个方法根本不可能有，但被反复提，，现在untrac，但已经在git history 里永远报错
+git lfs untrack "11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 3/Car detection for Autonomous Driving/font/SIL Open Font License.txt"
+git rm "11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 3/Car detection for Autonomous Driving/font/SIL Open Font License.txt"
+git rm "11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 4/Neural Style Transfer/Pretrained_Model_LICENSE.txt"
+git commit -m "Remove unnecessary LFS files"
+git push origin master -f
+
+
+
+
+###############================
+###############================
+###############================ (1) 这里备份了git记，，以后可以恢复
+cd ..
+git clone --mirror Python_Omics_DS Python_Omics_DS.git
+
+
+
+###############================(2) cd Python_Omics_DS
+C:\Users\zhen-\Code\Python_code\Python_Omics_DS>
+
+###############================ (3)
+git log origin/master
+###############================ (4) 这一步需要小，务必完成了上面的git cline 或者 把关键文件拷贝到别处
+git reset --hard d775529 
+
+###############================（5）
+git reflog 查证提交失败的那个commit的hash值
+
+###############================ (6)
+# -- . 告诉 $\text{Git}$ 提取该提交中的所有文件到您的当前目录。
+# 从 17c0316 提交中，提取所有文件并覆盖工作区
+git checkout 17c0316 -- .
+
+###############================（7A）
+# 现在我们已经恢复了提交，我们可以继续进行提交操作，但我们需要注意以下几点：
+# 1. 我们需要确保提交中没有包含那两个大文件本身，否则提交会再次失败。
+# 2. 我们需要确保提交中没有包含那两个大文件的文件名，否则提交会再次失败。
+# 3. 我们需要确保提交中没有包含那两个大文件的文件名，否则提交会再次失败。
+
+不能 git add .： 如果您直接 git add .，您会提交整个工作区，而如果您的工作区中仍然包含那两个大文件本身，
+并且它们的文件名仍在 .gitattributes 中被 $\text{LFS}$ 追踪，
+那么新的提交仍然会引用那两个缺失的 $\text{LFS}$ 对象，导致推送再次失败。
+
+📌 解决方案：移除 LFS 标记并删除文件我们现在需要执行的步骤是：移除 LFS 标记： 告诉 $\text{Git}$ 停止将这两个文件视为 $\text{LFS}$ 对象。删除这两个文件： 从您的工作区中删除它们，然后提交删除操作。步骤一：找出并停止 LFS 标记首先，我们需要确认那两个文件的完整路径，您之前已经提供了：11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 3/Car detection for Autonomous Driving/font/SIL Open Font License.txt11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 4/Neural Style Transfer/Pretrained_Model_LICENSE.txt现在，告诉 $\text{Git LFS}$ 停止跟踪这两个文件：Bash# 停止 LFS 跟踪第一个文件
+git lfs untrack "11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 3/Car detection for Autonomous Driving/font/SIL Open Font License.txt"
+
+# 停止 LFS 跟踪第二个文件
+git lfs untrack "11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 4/Neural Style 
+（这个操作只会修改 .gitattributes 文件，不会删除工作区的文件。）
+
+步骤二：删除工作区中的文件并提交现在，从您的工作区中删除它们，并让 $\text{Git}$ 记录这次删除操作。Bash# 从工作区和暂存区删除第一个文件
+git rm "11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 3/Car detection for Autonomous Driving/font/SIL Open Font License.txt"
+
+# 从工作区和暂存区删除第二个文件
+git rm "11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 4/Neural Style Transfer/Pretrained_Model_LICENSE.txt"
+
+# 将所有剩余的修改（包括文件删除和 untrack 操作）添加到暂存区
+git add .
+
+###############================ (7B) 我喜欢的方，， 直接删除文件，不用 git rm
+# 现在我们已经停止了 LFS 跟踪，我们可以删除这两个文件：
+## 删除第一个文件
+rm 11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 3/Car detection for Autonomous Driving/font/SIL Open Font License.txt
+
+## 删除第二个文件
+rm 11.DeepLearningAI_Andrew_Ng/Full_Code/C4_Convolutional Neural Networks/Week 4/Neural Style Transfer/Pretrained_Model_LICENSE.txt
+
+
+###############================ (8)
+# 现在我们已经删除了这两个文件，我们可以提交删除操作：
+git add .
+git commit -m "Remove unnecessary LFS files"
+
+# 最后，我们可以推送提交：
+###############================ (9)
+git push origin master:master --force
+
+###############================
+###############================
+###############================
+###############================

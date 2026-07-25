@@ -1,0 +1,169 @@
+[2026-07-23 10:29:03] ══ START 17_Daniel_Mendes_gut_metagenomics/work_taxprofiler ══
+[2026-07-23 10:29:03] rsync starting...
+
+Number of files: 3,945 (reg: 2,626, dir: 567, link: 752)
+Number of created files: 3,945 (reg: 2,626, dir: 567, link: 752)
+Number of deleted files: 0
+Number of regular files transferred: 2,626
+Total file size: 96,733,334,690 bytes
+Total transferred file size: 96,733,224,675 bytes
+Literal data: 96,733,224,675 bytes
+Matched data: 0 bytes
+File list size: 458,504
+File list generation time: 0.001 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 96,757,220,937
+Total bytes received: 55,353
+
+sent 96,757,220,937 bytes  received 55,353 bytes  272,940,130.58 bytes/sec
+total size is 96,733,334,690  speedup is 1.00
+[2026-07-23 10:34:58] verify: src_size=96733334690 dst_size=96733334690 src_count=3945 dst_count=3945
+[2026-07-23 10:34:58] size diff = 0.000%
+[2026-07-23 10:35:05] ✅ DONE 17_Daniel_Mendes_gut_metagenomics/work_taxprofiler — verified, original removed, symlink created -> /srv/external_data/gao_projects_offload/projects_2026H2_offload/17_Daniel_Mendes_gut_metagenomics/work_taxprofiler (~90.1 GiB freed)
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       7.3T  6.8T  101G  99% /mnt/ex_8T_SSD
+[2026-07-23 10:35:05] ══ START 17_Daniel_Mendes_gut_metagenomics/work_mag ══
+[2026-07-23 10:35:05] rsync starting...
+
+Number of files: 421,826 (reg: 379,794, dir: 26,085, link: 15,947)
+Number of created files: 421,826 (reg: 379,794, dir: 26,085, link: 15,947)
+Number of deleted files: 0
+Number of regular files transferred: 379,794
+Total file size: 217,942,409,315 bytes
+Total transferred file size: 217,940,147,092 bytes
+Literal data: 217,940,147,092 bytes
+Matched data: 0 bytes
+File list size: 18,738,865
+File list generation time: 0.001 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 218,023,568,350
+Total bytes received: 7,431,746
+
+sent 218,023,568,350 bytes  received 7,431,746 bytes  209,544,449.88 bytes/sec
+total size is 217,942,409,315  speedup is 1.00
+[2026-07-23 10:53:45] verify: src_size=217942409315 dst_size=217942409315 src_count=421826 dst_count=421826
+[2026-07-23 10:53:45] size diff = 0.000%
+[2026-07-23 10:54:15] ✅ DONE 17_Daniel_Mendes_gut_metagenomics/work_mag — verified, original removed, symlink created -> /srv/external_data/gao_projects_offload/projects_2026H2_offload/17_Daniel_Mendes_gut_metagenomics/work_mag (~203.0 GiB freed)
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       7.3T  6.6T  276G  97% /mnt/ex_8T_SSD
+[2026-07-23 10:54:15] ══ START 1_opossum_YuFan/script_opposum/work ══
+[2026-07-23 10:54:15] rsync starting...
+
+Number of files: 5,395 (reg: 3,763, dir: 839, link: 783, special: 10)
+Number of created files: 5,395 (reg: 3,763, dir: 839, link: 783, special: 10)
+Number of deleted files: 0
+Number of regular files transferred: 3,763
+Total file size: 406,989,558,086 bytes
+Total transferred file size: 406,989,470,868 bytes
+Literal data: 406,989,470,868 bytes
+Matched data: 0 bytes
+File list size: 327,633
+File list generation time: 0.001 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 407,089,256,353
+Total bytes received: 78,811
+
+sent 407,089,256,353 bytes  received 78,811 bytes  233,623,721.76 bytes/sec
+total size is 406,989,558,086  speedup is 1.00
+[2026-07-23 11:23:18] verify: src_size=406989558086 dst_size=406989558086 src_count=5395 dst_count=5395
+[2026-07-23 11:23:18] size diff = 0.000%
+[2026-07-23 11:23:42] ✅ DONE 1_opossum_YuFan/script_opposum/work — verified, original removed, symlink created -> /srv/external_data/gao_projects_offload/projects_2026H2_offload/1_opossum_YuFan/script_opposum/work (~379.0 GiB freed)
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       7.3T  6.3T  616G  92% /mnt/ex_8T_SSD
+[2026-07-23 11:23:42] ══ START 9_Lijian_Wu_Mouse/scripts/work ══
+[2026-07-23 11:23:42] rsync starting...
+
+Number of files: 7,796 (reg: 5,488, dir: 1,109, link: 1,199)
+Number of created files: 7,796 (reg: 5,488, dir: 1,109, link: 1,199)
+Number of deleted files: 0
+Number of regular files transferred: 5,488
+Total file size: 422,031,706,714 bytes
+Total transferred file size: 422,031,564,144 bytes
+Literal data: 422,031,564,144 bytes
+Matched data: 0 bytes
+File list size: 785,962
+File list generation time: 0.001 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 422,135,245,144
+Total bytes received: 114,466
+
+sent 422,135,245,144 bytes  received 114,466 bytes  228,366,437.44 bytes/sec
+total size is 422,031,706,714  speedup is 1.00
+[2026-07-23 11:54:34] verify: src_size=422031706714 dst_size=422031706714 src_count=7796 dst_count=7796
+[2026-07-23 11:54:34] size diff = 0.000%
+[2026-07-23 11:55:01] ✅ DONE 9_Lijian_Wu_Mouse/scripts/work — verified, original removed, symlink created -> /srv/external_data/gao_projects_offload/projects_2026H2_offload/9_Lijian_Wu_Mouse/scripts/work (~393.0 GiB freed)
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       7.3T  6.0T  962G  87% /mnt/ex_8T_SSD
+[2026-07-23 11:55:01] ══ START 6_jinlong_mouse/scripts/work ══
+[2026-07-23 11:55:01] rsync starting...
+
+Number of files: 8,514 (reg: 6,002, dir: 1,191, link: 1,317, special: 4)
+Number of created files: 8,514 (reg: 6,002, dir: 1,191, link: 1,317, special: 4)
+Number of deleted files: 0
+Number of regular files transferred: 6,002
+Total file size: 429,625,443,999 bytes
+Total transferred file size: 429,625,303,722 bytes
+Literal data: 429,625,303,722 bytes
+Matched data: 0 bytes
+File list size: 720,700
+File list generation time: 0.001 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 429,730,871,912
+Total bytes received: 125,034
+
+sent 429,730,871,912 bytes  received 125,034 bytes  223,876,528.76 bytes/sec
+total size is 429,625,443,999  speedup is 1.00
+[2026-07-23 12:27:03] verify: src_size=429625443999 dst_size=429625443999 src_count=8514 dst_count=8514
+[2026-07-23 12:27:04] size diff = 0.000%
+[2026-07-23 12:27:24] ✅ DONE 6_jinlong_mouse/scripts/work — verified, original removed, symlink created -> /srv/external_data/gao_projects_offload/projects_2026H2_offload/6_jinlong_mouse/scripts/work (~400.1 GiB freed)
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       7.3T  5.6T  1.3T  82% /mnt/ex_8T_SSD
+[2026-07-23 12:27:24] ══ START 16_Wenliang_Pan_wgs/work ══
+[2026-07-23 12:27:24] rsync starting...
+
+Number of files: 23,621 (reg: 19,239, dir: 3,538, link: 844)
+Number of created files: 23,621 (reg: 19,239, dir: 3,538, link: 844)
+Number of deleted files: 0
+Number of regular files transferred: 19,239
+Total file size: 542,078,067,539 bytes
+Total transferred file size: 542,077,956,686 bytes
+Literal data: 542,077,956,686 bytes
+Matched data: 0 bytes
+File list size: 1,310,500
+File list generation time: 0.001 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 542,211,929,851
+Total bytes received: 390,326
+
+sent 542,211,929,851 bytes  received 390,326 bytes  218,942,992.20 bytes/sec
+total size is 542,078,067,539  speedup is 1.00
+[2026-07-23 13:08:52] verify: src_size=542078067539 dst_size=542078067539 src_count=23621 dst_count=23621
+[2026-07-23 13:08:52] size diff = 0.000%
+[2026-07-23 13:09:14] ✅ DONE 16_Wenliang_Pan_wgs/work — verified, original removed, symlink created -> /srv/external_data/gao_projects_offload/projects_2026H2_offload/16_Wenliang_Pan_wgs/work (~504.8 GiB freed)
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       7.3T  5.2T  1.7T  76% /mnt/ex_8T_SSD
+[2026-07-23 13:09:14] ══ START 13_Ellen_knockin_wgs/work ══
+[2026-07-23 13:09:15] rsync starting...
+
+Number of files: 5,547 (reg: 4,019, dir: 848, link: 680)
+Number of created files: 5,547 (reg: 4,019, dir: 848, link: 680)
+Number of deleted files: 0
+Number of regular files transferred: 4,019
+Total file size: 1,405,884,895,468 bytes
+Total transferred file size: 1,405,884,824,448 bytes
+Literal data: 1,405,884,824,448 bytes
+Matched data: 0 bytes
+File list size: 393,174
+File list generation time: 0.001 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 1,406,228,485,412
+Total bytes received: 82,742
+
+sent 1,406,228,485,412 bytes  received 82,742 bytes  214,151,917.79 bytes/sec
+total size is 1,405,884,895,468  speedup is 1.00
+[2026-07-23 14:58:41] verify: src_size=1405884895468 dst_size=1405884895468 src_count=5547 dst_count=5547
+[2026-07-23 14:58:41] size diff = 0.000%
+[2026-07-23 14:59:13] ✅ DONE 13_Ellen_knockin_wgs/work — verified, original removed, symlink created -> /srv/external_data/gao_projects_offload/projects_2026H2_offload/13_Ellen_knockin_wgs/work (~1309.3 GiB freed)
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       7.3T  4.2T  2.8T  61% /mnt/ex_8T_SSD
+[2026-07-23 14:59:13] ALL_MIGRATIONS_DONE

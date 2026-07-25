@@ -1,0 +1,37 @@
+Qoder 智能体有命令行工具，叫 Qoder CLI（在中国区也称为 Qoder CN CLI）。
+
+Qoder CLI 和 Qwen 的命令行工具不是同一个东西。它们是两个独立的、由阿里发布的 AI 编程助手命令行工具。
+
+什么是 Qoder CLI？
+Qoder CLI 是 Qoder 智能体平台推出的命令行界面工具，定位为一个轻量级、AI 原生的编程助手。它旨在将 AI 能力带到终端，让开发者通过自然语言完成编码任务。
+
+它的主要特点包括：
+
+终端优先：可直接在终端中运行，无需打开 IDE。
+
+内置工具：集成了 Grep、Read、Write、Bash 等工具，用于文件操作和执行 Shell 命令。
+
+子代理 (Subagent)：支持创建专门处理特定任务的子 AI 代理，每个代理有独立的上下文和工具权限。
+
+可扩展：支持 MCP (Model Context Protocol) 协议，可接入自定义工具。
+
+Qoder CLI 与 Qwen CLI 的核心区别
+两者最核心的区别在于产品定位、开源情况和底层模型。
+
+Qoder CLI
+
+定位：一个完整的 Agentic 编码平台 的 CLI 入口，更强调工作流自动化和复杂任务处理。
+
+开源情况：闭源的专有软件。
+
+底层模型：不绑定单一模型，支持 Claude、GPT、Gemini、Qwen-Coder 等多种模型。
+
+Qwen CLI (通常指 Qwen Code)
+
+定位：一个开源的 AI 编码代理 CLI 工具，是 Qwen 模型家族的官方 CLI 客户端。
+
+开源情况：开源（Apache-2.0 许可证）。
+
+底层模型：主要围绕 Qwen 系列模型（尤其是 Qwen3-Coder）构建和优化。
+
+简单来说，Qoder CLI 是一个功能更综合的 AI 开发平台入口，而 Qwen Code 则是一个专注于 Qwen 模型的开源命令行客户端

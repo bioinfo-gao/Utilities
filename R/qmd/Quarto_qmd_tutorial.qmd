@@ -1,0 +1,113 @@
+---
+title: "Quarto_qmd_tutorial"
+format: html
+---
+
+
+在 .qmd (Quarto) 文件中正确显示表格非常简单，因为它原生支持 Pandoc 风格的 Markdown 语法。
+
+为了确保你拷贝过去后能完美渲染，请遵循以下三个核心要点：
+
+1. 粘贴时的格式要求
+前后空行：在表格的上方和下方各留出一个完整的空行。这是 Markdown 解析器识别表格的关键。 
+
+对齐分隔线：表头下方的第二行 |:---| 是必须的，它决定了列的对齐方式（:--- 左对齐，:---: 居中，---: 右对齐）。
+
+2. 在 .qmd 中增加高级功能（可选）
+如果你希望表格有标题或引用编号，可以在表格下方紧接着添加：
+
+
+| 几何对象 (Geom) | 数据要求 | 生信典型应用场景 | 关键参数建议 |
+| :--- | :--- | :--- | :--- |
+| **`geom_point()`** | 连续型 x, y | PCA 主成分分析图、火山图 (Volcano Plot) | `alpha=0.5`, `size` |
+| **`geom_tile()`** | 离散型 x, y | 差异表达基因热图 (Heatmap) | `aes(fill = value)` |
+| **`geom_boxplot()`** | 离散型 x, 连续型 y | 比较不同组别间的基因表达量分布 | `outlier.shape = NA` |
+| **`geom_violin()`** | 离散型 x, 连续型 y | 单细胞测序中 Cluster 基因分布 | `trim = FALSE` |
+| **`geom_bar()`** | 离散型 x | GO/KEGG 富集分析条形图 | `stat = "identity"` |
+| **`geom_density2d()`** | 连续型 x, y | **[Wildcard]** 大样本量单细胞轨迹密度分布 | `color = "blue"` |
+| **`geom_jitter()`** | 离散型 x, 连续型 y | 叠加原始数据点 | `width = 0.2`, `alpha = 0.3` |
+
+
+#### 2 : 添加中文字体
+
+既然你是在 Linux 服务器 上操作，PDF 渲染最容易因为找不到字体而失败。请按以下步骤操作：
+
+检查系统字体：在终端输入 fc-list :lang=zh。如果没有返回任何内容，说明你的服务器没装中文字体。
+
+安装字体（以 Ubuntu 为例）：P
+
+
+```{r}
+# fc-list :lang=zh
+4^5
+```
+
+```{bash}
+# fc-list :lang=zh
+pwd
+
+
+
+```{r}
+# Load required library
+library(ggplot2)
+
+# Create sample data similar to PCA results
+set.seed(123)
+pca_data <- data.frame(
+  PC1 = rnorm(100),
+  PC2 = rnorm(100),
+  group = factor(rep(c("Control", "Treatment"), each = 50))
+)
+print(pca_data |> head())
+print(pca_data |> dim())
+
+# Basic scatter plot
+# ggplot(pca_data, aes(x = PC1, y = PC2, color = group)) +
+#   geom_point(alpha = 0.7, size = 3) +
+#   labs(title = "PCA Plot", x = "PC1", y = "PC2") +
+#   theme_minimal()  # +
+#   # theme(
+#   #   plot.title = element_text(hjust = 0.5, size = 18)
+#   # )
+# # Use theme() to center the title and increase its size:
+
+ggplot(pca_data, aes(x = PC1, y = PC2, color = group)) + 
+  geom_point(alpha = 0.7, size = 3) +
+  labs(title = "PCA Plot", x = "PC1", y = "PC2") +
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme_minimal() +
+  # scale_x_continuous(expand = expansion(mult = 0.08)) + # “图中数据点离坐标轴边框太近”，那要改的是：
+  # scale_y_continuous(expand = expansion(mult = 0.08)) +
+  theme(
+    plot.title = element_text(
+      hjust = 0.5,
+      size = 18,
+      face = "bold",
+      family = "serif",
+      margin = margin(t = 15, b=15)                   # 增大标题和图主体之间的下边距 plot.margin = margin(t = 15, r = 10, b = 10, l = 10)
+    ),
+    panel.border = element_rect(                # 注意这一行和 panel.border一样，都是设置边线, 所有只能二选一
+      color = "black",
+      fill = NA,
+      linewidth = 1
+    ),
+    #axis.line = element_line(color = "black", linewidth = 1), # 注意这一行和 panel.border一样，都是设置边线, 所有只能二选一
+    plot.margin = margin(t = 10, r = 15, b = 10, l = 15)   ,      #  扩大整张图四周留白
+    axis.title = element_text(size =16, face = "bold"),            # x and y 轴标题 ， 这里是 PC1 PC2
+    axis.title.x = element_text(                                  # 增加x 轴标注 PC1 离开 x轴这条线的距离
+        margin = margin(t = 5)
+      ),
+    axis.text = element_text(size = 14, color = "black"),      # 坐标轴上的数字
+    legend.title = element_text(size = 14, face = "plain"), # must one of "plain", "bold", "italic", "oblique", or "bold.italic".
+    legend.text = element_text(size = 12),
+    legend.background = element_rect(
+      color = "black",
+      linewidth = 0.5,                     # 
+      fill = "white"
+    )
+
+  )
+```
+
+```

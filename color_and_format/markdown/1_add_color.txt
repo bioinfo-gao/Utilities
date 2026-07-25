@@ -1,0 +1,21 @@
+只想要加粗（导出后是黑色粗体）：
+使用你现在的写法：**我要加粗**
+想要真正的红字（导出后也是红字）：
+必须这样写：<span style="color: red;">我要红字</span>
+想要真正的黄底高亮（导出后也是黄底）：
+必须这样写：<mark>我要高亮</mark>                    # 这个成功 <<<<<<<<<<<< ======================
+
+炸弹二：iHPV (<mark>CAG–loxP–EGFP–pA</mark>–loxP–E6/E7–IRES–Luc)  # 这个成功 <<<<<<<<<<<< ======================
+
+
+
+- **Study A = Trp53/Brca/Pten CRISPR 成瘤模型（客户 2026-07-07 补充确认）**：
+  - **亲本 `RO_origin`**：来自 **Trp53⁺/⁻ ; Cas9** 转基因小鼠的原代细胞（自带一个 Trp53 缺失等位 + 组成型表达 Cas9），**未体外编辑**。
+  - **B1TP / B2TP**：以亲本为基础，**电穿孔导入 sgRNA**（Cas9 已在细胞内，只递送 sgRNA）——B1TP 靶 **Brca1+Pten**、B2TP 靶 **Brca2+Pten**（敲除）。
+  - **4/5/6 tumor**：把 B1TP/B2TP 打入小鼠 → 长出实体瘤 → 消化**不同**肿瘤得到的细胞株（哪个肿瘤来自 B1TP 还是 B2TP 未指明，**可由 WGS 反推**：Brca1-KO→B1TP、Brca2-KO→B2TP）。
+  - **RO_origin 即配对正常**，且它**已含 Trp53⁺/⁻ + Cas9 这两个工程特征** → 拿它作 normal 能把这些背景正确扣掉，只留 sgRNA 编辑(Brca/Pten)与肿瘤获得性改变。**Study A 不缺对照。**
+- **Study B = 基因型 × 年龄时间序列（客户 2026-07-08 详答）**：L1L2 vs L1L2H × 3M/12M/18M，各 n=1。**关键澄清**：
+  - **背景 = C57BL/6**（≈ GRCm39 参考本身 → 背景扣除几乎免费，见 §3）。
+  - **送样小鼠只有 flox、无 Cre → Lats1/2 未删除**（只带 loxP）；**iHPV 是 Cre 依赖的 lox-stop-lox**（CAG–loxP–EGFP–pA–loxP–E6/E7–IRES–Luc），**无 Cre 时 E6/E7 不表达**（表达 EGFP）。→ **两个工程元件都"上膛未击发"。**
+  - **iHPV 源** = Addgene #13712（pB-actin E6E7，Munger）；模型见 **PMC4662542**。
+  - **表型 = 输卵管异常，年龄依赖（>10 月龄出现）**。这解释了 3/12/18M 年龄序列（3M 在表型前）。

@@ -1,0 +1,168 @@
+---
+title: "Longley Economic Dataset Analysis"
+author: "ZG_2026"
+date: now()
+format:
+  html:
+    theme: cosmo
+    highlight-style: tango
+    toc: true
+    toc-depth: 2
+  pdf:
+    toc: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(datasets)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+```
+
+## Longley 数据集介绍
+
+**来源：** J.W. Longley (1967) 发表在《Journal of the American Statistical Association》上的论文
+
+**用途：** 这是一个经典的宏观经济数据集，因存在**严重的多重共线性问题**，常被用来检验回归算法和计算机的计算精度。
+
+**数据范围：** 1947年至1962年，共16年的年度观测数据
+
+**包含7个变量（均为数值型）：
+
+```{r}
+#| label: data-overview
+
+# Load the longley dataset
+data(longley)
+
+# Create variable description table
+var_info <- data.frame(
+  Variable = c("GNP.deflator", "GNP", "Unemployed", "Armed.Forces", "Population", "Year", "Employed"),
+  English_Name = c("GNP implicit price deflator", "Gross National Product", "Number of unemployed", "Number in armed forces", "Noninstitutionalized population ≥ 14 years", "Year", "Number of people employed"),
+  Chinese_Meaning = c("GNP平减指数", "国民生产总值", "失业人数", "武装部队人数", "非机构化人口（≥14岁）", "年份", "就业人数"),
+  Description = c("国民生产总值的价格指数（以1954年=100为基准）", "以百万美元为单位", "以千人为单位", "军队人员数量（千人）", "14岁及以上的非机构人口（千人）", "时间变量（1947-1962）", "受雇人数（千人）")
+)
+
+kable(var_info, col.names = c("变量名", "英文全称", "中文含义", "说明"), align = "l") |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+## 数据预览
+
+```{r}
+#| label: data-preview
+
+# Display first few rows of the dataset
+head(longley) |>
+  kable(caption = "Longley数据集前6行") |>
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+## 变量相关性热力图
+
+```{r}
+#| label: correlation-heatmap
+#| fig-width: 8
+#| fig-height: 6
+
+# Calculate correlation matrix
+cor_matrix <- cor(longley)
+
+# Create correlation heatmap
+library(corrplot)
+corrplot(cor_matrix, method = "color", type = "upper", 
+         order = "hclust", tl.cex = 0.8, tl.col = "black",
+         title = "Longley数据集变量相关性热力图")
+```
+
+## 时间序列趋势图
+
+```{r}
+#| label: time-series-plots
+#| fig-width: 10
+#| fig-height: 8
+
+# Create separate plots for key variables over time
+p1 <- ggplot(longley, aes(x = Year)) +
+  geom_line(aes(y = GNP.deflator), color = "red", size = 1) +
+  geom_point(aes(y = GNP.deflator), color = "red", size = 2) +
+  labs(title = "GNP平减指数随时间变化", y = "GNP.deflator", x = "年份") +
+  theme_minimal()
+
+p2 <- ggplot(longley, aes(x = Year)) +
+  geom_line(aes(y = GNP), color = "blue", size = 1) +
+  geom_point(aes(y = GNP), color = "blue", size = 2) +
+  labs(title = "国民生产总值随时间变化", y = "GNP (百万美元)", x = "年份") +
+  theme_minimal()
+
+p3 <- ggplot(longley, aes(x = Year)) +
+  geom_line(aes(y = Employed), color = "green", size = 1) +
+  geom_point(aes(y = Employed), color = "green", size = 2) +
+  labs(title = "就业人数随时间变化", y = "Employed (千人)", x = "年份") +
+  theme_minimal()
+
+p4 <- ggplot(longley, aes(x = Year)) +
+  geom_line(aes(y = Population), color = "purple", size = 1) +
+  geom_point(aes(y = Population), color = "purple", size = 2) +
+  labs(title = "人口随时间变化", y = "Population (千人)", x = "年份") +
+  theme_minimal()
+
+# Display plots
+library(patchwork)
+(p1 | p2) / (p3 | p4)
+```
+
+## 多重共线性诊断
+
+```{r}
+#| label: multicollinearity-diagnosis
+
+# Fit the classic regression model
+model <- lm(Employed ~ ., data = longley)
+
+# Calculate condition number (kappa)
+X <- model.matrix(model)
+condition_number <- kappa(X)
+
+# Calculate VIF (Variance Inflation Factor) <<< ==================================== 
+library(car)
+vif_values <- vif(model)
+
+# Display results
+cat("### 条件数 (Condition Number):", round(condition_number, 2), "\n\n")
+cat("**解释：** 条件数 > 1000 表示存在严重多重共线性\n\n")
+
+# Display VIF table
+vif_df <- data.frame(
+  Variable = names(vif_values),
+  VIF = round(vif_values, 2)
+)
+
+kable(vif_df, caption = "方差膨胀因子 (VIF) - 多重共线性诊断", align = "l") |>
+  kable_styling(bootstrap_options = c("striped", "hover")) |>
+  column_spec(2, bold = TRUE, background = ifelse(vif_df$VIF > 10, "#ffcccc", "#ccffcc"))
+```
+
+## 重要特征总结
+
+- 该数据集存在**严重的多重共线性**（条件数 kappa ≈ `r round(condition_number, 0)` >> 1000）
+- 变量 GNP.deflator、GNP、Population、Employed 与 Year 的趋势相近
+- 常用于演示多元线性回归中的共线性问题
+- 经典回归模型：`lm(Employed ~ .)` 用于预测就业人数
+
+这个数据集在统计学教学中非常重要，用来说明当自变量之间高度相关时，回归系数的估计会变得不稳定。
+
+<!-- 这就是问题所在：Quarto 在渲染时在真实路径 /Work_bio/gao/projects/... 下创建了临时文件，但尝试清理时却使用了符号链接路径 /home/gao/projects/...，导致权限检查失败。
+
+解决方案
+方案 1：使用真实路径渲染（推荐）
+直接使用真实路径来渲染文档： -->
+quarto preview /Work_bio/gao/projects/Utilities/R/2026_Tested_Versions/Ch05/05_03/Longley_Dataset_Analysis_Simplified.qmd --no-browser --no-watch-inputs

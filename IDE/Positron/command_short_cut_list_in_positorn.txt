@@ -1,0 +1,2 @@
+Shift + End,  Delete # delete to end of line
+Ctrl + Delete # delete a word 

@@ -1,0 +1,4 @@
+git init
+git remote add origin https://github.com/bioinfo-gao/linux-and-cluster.git
+git pull remote master
+git push -u origin master

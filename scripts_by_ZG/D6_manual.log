@@ -1,0 +1,65 @@
+nohup: 忽略输入
+[33mNextflow 25.10.4 is available - Please consider updating your version to it(B[m
+
+ N E X T F L O W   ~  version 24.10.5
+
+Launching `/home/songz/gaoz/GZ_Project_2026/rnaseq-3.12.0/main.nf` [kickass_lovelace] DSL2 - revision: f421ddc35d
+
+
+
+------------------------------------------------------
+                                        ,--./,-.
+        ___     __   __   __   ___     /,-._.--~'
+  |\ | |__  __ /  ` /  \ |__) |__         }  {
+  | \| |       \__, \__/ |  \ |___     \`-._,-`-,
+                                        `._,._,'
+  nf-core/rnaseq v3.12.0
+------------------------------------------------------
+Core Nextflow options
+  runName        : kickass_lovelace
+  launchDir      : /home/songz/gaoz/GZ_Project_2026/01_Junqiang_Ding_0216
+  workDir        : /home/songz/gaoz/work/01_Junqiang_Ding_0216
+  projectDir     : /home/songz/gaoz/GZ_Project_2026/rnaseq-3.12.0
+  userName       : songz
+  profile        : conda
+  configFiles    : /home/songz/gaoz/GZ_Project_2026/rnaseq-3.12.0/nextflow.config
+
+Input/output options
+  input          : /home/songz/gaoz/GZ_Project_2026/01_Junqiang_Ding_0216/samplesheet_full.csv
+  outdir         : /home/songz/gaoz/GZ_Project_2026/01_Junqiang_Ding_0216/results
+
+Reference genome options
+  fasta          : /home/songz/lhn_work/database/02.genome/mouse_reference/Mus_musculus.fasta
+  gtf            : /home/songz/lhn_work/database/02.genome/mouse_reference/Mus_musculus.gtf
+
+Process skipping options
+  skip_dupradar  : true
+  skip_rseqc     : true
+  skip_biotype_qc: true
+
+Max job request options
+  max_memory     : 64.GB
+
+!! Only displaying parameters that differ from the pipeline defaults !!
+------------------------------------------------------
+If you use nf-core/rnaseq for your analysis please cite:
+
+* The pipeline
+  https://doi.org/10.5281/zenodo.1400710
+
+* The nf-core framework
+  https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+  https://github.com/nf-core/rnaseq/blob/master/CITATIONS.md
+------------------------------------------------------
+WARN: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  There is a problem with your Conda configuration!
+
+  You will need to set-up the conda-forge and bioconda channels correctly.
+  Please refer to https://bioconda.github.io/
+  The observed channel order is 
+  [https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda/, https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/, https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/, conda-forge]
+  but the following channel order is required:
+  [conda-forge, bioconda, defaults]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

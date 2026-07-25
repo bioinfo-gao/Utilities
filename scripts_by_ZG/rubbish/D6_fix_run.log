@@ -1,0 +1,26 @@
+nohup: 忽略输入
+正在进入工作目录: /home/songz/gaoz/GZ_Project_2026/01_Junqiang_Ding_0216
+开始监听：等待当前所有 songz 的 Nextflow 进程结束...
+检测到前序任务已完成，时间：Fri Feb 20 12:17:31 PM CST 2026
+正在执行备份: results -> results_bak...
+备份完成。
+正在初始化 mamba 环境 R44_RNA...
+/home/songz/gaoz/GZ_Project_2026/01_Junqiang_Ding_0216/run_D6_fix.sh: 行 40: /home/songz/anaconda3/etc/profile.d/conda.sh: 没有那个文件或目录
+critical libmamba Shell not initialized
+
+'mamba' is running as a subprocess and can't modify the parent shell.
+Thus you must initialize your shell before using activate and deactivate.
+
+To initialize the current bash shell, run:
+    $ eval "$(mamba shell hook --shell bash)"
+and then activate or deactivate with:
+    $ mamba activate
+To automatically initialize all future (bash) shells, run:
+    $ mamba shell init --shell bash --root-prefix=~/.local/share/mamba
+If your shell was already initialized, reinitialize your shell with:
+    $ mamba shell reinit --shell bash
+Otherwise, this may be an issue. In the meantime you can run commands. See:
+    $ mamba run --help
+
+Supported shells are {bash, zsh, csh, posix, xonsh, cmd.exe, powershell, fish, nu}.
+错误: 无法激活 R44_RNA 环境

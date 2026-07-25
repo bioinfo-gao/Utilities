@@ -1,0 +1,130 @@
+---
+title: "Longley Economic Dataset Analysis (Simplified)"
+author: "ZG2026"
+date: now()
+format:
+  html:
+    theme: cosmo
+    highlight-style: tango
+    toc: true
+    toc-depth: 2
+  pdf:
+    toc: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# Only use base R packages - no external dependencies required
+library(datasets)
+```
+
+## Longley 数据集介绍
+
+**来源：** J.W. Longley (1967) 发表在《Journal of the American Statistical Association》上的论文
+
+**用途：** 这是一个经典的宏观经济数据集，因存在**严重的多重共线性问题**，常被用来检验回归算法和计算机的计算精度。
+
+**数据范围：** 1947年至1962年，共16年的年度观测数据
+
+**包含7个变量（均为数值型）：
+
+```{r}
+#| label: data-overview
+
+# Load the longley dataset
+data(longley)
+
+# Create variable description table using base R
+var_info <- data.frame(
+  Variable = c("GNP.deflator", "GNP", "Unemployed", "Armed.Forces", "Population", "Year", "Employed"),
+  English_Name = c("GNP implicit price deflator", "Gross National Product", "Number of unemployed", "Number in armed forces", "Noninstitutionalized population ≥ 14 years", "Year", "Number of people employed"),
+  Chinese_Meaning = c("GNP平减指数", "国民生产总值", "失业人数", "武装部队人数", "非机构化人口（≥14岁）", "年份", "就业人数"),
+  Description = c("国民生产总值的价格指数（以1954年=100为基准）", "以百万美元为单位", "以千人为单位", "军队人员数量（千人）", "14岁及以上的非机构人口（千人）", "时间变量（1947-1962）", "受雇人数（千人）")
+)
+
+# Use base R kable instead of kableExtra
+knitr::kable(var_info, col.names = c("变量名", "英文全称", "中文含义", "说明"), align = "l")
+```
+
+## 数据预览
+
+```{r}
+#| label: data-preview
+
+# Display first few rows of the dataset
+knitr::kable(head(longley), caption = "Longley数据集前6行")
+```
+
+## 变量相关性矩阵
+
+```{r}
+#| label: correlation-matrix
+
+# Calculate and display correlation matrix using base R
+cor_matrix <- cor(longley)
+knitr::kable(round(cor_matrix, 3), caption = "变量相关性矩阵")
+```
+
+## 时间序列趋势图
+
+```{r}
+#| label: time-series-plots
+#| fig-width: 10
+#| fig-height: 8
+
+# Create time series plots using base R graphics
+par(mfrow = c(2, 2))
+
+plot(longley$Year, longley$GNP.deflator, type = "b", col = "red", 
+     main = "GNP平减指数随时间变化", xlab = "年份", ylab = "GNP.deflator")
+grid()
+
+plot(longley$Year, longley$GNP, type = "b", col = "blue", 
+     main = "国民生产总值随时间变化", xlab = "年份", ylab = "GNP (百万美元)")
+grid()
+
+plot(longley$Year, longley$Employed, type = "b", col = "green", 
+     main = "就业人数随时间变化", xlab = "年份", ylab = "Employed (千人)")
+grid()
+
+plot(longley$Year, longley$Population, type = "b", col = "purple", 
+     main = "人口随时间变化", xlab = "年份", ylab = "Population (千人)")
+grid()
+
+par(mfrow = c(1, 1)) # Reset layout
+```
+
+## 多重共线性诊断
+
+```{r}
+#| label: multicollinearity-diagnosis
+
+# Fit regression model using base R
+model <- lm(Employed ~ ., data = longley)
+
+# Calculate condition number using base R functions
+X <- model.matrix(model)
+condition_number <- kappa(X)
+
+# Display results
+cat("### 条件数 (Condition Number):", round(condition_number, 2), "\n\n")
+cat("**解释：** 条件数 > 1000 表示存在严重多重共线性\n\n")
+
+# Show model summary
+summary(model)
+```
+
+## 重要特征总结
+
+- 该数据集存在**严重的多重共线性**（条件数 kappa ≈ `r round(condition_number, 0)` >> 1000）
+- 变量 GNP.deflator、GNP、Population、Employed 与 Year 的趋势相近
+- 常用于演示多元线性回归中的共线性问题
+- 经典回归模型：`lm(Employed ~ .)` 用于预测就业人数
+
+这个数据集在统计学教学中非常重要，用来说明当自变量之间高度相关时，回归系数的估计会变得不稳定。

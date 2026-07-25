@@ -1,0 +1,102 @@
+---
+title: "Longley Economic Dataset Analysis"
+author: "ZG2026"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: cosmo
+    highlight: tango
+    toc: true
+    toc_float: true
+  pdf_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(datasets)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+```
+
+# R Statistics Essential Training # Ex05_03
+# Merging files
+## Longley 数据集介绍
+
+**来源：** J.W. Longley (1967) 发表在《Journal of the American Statistical Association》上的论文
+
+**用途：** 这是一个经典的宏观经济数据集，因存在**严重的多重共线性问题**，常被用来检验回归算法和计算机的计算精度。
+
+**数据范围：** 1947年至1962年，共16年的年度观测数据
+
+**包含7个变量（均为数值型）：**
+
+```{r data-overview, echo=FALSE}
+# 原始数据来自这个数据集
+# Load the longley dataset
+data(longley)
+
+# Create variable description table
+var_info <- data.frame(
+  Variable = c("GNP.deflator", "GNP", "Unemployed", "Armed.Forces", "Population", "Year", "Employed"),
+  English_Name = c("GNP implicit price deflator", "Gross National Product", "Number of unemployed", "Number in armed forces", "Noninstitutionalized population ≥ 14 years", "Year", "Number of people employed"),
+  Chinese_Meaning = c("GNP平减指数", "国民生产总值", "失业人数", "武装部队人数", "非机构化人口（≥14岁）", "年份", "就业人数"),
+  Description = c("国民生产总值的价格指数（以1954年=100为基准）", "以百万美元为单位", "以千人为单位", "军队人员数量（千人）", "14岁及以上的非机构人口（千人）", "时间变量（1947-1962）", "受雇人数（千人）")
+)
+##### 创建变量描述表, 本本section 无最终可视化输出
+```
+
+##### 可视化输出 a1t a2t ##### section 外部会打印本行
+```{r multicollinearity-diagnosis, echo=FALSE}
+# Split up longley
+a1 <- longley[1:14, 1:6]  # Starting data
+a2 <- longley[1:14, 6:7]  # New column to add (with "Year" to match)
+b <- longley[15:16, ]     # New rows to add
+
+# Save 上面生成的数据 data
+# write.table(a1, "~/Desktop/R/longley.a1.txt", sep="\t")
+# write.table(a2, "~/Desktop/R/longley.a2.txt", sep="\t")
+# write.table(b, "~/Desktop/R/longley.b.txt", sep="\t")
+write.table(a1, "/home/gao/projects/Utilities/R/2026_Tested_Versions/Ch05/05_03/longley.a1.txt", sep="\t")
+write.table(a2, "/home/gao/projects/Utilities/R/2026_Tested_Versions/Ch05/05_03/longley.a2.txt", sep="\t")
+write.table(b,  "/home/gao/projects/Utilities/R/2026_Tested_Versions/Ch05/05_03/longley.b.txt",  sep="\t")
+
+rm(list=ls()) # Clear out everything to start fresh
+
+# Import data
+# a1t <- read.table("~/Desktop/R/longley.a1.txt", sep="\t")
+# a2t <- read.table("~/Desktop/R/longley.a2.txt", sep="\t")
+a1t <- read.table("/home/gao/projects/Utilities/R/2026_Tested_Versions/Ch05/05_03/longley.a1.txt", sep="\t")
+a2t <- read.table("/home/gao/projects/Utilities/R/2026_Tested_Versions/Ch05/05_03/longley.a2.txt", sep="\t")
+
+a1t
+a2t
+
+##### 可视化输出 a1t a2t  ##### ##### section 内部不会打印本行
+
+```
+##### 可视化输出 all.data  ##### section 外部会打印本行
+
+```{r merge-data, echo=FALSE}
+# Take early years (a1t) and add columns (a2t)
+# Must specify variable to match cases
+a.1.2 <- merge(a1t, a2t, by = "Year")  # Merge two data frames
+a.1.2  # Check results
+
+# Add two more cases at bottom
+# b <- read.table("~/Desktop/R/longley.b.txt", sep="\t")
+b <- read.table("/home/gao/projects/Utilities/R/2026_Tested_Versions/Ch05/05_03/longley.b.txt", sep="\t")
+all.data <- rbind(a.1.2, b)  # "Row Bind"
+all.data  # Check data
+row.names(all.data) <- NULL  # Reset row names
+all.data  # Check data
+
+##### 可视化输出 all.data  ##### section 内部不会打印本行
+```
+
+```{r cleaning-data, echo=FALSE}
+    
+rm(list=ls())  # Clean up
+```          

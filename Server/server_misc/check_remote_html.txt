@@ -1,0 +1,21 @@
+查看远端服务器上的 HTML 文件有以下几种高效方案，按推荐程度排序：
+
+一、 像浏览器一样直接在远端看（无需下载）
+这是最推荐的方法，利用 VS Code 的**端口转发（Port Forwarding）**功能。
+
+1. 方法1 使用 "Live Preview" 插件（最简单、最推荐）
+
+右键点击该文件，选择 "Show Preview"。
+
+2. 方法2 使用 Python 自带服务器 + VS Code 端口转发（最通用）
+进入 HTML 所在的目录。
+
+python3 -m http.server 8000
+此时 VS Code 通常会弹出一个提示框“Your application running on port 8000 is available”，点击 "Open in Browser"。
+如果没有弹出，手动点击底部状态栏的 "Ports" 标签页（或按 Ctrl+Shift+U 选 Ports），确认 8000 端口已转发。
+在本地浏览器输入 http://localhost:8000 即可查看。
+
+1. 右键直接下载（最直接）
+在 VS Code 左侧的文件管理器（Explorer）中，找到该文件。
+右键点击文件 -> 选择 "Download..."。
+选择本地路径保存即可。

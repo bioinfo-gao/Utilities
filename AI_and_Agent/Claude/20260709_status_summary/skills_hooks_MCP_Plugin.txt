@@ -1,0 +1,21 @@
+一、Skills(用户可调用的 /命令)
+顶层技能(~/.claude/commands/,直接 /名称 调用):
+
+技能	说明
+/rnaseq	Bulk RNA-seq 分析全流程搭建
+/wgs	WGS 分析设置(三模式:标准种系 / 定点敲入整合 / 细胞系鉴定+转基因盲鉴)
+/tax-assembly-mag	宏基因组 De-novo 组装·分箱·MAG 重建
+/taxnom	Shotgun 宏基因组分类学谱分析
+/ftp	sFTP 服务配置 + 客户登录信息
+Superpowers 插件带来的技能(superpowers: 前缀,来自已安装插件,详见下方插件部分):
+brainstorming、dispatching-parallel-agents、executing-plans、finishing-a-development-branch、receiving-code-review、requesting-code-review、subagent-driven-development、systematic-debugging、test-driven-development、using-git-worktrees、using-superpowers、verification-before-completion、writing-plans、writing-skills
+
+二、Hooks
+用户自定义 hooks:~/.claude/settings.json 和项目级 settings.local.json 里的 hooks 都是空的——你没配置任何 hook。
+插件自带的 hook:仅 superpowers 插件注册了一个 SessionStart hook(在 startup|clear|compact 时触发,跑它自己的 session-start 脚本)。
+三、MCP
+只有一个:gmail(claude-gmail-mcp,配置在 ~/.claude.json 顶层 mcpServers)——工具为 search_emails/read_email/send_email,不支持下载附件(我们这几个项目里都是绕道走它的 IMAP 凭据自取附件)。
+
+四、Plugins
+实际已安装并启用的只有一个:superpowers(v6.1.1,来自 claude-plugins-official 市场,.in_use 标记确认在用)——提供上面列的那一整套技能 + 一个 SessionStart hook。
+市场目录里还有 40+ 个可安装但你并未安装的插件(如 code-review、playground、mcp-tunnels、github、linear、serena 等各类 LSP/集成插件)——这些只是 claude-plugins-official 市场仓库里克隆下来的目录列表,不代表已安装/生效,只是"可以装"。
