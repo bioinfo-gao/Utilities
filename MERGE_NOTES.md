@@ -8,6 +8,10 @@
 - `/home/gao/projects_2026H2/facilities/` （第二代，改名 `facilities`）
 - `/home/gao/projects_2026M7/facilities/` （当前活跃项目父目录下的第三代）
 
+**Git**：本目录自 2026-07-25 起是独立 git 仓库，远端 `git@github.com:bioinfo-gao/Utilities.git`
+（**private**），同款 `.githooks/pre-commit` 大文件拦截（>10MB）。`Server/FTP/client_credentials.env`
+已在 `.gitignore` 中排除，不进任何 commit。
+
 ## 合并逻辑
 
 三代内容本质是**同一个人工具库随时间演进**（改名 Utilities→facilities，父目录也在演进），
