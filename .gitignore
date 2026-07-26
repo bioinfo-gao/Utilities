@@ -13,3 +13,8 @@ __pycache__/
 *.bai
 *.fastq*
 *.fq*
+
+# MultiQC raw JSON data dump — regenerable from the pipeline, always tens of MB, and the
+# smaller per-module multiqc_report_data/*.txt files already carry everything the html/plots
+# need. Keep the html + per-module data/plots, drop the monolithic json.
+multiqc_data.json

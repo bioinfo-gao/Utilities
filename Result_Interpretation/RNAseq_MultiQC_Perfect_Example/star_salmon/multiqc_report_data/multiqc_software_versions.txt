@@ -1,0 +1,35 @@
+Sample	bedtools	getchromsizes	python	r-base	bioconductor-deseq2	bioconductor-dupradar	fastqc	perl	rsem	star	picard	qualimap	rseqc	salmon	samtools	bioconductor-summarizedexperiment	gawk	stringtie	subread	trimgalore	cutadapt	bioconductor-tximeta	ucsc	nf-core/rnaseq	Nextflow
+BEDTOOLS_GENOMECOV_FW	2.31.1																								
+CUSTOM_GETCHROMSIZES		1.2																							
+CUSTOM_TX2GENE			3.9.5																						
+DESEQ2_QC_STAR_SALMON				4.0.3	1.28.0																				
+DupRadar						1.32.0																			
+FASTQC							0.12.1																		
+GTF2BED								5.26.2																	
+GTF_FILTER			3.9.5																						
+MAKE_TRANSCRIPTS_FASTA									1.3.1	2.7.10a															
+MULTIQC_CUSTOM_BIOTYPE			3.9.5																						
+PICARD_MARKDUPLICATES											3.1.1														
+QUALIMAP_RNASEQ												2.3													
+RSEQC_BAMSTAT													5.0.2												
+RSEQC_INFEREXPERIMENT													5.0.2												
+RSEQC_INNERDISTANCE													5.0.2												
+RSEQC_JUNCTIONANNOTATION													5.0.2												
+RSEQC_JUNCTIONSATURATION													5.0.2												
+RSEQC_READDISTRIBUTION													5.0.2												
+RSEQC_READDUPLICATION													5.0.2												
+SALMON_QUANT														1.10.1											
+SAMTOOLS_FLAGSTAT															1.2										
+SAMTOOLS_IDXSTATS															1.2										
+SAMTOOLS_INDEX															1.2										
+SAMTOOLS_SORT															1.2										
+SAMTOOLS_STATS															1.2										
+SE_GENE																1.32.0									
+STAR_ALIGN										2.7.10a					1.18		5.1.0								
+STRINGTIE_STRINGTIE																		2.2.1							
+SUBREAD_FEATURECOUNTS																			2.0.1						
+TRIMGALORE																				0.6.7	3.4				
+TXIMETA_TXIMPORT																						1.20.1			
+UCSC_BEDCLIP																							377		
+UCSC_BEDGRAPHTOBIGWIG																							445		
+Workflow																								v3.15.1-g4053b2e	25.10.4

@@ -12,7 +12,9 @@
 | nf-core/sarek | [sarek.md](sarek.md) | `--use_gatk_spark markduplicates` 净倒退+击穿 alignment cache；CNNScoreVariants 隐藏 CPU 大户内存限流管不住 |
 | nf-core/mag | [nfcore_mag.md](nfcore_mag.md) | DASTool 精炼后 final bins 与 QC/分类报告跑在的原始 per-binner bins 命名不同、数量差 ~5.8 倍，不做名字映射会把基因组数报大近 6 倍 |
 | Nextflow（现代 nf-core 模板） | [nextflow.md](nextflow.md) | 裸布尔 CLI flag 被新版 Nextflow 变成字符串 → nf-schema 校验全灭，`-profile test` 测不出；自定义 resource config 漏配某个通用 label（如 process_high）→ 该步骤悄悄吃官方默认值，并发被压低、负载虚低 |
+| git（`.gitignore`） | [git.md](git.md) | 目录规则写成文件系统绝对路径（而非仓库根相对路径）时永远匹配不到，无任何报错；已跟踪文件还需额外 `git rm --cached` |
 | `conda run` | [conda_run.md](conda_run.md) | 子进程隔离：进程替换 `<(...)` 失效 + 跨两次 `conda run` 管道 BrokenPipe + 复杂命令替换被搅乱 |
+| conda 同名 env（不同前缀） | [conda_env_duplicate_names.md](conda_env_duplicate_names.md) | 两个不同路径下的 env 恰好同名（如 `DE_R45`）时 `conda run -n <name>` 解析错环境，悄悄换成别的 env 的解释器，缺包报错才暴露；改用绝对路径可执行文件即可 |
 | tmux self-relaunch | [tmux.md](tmux.md) | `tee` 写日志的目录不存在时静默失败，日志文件永不产生，下游编排器 ~24h 后误报 FAILURE |
 | HUMAnN ↔ MetaPhlAn | [humann_metaphlan.md](humann_metaphlan.md) | 版本兼容三连坑：version-check 解析崩 + db 代际不匹配 + 参数名不兼容，需 shim 脚本 |
 
