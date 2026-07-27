@@ -1,0 +1,11 @@
+用peacock 给Positonr边框增加颜色
+
+install peacock extension
+
+Ctrl + Shift + P（Windows/Linux）或 Cmd + Shift + P（Mac）
+
+输入Peacock: add color  
+or 
+输入Peacock: change color  
+
+done (see the attached image)

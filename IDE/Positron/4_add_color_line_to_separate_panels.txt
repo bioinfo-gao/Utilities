@@ -1,0 +1,45 @@
+positron IDE 在各个panel 之间加上亮线增加视觉区分度
+
+Positron IDE 是基于 VS Code (Code OSS) 核心构建的，因此你可以使用与 VS Code 完全相同的 settings.json 配置来高度自定义用户界面。
+要在各个 Panel（面板）之间添加亮线以增加视觉区分度，你可以通过修改 workbench.colorCustomizations 来实现。
+以下是具体的操作步骤：
+第一步：打开 settings.json 文件
+在 Positron 中，按下快捷键 Ctrl + Shift + P (Windows/Linux) 或 Cmd + Shift + P (Mac) 打开命令面板。
+输入 Open Settings JSON。
+选择 Preferences: Open User Settings (JSON)（首选项: 打开用户设置 (JSON)）。
+
+第二步：添加边框颜色代码
+在打开的 settings.json 文件中，添加 "workbench.colorCustomizations" 配置块。如果你的文件中已经有了其他的设置，请确保在上一行的末尾加上逗号 ,。
+复制并粘贴以下代码：
+code
+JSON
+{
+    // 其他已有的设置...
+
+    "workbench.colorCustomizations": {
+        // --- 核心面板分隔线 ---
+        "sideBar.border": "#00FFFF",       // 侧边栏与编辑器之间的边框
+        "panel.border": "#00FFFF",         // 底部/侧边面板（Console/Terminal等）与编辑器之间的边框
+        "editorGroup.border": "#00FFFF",   // 多个代码编辑器分屏时的中间边框
+        
+        // --- 可选的其他边框 ---
+        "activityBar.border": "#00FFFF",   // 最左侧活动栏与侧边栏之间的边框
+        "statusBar.border": "#00FFFF",     // 底部状态栏上方的边框
+        "titleBar.border": "#00FFFF",      // 顶部标题栏下方的边框
+
+        // --- 拖拽条（Sash）的高亮 ---
+        "sash.hoverBorder": "#FF00FF"      // 当鼠标悬停在分隔线上准备拖拽时的颜色
+    }
+}
+
+我到这一步就自动成功了 =============================================================================
+
+第三步：保存并调整颜色
+保存文件 (Ctrl + S 或 Cmd + S)，你会立刻看到界面上的边框变成了亮青色。
+自定义颜色：代码中的 #00FFFF 是亮青色（Cyan），非常醒目。你可以根据自己的喜好将这些 Hex（十六进制）颜色代码替换为你想要的“亮线”颜色。
+亮橙色：#FF9900
+荧光绿：#39FF14
+亮粉色：#FF007F
+柔和的白/灰色（不那么刺眼但有区分度）：#888888 或 #FFFFFF50 (带有透明度的白色)
+提示：
+在 Positron (VS Code) 的 settings.json 中，当你把鼠标悬停在 #00FFFF 这样的颜色代码上时，会自动弹出一个拾色器（Color Picker），你可以直接在弹出的拾色器中拖动鼠标来选择最适合你当前主题的“亮线”颜色。
