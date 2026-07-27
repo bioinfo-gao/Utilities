@@ -1,0 +1,25 @@
+我的 https://platform.claude.com/dashboard   API balance 能转到 montly pro plan 里的 Usage credits 用么？ 我希望合并到这里来用
+Turn on usage credits to keep using Claude if you hit a plan limit.
+
+不能转，这是两个完全独立的账单系统：
+
+API balance（platform.claude.com）
+
+预充值的 API credits，给开发者/程序调用用
+走 api.anthropic.com，按 token 计费
+供 Aider、自己写的脚本、SDK 调用消耗
+Monthly Pro Plan Usage Credits（claude.ai）
+
+订阅超额后的补充额度，给 claude.ai 界面 + Claude Code CLI 订阅用
+走订阅体系，不是 token 计费
+两者之间不能互转、不能合并、不能共享，是 Anthropic 完全隔离的两套体系。
+
+实际上你现在的组合已经是最优的：
+
+claude.ai Pro $20/月
+    └── Claude Code CLI 日常使用（订阅额度）
+            └── 超额时开 Usage Credits 兜底
+
+platform.claude.com API balance
+    └── Aider 调用（按 token 计费）
+唯一能"合并"的方向是全部转向 API——不订阅 Pro，直接用 API key 跑 Claude Code（claude --api-key），但这样高频使用会比 $20/月贵很多。所以现在的分开用法反而是对的。
