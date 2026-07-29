@@ -1,0 +1,3 @@
+最合适的是写进工作区根目录的 AGENTS.md
+
+/home/lena/AGENTS.md
