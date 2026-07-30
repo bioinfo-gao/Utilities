@@ -18,3 +18,27 @@ df_before: /dev/sdb1       9.1T  3.5T  5.1T  41% /Work_bio
 82707195012	/Work_bio/gao/projects/2026_Item5_T.majus/cleaning_and_make_ref/working_split/WhS4_4/work
 total_bytes	82707195012
 df_after: /dev/sdb1       9.1T  3.5T  5.2T  40% /Work_bio
+===== 2026-07-29 22:39:33  ROOT=/mnt/ex_8T_SSD/projects_2026H2 =====
+df_before: /dev/sda1       7.3T  5.5T  1.4T  81% /mnt/ex_8T_SSD
+157428930302	/mnt/ex_8T_SSD/projects_2026H2/10_Yue_Liu/scripts/work
+173672078725	/mnt/ex_8T_SSD/projects_2026H2/11_Qiuchen_Li/scripts/work
+207815528993	/mnt/ex_8T_SSD/projects_2026H2/12_Zhen_Yan/scripts/work
+70103743157	/mnt/ex_8T_SSD/projects_2026H2/5_mouse-rRNA/scripts/work
+total_bytes	609020281177
+df_after: /dev/sda1       7.3T  5.0T  2.0T  72% /mnt/ex_8T_SSD
+===== 2026-07-29 22:39:37  OFFLOAD-WORK  ROOT=/mnt/ex_8T_SSD/projects_2026H2 =====
+df_before(target_fs): /dev/sdc1       9.1T  3.3T  5.4T  38% /srv/external_data
+1405884895468	/srv/external_data/gao_projects_offload/projects_2026H2_offload/13_Ellen_knockin_wgs/work	(symlink: /mnt/ex_8T_SSD/projects_2026H2/13_Ellen_knockin_wgs/work)
+542078067539	/srv/external_data/gao_projects_offload/projects_2026H2_offload/16_Wenliang_Pan_wgs/work	(symlink: /mnt/ex_8T_SSD/projects_2026H2/16_Wenliang_Pan_wgs/work)
+217942409315	/srv/external_data/gao_projects_offload/projects_2026H2_offload/17_Daniel_Mendes_gut_metagenomics/work_mag	(symlink: /mnt/ex_8T_SSD/projects_2026H2/17_Daniel_Mendes_gut_metagenomics/work_mag)
+96733334690	/srv/external_data/gao_projects_offload/projects_2026H2_offload/17_Daniel_Mendes_gut_metagenomics/work_taxprofiler	(symlink: /mnt/ex_8T_SSD/projects_2026H2/17_Daniel_Mendes_gut_metagenomics/work_taxprofiler)
+406989558086	/srv/external_data/gao_projects_offload/projects_2026H2_offload/1_opossum_YuFan/script_opposum/work	(symlink: /mnt/ex_8T_SSD/projects_2026H2/1_opossum_YuFan/script_opposum/work)
+429625443999	/srv/external_data/gao_projects_offload/projects_2026H2_offload/6_jinlong_mouse/scripts/work	(symlink: /mnt/ex_8T_SSD/projects_2026H2/6_jinlong_mouse/scripts/work)
+422031706714	/srv/external_data/gao_projects_offload/projects_2026H2_offload/9_Lijian_Wu_Mouse/scripts/work	(symlink: /mnt/ex_8T_SSD/projects_2026H2/9_Lijian_Wu_Mouse/scripts/work)
+total_bytes	3521285415811
+df_after(target_fs): /dev/sdc1       9.1T   72K  8.6T   1% /srv/external_data
+===== 2026-07-29 22:54:00  ROOT=/mnt/ex_8T_SSD/projects_2026H2 =====
+df_before: /dev/sda1       7.3T  5.0T  2.0T  72% /mnt/ex_8T_SSD
+1086977907989	/mnt/ex_8T_SSD/projects_2026H2/14_geneedit_lats12_wgs/work_B
+total_bytes	1086977907989
+df_after: /dev/sda1       7.3T  4.0T  3.0T  58% /mnt/ex_8T_SSD

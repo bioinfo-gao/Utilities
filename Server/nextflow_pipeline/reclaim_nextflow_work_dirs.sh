@@ -33,6 +33,13 @@ EXECUTE=0
 #   2026_Item5_T.majus/cleaning_and_make_ref/working_split/WhS4_4/work  (78 GiB)
 # —— 项目内常有"按样本分片再各跑一条 pipeline"的布局，work/ 会埋得很深。
 # 用 -prune 保证匹配到 work/ 后不再往里递归（避免嵌套 work 重复计数）。
+#
+# 0729 第二个同类漏检（维度是【命名】不是深度）：硬匹配 -name work 漏掉了
+#   projects_2026H2/14_geneedit_lats12_wgs/work_B  (1013 GiB)
+# —— 一个项目分 Study A / Study B 两臂各跑一条 pipeline 时，work 目录会带后缀
+#    (work_A / work_B)，taxprofiler+mag 双路线同理 (work_mag / work_taxprofiler)。
+#    这一个目录就占该 repo 可回收量的 65%，dry-run 只报 0.55 T 而非 1.55 T。
+# 修法：匹配放宽到 work / work_* / *_work，仍由闸门2 的 .nextflow marker 兜底防误删。
 DEPTH=""
 MANIFEST="${HOME}/Utilities/Server/nextflow_pipeline/reclaimed_work_dirs_manifest.log"
 
@@ -89,7 +96,8 @@ while IFS= read -r d; do
   printf 'TARGET %9.1f GiB  %s\n' "$(echo "scale=4; $bytes/1073741824" | bc)" "$d"
   TARGETS+=("$d")
   TOTAL=$((TOTAL + bytes))
-done < <(find "$ROOT" -xdev "${DEPTH_ARGS[@]}" -type d -name work -prune 2>/dev/null | sort)
+done < <(find "$ROOT" -xdev "${DEPTH_ARGS[@]}" -type d \
+           \( -name 'work' -o -name 'work_*' -o -name '*_work' \) -prune 2>/dev/null | sort)
 
 echo
 printf '合计可回收: %.2f TiB  (%d 个 work/ 目录)\n' "$(echo "scale=6; $TOTAL/1099511627776" | bc)" "${#TARGETS[@]}"
