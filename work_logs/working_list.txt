@@ -1,0 +1,80 @@
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period:  July 23, 2026 – Jun 30, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 19 Hours
+
+
+1. RNA-seq Analysis downstream – Lijian Wu (1.5 Hours)
+Data analysis and result report for the large data set of 24 mouse samples.
+
+2. RNA-seq Analysis – Zhen Yan (3 Hours)
+Whole analysis of for the large data set of 37 neuron samples.
+
+3. Shotgun Metagenomics -Totally reanalysis of – Daniel Mendes (8 Hours)
+Daniel Mendes provided the extremely complex data design 
+Based on the new design performed complete reanalysis.
+Provided the 2-dimension comparative analysis.
+Performed the fold-change analysis for the samples without replication.
+Provided the trends analysis for the samples without replication.
+Provided the supplementary analysis for the samples without enough database coverage.
+
+4. RNA-seq Analysis downstream – Lijian Wu (1 Hours)
+Provided the Data analysis and result report for the new requests.
+
+5. Email commuinication, Technical Consultation & Reporting for and customs (4 Hours)
+Extenseively reviewed all the earlier communications about the project backgrouds
+Probided the detailed technical consultation
+Provided the data quality review after customs' questions
+Provided the techinical solution for the customs' questions
+
+6. Methodology Setup and internal commuinication (0.5 Hours)
+Setup the environment for the project of Single-cell sequencing demulsification problem
+Other interanl discussion of data quality and prioritization
+
+6. System Monitoring & Maintenance (2.0 Hours)
+Monitored memory, harddisk, network, and CPU usage.
+Extenseively manegment of the data, spare 2.8T SSD and 4.5T of mechanical harddisk.
+
+Total Hours Worked: 19 Hours
+Date of Submission: July 30, 2026
+
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+
+
+Weekly Work Report
+Period: July 23, 2026 – July 30, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 20 Hours
+
+1. RNA-seq Downstream Analysis – Lijian Wu (1.5 Hours)
+Conducted downstream data analysis and generated the final results report for a large-scale dataset comprising 24 mouse samples.
+
+2. RNA-seq Analysis – Zhen Yan (3.0 Hours)
+Performed a comprehensive, end-to-end analysis for a large dataset comprising 37 neuron samples.
+
+3. Shotgun Metagenomics Reanalysis – Daniel Mendes (8.0 Hours)
+Executed a complete reanalysis based on a highly complex new experimental data design provided by the client.
+Conducted two-dimensional comparative analyses.
+Performed fold-change and trend analyses for samples lacking biological replicates.
+Executed supplementary analyses for samples with insufficient database coverage.
+
+4. RNA-seq Downstream Analysis (Follow-up) – Lijian Wu (1.0 Hour)
+Conducted additional data analysis and provided updated result reports in response to the new requests.
+
+5. Client Communication, Technical Consultation & Reporting (4.0 Hours)
+Extensively reviewed projects' communications to establish clear project backgrounds.
+Provided detailed technical consultations to clients in quite a few projects.
+Conducted data quality reviews and formulated technical solutions in response to client inquiries.
+
+6. Methodology Setup & Internal Communication (0.5 Hours)
+Configured the computational environment for the proposed single-cell sequencing demultiplexing project.
+Participated in internal discussions regarding data quality issue and tasks prioritization.
+
+7. System Monitoring & Maintenance (2.0 Hours)
+Monitored server health, including memory, CPU, network, and hard disk usage.
+Performed extensive data management and cleanup, successfully freeing up 2.8 TB of SSD storage and 
+4.5 TB of mechanical hard drive (HDD) storage.
+
+Total Billable Hours: 20 Hours
+Date of Submission: July 30, 2026
