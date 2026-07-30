@@ -1,0 +1,20 @@
+===== 2026-07-29 21:47:30  ROOT=/Work_bio/gao/projects =====
+df_before: /dev/sdb1       9.1T  8.3T  321G  97% /Work_bio
+1886060486547	/Work_bio/gao/projects/2026_Item10_rRNA_removal/scripts/work
+20289050381	/Work_bio/gao/projects/2026_Item11_Mingxue_with_2_pairs_samples/scripts/work
+90790030379	/Work_bio/gao/projects/2026_Item12_rRNA/scripts/work
+261921559758	/Work_bio/gao/projects/2026_Item16_ZhenYan/scripts/work
+546607241611	/Work_bio/gao/projects/2026_Item2_0205_Jitu/scripts/work
+4557608004	/Work_bio/gao/projects/2026_Item3_WGS/work
+1304910372888	/Work_bio/gao/projects/2026_Item5_T.majus/scripts/work
+349390982737	/Work_bio/gao/projects/2026_Item6_UIC_02122603/ReAnalysis/scripts/work
+205414615040	/Work_bio/gao/projects/2026_Item7_LZJ/scripts/work
+566795312077	/Work_bio/gao/projects/2026_Item9_gc/scripts/work
+0	/Work_bio/gao/projects/singularity_cache/work
+total_bytes	5236737259422
+df_after: /dev/sdb1       9.1T  3.5T  5.1T  41% /Work_bio
+===== 2026-07-29 21:54:12  ROOT=/Work_bio/gao/projects =====
+df_before: /dev/sdb1       9.1T  3.5T  5.1T  41% /Work_bio
+82707195012	/Work_bio/gao/projects/2026_Item5_T.majus/cleaning_and_make_ref/working_split/WhS4_4/work
+total_bytes	82707195012
+df_after: /dev/sdb1       9.1T  3.5T  5.2T  40% /Work_bio

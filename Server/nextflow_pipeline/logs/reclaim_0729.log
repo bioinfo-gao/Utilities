@@ -1,0 +1,51 @@
+ROOT   : /Work_bio/gao/projects
+MODE   : EXECUTE (真删)
+DEPTH  : 4
+df 当前:
+/dev/sdb1       9.1T  8.3T  321G  97% /Work_bio
+
+TARGET    1756.5 GiB  /Work_bio/gao/projects/2026_Item10_rRNA_removal/scripts/work
+TARGET      18.9 GiB  /Work_bio/gao/projects/2026_Item11_Mingxue_with_2_pairs_samples/scripts/work
+TARGET      84.6 GiB  /Work_bio/gao/projects/2026_Item12_rRNA/scripts/work
+TARGET     243.9 GiB  /Work_bio/gao/projects/2026_Item16_ZhenYan/scripts/work
+TARGET     509.1 GiB  /Work_bio/gao/projects/2026_Item2_0205_Jitu/scripts/work
+TARGET       4.2 GiB  /Work_bio/gao/projects/2026_Item3_WGS/work
+TARGET    1215.3 GiB  /Work_bio/gao/projects/2026_Item5_T.majus/scripts/work
+TARGET     325.4 GiB  /Work_bio/gao/projects/2026_Item6_UIC_02122603/ReAnalysis/scripts/work
+TARGET     191.3 GiB  /Work_bio/gao/projects/2026_Item7_LZJ/scripts/work
+TARGET     527.9 GiB  /Work_bio/gao/projects/2026_Item9_gc/scripts/work
+TARGET       0.0 GiB  /Work_bio/gao/projects/singularity_cache/work
+
+合计可回收: 4.76 TiB  (11 个 work/ 目录)
+manifest 已写入: /home/gao/Utilities/Server/nextflow_pipeline/reclaimed_work_dirs_manifest.log
+开始删除...
+  rm -rf /Work_bio/gao/projects/2026_Item10_rRNA_removal/scripts/work
+  rm -rf /Work_bio/gao/projects/2026_Item11_Mingxue_with_2_pairs_samples/scripts/work
+  rm -rf /Work_bio/gao/projects/2026_Item12_rRNA/scripts/work
+  rm -rf /Work_bio/gao/projects/2026_Item16_ZhenYan/scripts/work
+  rm -rf /Work_bio/gao/projects/2026_Item2_0205_Jitu/scripts/work
+  rm -rf /Work_bio/gao/projects/2026_Item3_WGS/work
+  rm -rf /Work_bio/gao/projects/2026_Item5_T.majus/scripts/work
+  rm -rf /Work_bio/gao/projects/2026_Item6_UIC_02122603/ReAnalysis/scripts/work
+  rm -rf /Work_bio/gao/projects/2026_Item7_LZJ/scripts/work
+  rm -rf /Work_bio/gao/projects/2026_Item9_gc/scripts/work
+  rm -rf /Work_bio/gao/projects/singularity_cache/work
+
+完成。df 现在:
+/dev/sdb1       9.1T  3.5T  5.1T  41% /Work_bio
+RECLAIM_EXIT_DONE
+ROOT   : /Work_bio/gao/projects
+MODE   : EXECUTE (真删)
+DEPTH  : unlimited
+df 当前:
+/dev/sdb1       9.1T  3.5T  5.1T  41% /Work_bio
+
+TARGET      77.0 GiB  /Work_bio/gao/projects/2026_Item5_T.majus/cleaning_and_make_ref/working_split/WhS4_4/work
+
+合计可回收: 0.08 TiB  (1 个 work/ 目录)
+manifest 已写入: /home/gao/Utilities/Server/nextflow_pipeline/reclaimed_work_dirs_manifest.log
+开始删除...
+  rm -rf /Work_bio/gao/projects/2026_Item5_T.majus/cleaning_and_make_ref/working_split/WhS4_4/work
+
+完成。df 现在:
+/dev/sdb1       9.1T  3.5T  5.2T  40% /Work_bio
