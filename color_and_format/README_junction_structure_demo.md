@@ -10,6 +10,7 @@
 | [R/grey_figures/](R/grey_figures/) | 灰阶 + hatch（ggpattern） | 同上，R 版 |
 | [R/color_figures/](R/color_figures/) | 全彩（手调） | 同上，R 版 |
 | [R/color_figures_with_preconfigured_sets/](R/color_figures_with_preconfigured_sets/) | 全彩（预置色板：ColorBrewer） | 颜色不手调，全部取自成熟色板 |
+| [python/color_figures_with_preconfigured_sets/](python/color_figures_with_preconfigured_sets/) | 同上，**Python 版** | 与 R 版**同一套配色、同样的函数名与断言** |
 
 每个目录里 3 张图 × (png + pdf)，脚本就在同一目录：
 
@@ -79,8 +80,28 @@ assert_fill_not_near_black()    大面积填充不得近黑（ink #272727 对比
 定下时的候选池（Default_B 那批传 `from = c("3","4","5")`），所以 A 升为第一优先后，
 第一层与 `Advanced/` 的 9 张图 MD5 一个字节没变。
 
-**总纲**在 [R/color_figures_with_preconfigured_sets/](R/color_figures_with_preconfigured_sets/)，
-**验证代码与验证图**在它下面的 `Advanced/` 子文件夹：
+### R 与 Python 两套等价实现（2026-08-06 起）
+
+同一套规则有 **R 与 Python 两个实现**，目录结构逐一对应，**改一边就要改另一边**：
+
+```
+{R,python}/color_figures_with_preconfigured_sets/
+├── palette_priority.{R,py}          ← 总纲（五级优先级 + Default_A/B 常量 + 守卫）
+├── palette_levels_swatch.png/.pdf   ← **色卡：每一级的每个颜色，肉眼直接看**
+├── plot_junction_structure.{R,py}   ← Default_B 版（第一层，已冻结）
+├── Advanced/                        ← 3 个验证脚本（6 样本 / 9 色块 / 15 色块）
+└── Alternative/                     ← Default_A 版，与第一层同名的 6 个图
+```
+
+看全部颜色：`Rscript palette_priority.R --swatch` 或 `python palette_priority.py --swatch`。
+
+**四个跨语言差异（都实测踩过）**：① R 的 `from=` 在 Python 里叫 `from_levels=`；
+② `brewer(name, 9)` 两边**不等价** —— matplotlib 是 256 档查找表，按 `i/(n-1)` 采样会落在档位
+之间（Blues 第 6 色 `#4191C6` vs R 原值 `#4292C6`，差 1 个 RGB 单位），取 canonical 原表要用
+`colormaps[name].resampled(9)`；③ matplotlib 默认字体**没有汉字**，中文会变方框，须显式指定
+`Noto Sans CJK JP`；④ `✗`(U+2717) 在 CJK 字体里没有字形，标记一律用 ASCII 的 `X`。
+
+**总纲**在各自目录的第一层，**验证代码与验证图**在它下面的 `Advanced/` 子文件夹：
 
 | 文件 | 位置 | 作用 |
 | :--- | :---: | :--- |

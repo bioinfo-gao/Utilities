@@ -285,6 +285,76 @@ print_palette_levels <- function(roles = c("segment", "sample", "stroke")) {
   invisible(TRUE)
 }
 
+#' 把每一级的每个颜色画成**色卡**存盘 —— 数字看不出美丑，这个可以用眼睛看。
+#'
+#' 与 Python 版 `palette_priority.py` 的 `save_palette_swatch()` 同版式、同内容。
+#' 格内写十六进制与白底对比度；不满足该角色阈值的格子右上角标红 X
+#' （填充需 >= 1.1 且 <= 10 不得近黑；线条/文字需 >= 1.5，越深越好、不设上限）。
+save_palette_swatch <- function(out_stem = NULL) {
+  suppressPackageStartupMessages(library(ggplot2))
+  if (is.null(out_stem)) {
+    this <- grep("^--file=", commandArgs(FALSE), value = TRUE)[1]
+    here <- if (is.na(this)) getwd() else dirname(normalizePath(sub("^--file=", "", this)))
+    out_stem <- file.path(here, "palette_levels_swatch")
+  }
+  ## R 的默认 sans 也没有汉字，图上会出方框。本机有 Noto Sans CJK JP（含完整汉字）。
+  fam <- "sans"
+  if (requireNamespace("systemfonts", quietly = TRUE)) {
+    have <- systemfonts::system_fonts()$family
+    for (f in c("Noto Sans CJK JP", "Noto Serif CJK JP")) if (f %in% have) { fam <- f; break }
+  }
+
+  seg_of <- list(A = DEFAULT_A_SEG_FILLS, B = DEFAULT_B_SEG_FILLS)
+  str_of <- list(A = DEFAULT_A_JUNC_STROKES, B = DEFAULT_B_JUNC_STROKES,
+                 `3` = TIER1_STROKES, `4` = TIER2_STROKES, `5` = TIER3_STROKES)
+  rows <- list()
+  add <- function(title, cols, thr, cap) rows[[length(rows) + 1]] <<-
+    list(title = title, cols = unname(cols), thr = thr, cap = cap)
+  for (t in PRIORITY_LEVELS) {
+    tag <- switch(t, A = "第1优先 Default_A", B = "第2优先 Default_B", paste0("第", t, "级"))
+    if (!is.null(seg_of[[t]])) add(paste(tag, " 区段/结构（填充）"), seg_of[[t]], 1.1, TRUE)
+    add(paste(tag, " 柱子/分类（填充）"), SAMPLE_FILLS_BY_LEVEL[[t]], 1.1, TRUE)
+    add(paste(tag, " 线条/文字"), str_of[[t]], 1.5, FALSE)
+  }
+
+  d <- do.call(rbind, lapply(seq_along(rows), function(i) {
+    r <- rows[[i]]
+    cr <- vapply(r$cols, contrast_vs_white, numeric(1))
+    data.frame(row = i, title = r$title, x = seq_along(r$cols), col = r$cols,
+               cr = cr, bad = cr < r$thr | (r$cap & cr > 10),
+               ink = ifelse(cr > 4.5, "white", "black"),
+               stringsAsFactors = FALSE, row.names = NULL)
+  }))
+  d$y <- max(d$row) - d$row + 1
+  titles <- unique(d[, c("y", "title")])
+
+  p <- ggplot(d) +
+    geom_tile(aes(x = x, y = y, fill = col), width = 0.94, height = 0.9,
+              colour = "black", linewidth = 0.3) +
+    geom_text(aes(x = x, y = y + 0.12, label = col, colour = ink),
+              size = 2.5, family = "mono") +
+    geom_text(aes(x = x, y = y - 0.18, label = sprintf("%.2f", cr), colour = ink), size = 2.3) +
+    geom_text(data = d[d$bad, ], aes(x = x + 0.39, y = y + 0.32), label = "X",
+              colour = "#B00020", fontface = "bold", size = 3.6) +
+    geom_text(data = titles, aes(x = 0.35, y = y, label = title),
+              hjust = 1, size = 3.1, family = fam) +
+    scale_fill_identity() + scale_colour_identity() +
+    scale_x_continuous(limits = c(-6.2, max(d$x) + 0.6), expand = c(0, 0)) +
+    labs(title = paste0("配色优先级色卡 —— 永远第一优先 Default_A；",
+                        "B 只在【用户点名】或【A 不够用】时补充"),
+         subtitle = paste0("格内 = 十六进制 + 白底 WCAG 对比度　红 X = 该角色不可用",
+                           "（填充需 ≥1.1 且 ≤10 不得近黑；线条/文字需 ≥1.5，越深越好不设上限）")) +
+    theme_void(base_family = fam) +
+    theme(plot.title = element_text(hjust = 0.5, size = 11, face = "bold"),
+          plot.subtitle = element_text(hjust = 0.5, size = 9),
+          plot.margin = margin(10, 10, 10, 10),
+          plot.background = element_rect(fill = "white", colour = NA))
+
+  finalize_figure(p, out_stem, formats = c("png", "pdf"), dpi = 200,
+                  width = 1.35 * max(d$x) + 5.2, height = 0.62 * max(d$row) + 1.4)
+  invisible(paste0(out_stem, c(".png", ".pdf")))
+}
+
 #' 回归守卫：通用候选池现在是否仍然产出 Default_B 那套已冻结的样本色。
 #'
 #' source() 本文件时自动跑一次。以后谁改了候选池或门槛，只要会动到已冻结的配色，
@@ -329,3 +399,16 @@ palette_report <- function(cols, label = "fills") {
 
 ## source() 时立刻校验已冻结的 Default_B 没有被后续改动悄悄改掉。
 check_default_b_palette_unchanged()
+
+## 直接 `Rscript palette_priority.R [--swatch]` 时：打印全量清单（并按需另存色卡）。
+## 只在**本文件被直接执行**时触发 —— 被别的脚本 source 时不会误跑
+## （那些脚本自己的命令行参数里也可能带东西）。
+local({
+  f <- grep("^--file=", commandArgs(FALSE), value = TRUE)[1]
+  if (!is.na(f) && basename(sub("^--file=", "", f)) == "palette_priority.R") {
+    print_palette_levels()
+    if ("--swatch" %in% commandArgs(TRUE)) {
+      for (p in save_palette_swatch()) cat(sprintf("[OK] 色卡 -> %s\n", p))
+    }
+  }
+})

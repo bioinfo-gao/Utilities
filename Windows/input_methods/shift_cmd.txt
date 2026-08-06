@@ -1,0 +1,1 @@
+window + space  # shift the input method between English and Chinese
