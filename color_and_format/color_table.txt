@@ -1,0 +1,22 @@
+https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf
+## 五级全量色表（与色卡 PNG 同源，都出自本文件下面的常量）：
+##
+##   第1优先 Default_A  区段  #80B1D3 蓝    #FDB462 橙    #B3DE69 绿
+##                      柱子  #BEBADA  #FB8072  #FFED6F  #FCCDE5  #BC80BD  #CCEBC5
+##                      线条  #8E0152 酒红实线  #003C30 深青绿虚线  #0000CD blue3
+##                            #8B4500 darkorange4  #9400D3 darkviolet
+##
+##   第2优先 Default_B  区段  #999999 中灰  #FDB462 橙    #B3DE69 绿
+##                      柱子  #8DD3C7  #FB8072  #FFED6F  #C75C9F  #E9A6A1  #B87542
+##                      线条  #E41A1C 正红实线  #1F78B4 亮蓝虚线  #0000CD blue3
+##                            #CD5B45 coral3  #32CD32 limegreen
+##
+##   第3级 ColorBrewer  柱子  #8DD3C7  #FFFFB3(X)  #BEBADA  #FB8072  #999999  #FDB462
+##                            #B3DE69  #FCCDE5  #D9D9D9  #BC80BD  #CCEBC5  #FFED6F
+##                      线条  #000000  #E41A1C  #1F78B4  #006D2C  #8C510A  #762A83
+##
+##   第4级 手调全彩     柱子  #73C6CF  #C75C9F  #E9A6A1  #B87542  #70487E  #6B6B2F
+##                      线条  #C71585  #17BECF  #0055E5
+##
+##   第5级 黑白灰       柱子  #ABABAB  #828282  #5A5A5A
+##                      线条  #000000  #4D4D4D

@@ -33,7 +33,44 @@
 ##     并把每个颜色实际来自哪一级**打印出来**。这就是"优先级可验证"的含义：
 ##     不是写在注释里靠自觉，而是跑一次就看得见。
 ##
-## **想一眼看全每一级都有哪些颜色** -> `print_palette_levels()`。
+## ===========================================================================
+## **一目了然：色卡 PNG —— `palette_levels_swatch.png`（与本文件同目录）**
+## ===========================================================================
+## 五级 × 每级的每个颜色都画成色块，格内写十六进制与白底对比度，
+## 不满足该角色阈值的格子标红 X。**打开那个 PNG 就能用眼睛看全部配色。**
+##   重新生成： Rscript palette_priority.R --swatch
+##   只打印文字：Rscript palette_priority.R        （或 print_palette_levels()）
+##
+## **本级不够就自动向下一级取**（只排除肉眼分不清的色，EYE_THRESHOLD = 0.10）：
+##   面积 -> fills_by_priority(n) / sample_fills(n)　线状 -> strokes_by_priority(n)
+##
+## 五级全量色表（与色卡 PNG 同源，都出自本文件下面的常量）：
+## **只分两类**：面积(区段/柱子，阈值 1.1-10 不得近黑) · 线状(线条/文字，阈值 >=1.5 无上限)。
+## 面积一栏里 │ 左边 = 区段的固定语义映射，右边 = 柱子色序列；同图里这两段必须互不相交。
+##
+##   第1优先 Default_A  面积  #80B1D3 蓝  #FDB462 橙  #B3DE69 绿 │ #BEBADA  #FB8072  #FFED6F
+##                            #FCCDE5  #BC80BD  #CCEBC5
+##                      线状  #8E0152 酒红实线  #003C30 深青绿虚线  #0000CD blue3
+##                            #8B4500 darkorange4  #9400D3 darkviolet
+##
+##   第2优先 Default_B  面积  #999999 中灰  #FDB462 橙  #B3DE69 绿 │ #8DD3C7  #FB8072  #FFED6F
+##                            #C75C9F  #E9A6A1  #B87542
+##                      线状  #E41A1C 正红实线  #1F78B4 亮蓝虚线  #0000CD blue3
+##                            #CD5B45 coral3  #32CD32 limegreen
+##
+##   第3级 ColorBrewer  面积  #8DD3C7  #FFFFB3(X)  #BEBADA  #FB8072  #999999  #FDB462
+##                            #B3DE69  #FCCDE5  #D9D9D9  #BC80BD  #CCEBC5  #FFED6F
+##                      线状  #000000  #E41A1C  #1F78B4  #006D2C  #8C510A  #762A83
+##
+##   第4级 手调全彩     面积  #73C6CF  #C75C9F  #E9A6A1  #B87542  #70487E  #6B6B2F
+##                      线状  #C71585  #17BECF  #0055E5
+##
+##   第5级 黑白灰       面积  #ABABAB  #828282  #5A5A5A
+##                      线状  #000000  #4D4D4D
+##
+##   (X) = #FFFFB3 对白底对比度仅 1.04，低于面积阈值 1.1，**永远被自动剔除**。
+##   分组底纹 #F2F2F2 两套共用，不属于任何一级；任何取色都要把它当背景色排除。
+## ===========================================================================
 ##
 ## 依赖 pubfig.R（contrast_vs_white / .rgb_distance / set3_with_grey / STROKE_COLORS）。
 ## 用法：source() 本文件之前先 source pubfig.R，或直接 source 本文件（它会自己 source）。
@@ -74,7 +111,10 @@ PRIORITY_LEVELS <- names(TIER_SOURCE)
 ## 再手调的 magenta/cyan，最后黑与深灰。颜色不够用时文字一律黑色。
 ## （成套用时直接取 DEFAULT_A_JUNC_STROKES / DEFAULT_B_JUNC_STROKES。）
 TIER1_STROKES <- STROKE_COLORS
-TIER2_STROKES <- c("#C71585", "#17BECF")
+## 第 4 级线条：第 3 位 #0055E5 是用户截图里**顶部标题栏**的蓝（逐像素采样所得，
+## 见 Screenshot 2026-08-06 105131.png）。对白底 6.12，距另两色 0.459/0.282，
+## 距第 4 级 6 个填充最小 0.314 —— 各项都过。
+TIER2_STROKES <- c("#C71585", "#17BECF", "#0055E5")
 TIER3_STROKES <- c("#000000", "#4D4D4D")
 
 ## ---------------------------------------------------------------------------
@@ -155,8 +195,25 @@ DEFAULT_B_SAMPLE_FILLS <- c("#8DD3C7",  # 3 级 Set3 teal
                             "#C75C9F",  # 4 级 magenta 降饱和
                             "#E9A6A1",  # 4 级 pink
                             "#B87542")  # 4 级 深橙降饱和
-DEFAULT_B_JUNC_STROKES <- c(J2 = TIER1_STROKES[2],   # #E41A1C 正红，实线
-                            J1 = TIER1_STROKES[3])   # #1F78B4 亮蓝，虚线
+## 线条/文字（**五色，按优先序**）。前两个是 STROKE_COLORS 的正红与亮蓝；
+## 第 3-5 个由用户 2026-08-06 指定，取自 NCEAS 配色速查表
+## https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf
+## 的 R 颜色名 blue3 / coral3 / limegreen。
+##
+## **用 coral3 前必看（实测）**：它距 B 的三个【区段填充】最小 0.258（没问题，接头竖线
+## 就画在区段上），但距【柱子填充】#B87542（深橙降饱和）只有 **0.079** —— 低于 0.10
+## 撞色门槛。**coral3 的线绝不能画在 #B87542 的柱子上，会直接看不见。**
+## 线一般不画在柱子上，所以留它在第 4 位；真要画时
+## assert_strokes_visible_over_fills() 会当场拦下，不必靠记忆。
+## 另：coral3 与第 1 位正红 #E41A1C 距离 0.198 —— 过门槛但同属红系，同图并用要留意。
+## limegreen 对白底 2.12，刚过线条 1.5 门槛，**细线偏弱**；做粗线/标记没问题。
+DEFAULT_B_STROKES <- c(TIER1_STROKES[2],   # #E41A1C 正红   （J2 实线）
+                       TIER1_STROKES[3],   # #1F78B4 亮蓝   （J1 虚线）
+                       "#0000CD",          # blue3
+                       "#CD5B45",          # coral3     ← 见上面的 #B87542 警告
+                       "#32CD32")          # limegreen  ← 对白底仅 2.12
+## 接头的角色映射只取前两个 —— 已冻结的图靠这两个色，扩充第 3-5 位不会动它们。
+DEFAULT_B_JUNC_STROKES <- c(J2 = DEFAULT_B_STROKES[1], J1 = DEFAULT_B_STROKES[2])
 ## 作为候选池时的取色顺序：先柱子色（要 n 个色多半是给 n 个分类上色），再区段色。
 DEFAULT_B_FILLS <- unname(c(DEFAULT_B_SAMPLE_FILLS, DEFAULT_B_SEG_FILLS))
 
@@ -190,9 +247,29 @@ DEFAULT_A_SEG_FILLS <- c("mouse genomic flank"           = .S3_STOCK[5],   # #80
                          "human insert"                  = .S3_STOCK[7])   # #B3DE69 绿
 ## 柱子：跳过 #FFFFB3（对白底 1.04，太浅）与 teal（撞蓝侧翼），取淡紫/珊瑚/黄，再接粉/紫/浅绿。
 DEFAULT_A_SAMPLE_FILLS <- .S3_STOCK[c(3, 4, 12, 8, 10, 11)]
-## 接头线条/文字：diverging 色板的**深端** —— 深色饱和，正是细线与小字需要的。
-DEFAULT_A_JUNC_STROKES <- c(J2 = brewer("PiYG", 2)[1],   # #8E0152 酒红，实线
-                            J1 = brewer("BrBG", 2)[2])   # #003C30 深青绿，虚线
+## 线条/文字（**五色，按优先序**）。前两个是 diverging 色板的深端 —— 深色饱和，
+## 正是细线与小字需要的；第 3-5 个由用户 2026-08-06 指定，取自 NCEAS 配色速查表
+## https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf
+## 的 R 颜色名 blue3 / darkorange4 / darkviolet。
+##
+## 第 3 位 blue3 = 用户说的「截图里 Eclipse 窗口边框那个蓝」—— **这是实测结论，不是近似**：
+## 用户把截图存到本目录 `Screenshot 2026-08-06 105131.png`，逐像素采样得到
+## 左边框主体 #0221D2、右边框主体 #0044EA、顶部标题栏 #0055E5。
+## **blue3 #0000CD 距左边框主体 #0221D2 只有 0.087 —— 低于 0.10 的撞色门槛**，
+## 即我们自己的工具判定这两个色不可区分。用户原话「这两个蓝色我分不太清楚」，
+## 原因就在这里。既然等价，就用有名字、可复现的 blue3。
+## 另：顶部标题栏蓝 #0055E5 是**另一个**蓝（距 blue3 0.229，可区分），用户也喜欢，
+## 需要时可追加为第 6 位（对白底 6.12，距 A 全部填充最小 0.340，各项检查都过）。
+##
+## 五色实测：对白底对比度 9.23 / 12.43 / 11.16 / 7.12 / 6.56（线条门槛 1.5，无上限）；
+## 两两最小距离 0.257，优于 STROKE_COLORS 六色的 0.221 基准；无黄色文字。
+DEFAULT_A_STROKES <- c(brewer("PiYG", 2)[1],  # #8E0152 酒红   （J2 实线）
+                       brewer("BrBG", 2)[2],  # #003C30 深青绿 （J1 虚线）
+                       "#0000CD",             # blue3
+                       "#8B4500",             # darkorange4
+                       "#9400D3")             # darkviolet
+## 接头的角色映射只取前两个 —— 已冻结的图靠这两个色，扩充第 3-5 位不会动它们。
+DEFAULT_A_JUNC_STROKES <- c(J2 = DEFAULT_A_STROKES[1], J1 = DEFAULT_A_STROKES[2])
 ## 作为候选池时的取色顺序：先柱子色，再区段色（同 Default_B）。
 DEFAULT_A_FILLS <- unname(c(DEFAULT_A_SAMPLE_FILLS, DEFAULT_A_SEG_FILLS))
 
@@ -248,48 +325,126 @@ sample_fills <- function(n, exclude = character(0), min_distance = 0.10,
   structure(chosen, tier = tiers, min_pairwise = d)
 }
 
+## ---------------------------------------------------------------------------
+## 基本原则：**本级不够就自动向下一级取**（user directive 2026-08-06）
+## ---------------------------------------------------------------------------
+## 面积色与线状色都适用：当前级取不满 n 个，就自动到下一级继续取，
+## **只排除"肉眼分不清"的颜色**，不因为"有点像"就跳过。
+##
+## "肉眼分不清"这个门槛不是拍的，是本轮实测校准出来的：
+##   用户看 blue3 #0000CD 与截图左边框 #0221D2（两者距离 **0.087**）时，
+##   原话是「这两个蓝色我分不太清楚」。撞色断言 assert_no_palette_collision()
+##   的默认门槛 0.10 正好压在这个经验值之上 —— 所以 EYE_THRESHOLD = 0.10。
+##
+## **注意这与"并排间距"是两件事，别混：**
+##   · EYE_THRESHOLD 0.10 = "算不算重复" —— 跨级下取时的排除标准（本原则）。
+##   · min_distance 0.13 = "并排够不够分得开" —— 同一组里 6 根柱子挨在一起时的
+##     审美/可读性要求，比"不重复"更严。fills_by_priority() 的默认值就是它。
+##     实测：把它放宽到 0.10，已冻结的 Default_B 六个柱子色会全部改变 —— 那是
+##     另一个问题（并排可读性），不是本原则要解决的问题。
+EYE_THRESHOLD <- 0.10
+
+#' 按全局优先级挑 n 个**线状色**（线条 / 文字）。
+#'
+#' 与 fills_by_priority() 对称，只是候选池换成各级的线状色，且判据换成线状的：
+#' 对白底对比度 >= 1.5（**不设上限** —— 线条越深越好，黑色 21.00 是首选笔画色）。
+#' 逐级 A -> B -> 3 -> 4 -> 5，**本级不够自动下取**，排除标准是"肉眼分不清"
+#' （EYE_THRESHOLD = 0.10），不是更严的并排间距。
+#'
+#' @param exclude 必须避开的颜色。**线条要压在色块上时，把那些色块填充放进来** ——
+#'   一根线画在与它同色系的填充上会直接消失，这是 assert_strokes_visible_over_fills()
+#'   要防的那种 bug（实例：J2 正红 #E41A1C 压在 #BD0026 上距离 0.102，线彻底看不见）。
+#' @return 字符向量，带属性 `tier`（每色来自哪一级）与 `min_pairwise`。
+strokes_by_priority <- function(n, exclude = character(0), min_distance = EYE_THRESHOLD,
+                                from = PRIORITY_LEVELS) {
+  bad <- setdiff(from, PRIORITY_LEVELS)
+  if (length(bad)) stop(sprintf("未知的优先级: %s", paste(bad, collapse = ", ")))
+  all_pools <- list(A = DEFAULT_A_STROKES, B = DEFAULT_B_STROKES,
+                    `3` = TIER1_STROKES, `4` = TIER2_STROKES, `5` = TIER3_STROKES)
+  pools <- all_pools[from]
+  chosen <- character(0); tiers <- character(0)
+  ok_vs <- function(col, others) {
+    if (!length(others)) return(TRUE)
+    all(vapply(others, function(o) .rgb_distance(col, o), numeric(1)) >= min_distance)
+  }
+  for (t in names(pools)) {
+    for (col in pools[[t]]) {
+      if (length(chosen) >= n) break
+      if (contrast_vs_white(col) < 1.5) next        # 线状阈值；**无上限**，越深越好
+      if (col %in% chosen) next
+      if (!ok_vs(col, exclude) || !ok_vs(col, chosen)) next
+      chosen <- c(chosen, col); tiers <- c(tiers, t)
+    }
+    if (length(chosen) >= n) break
+  }
+  if (length(chosen) < n) {
+    stop(sprintf(paste0("第 %s 级的线状色只凑出 %d 个，要 %d 个。",
+                        "颜色不够用时，文字标注直接用黑色 —— 不会出错的兜底。"),
+                 paste(from, collapse = "/"), length(chosen), n))
+  }
+  d <- if (n > 1) min(utils::combn(chosen, 2, function(p) .rgb_distance(p[1], p[2]))) else NA_real_
+  structure(chosen, tier = tiers, min_pairwise = d)
+}
+
 #' 一屏打印**每一级的全部颜色** —— 想一眼看清有哪些色就跑这个。
 #'
-#' @param roles 只看某些角色（"segment" / "sample" / "stroke"），默认全看。
-print_palette_levels <- function(roles = c("segment", "sample", "stroke")) {
+#' **只分两类**（user directive 2026-08-06，取代原来的三分法）：
+#'   1. **面积**：区段 / 柱子 —— 都是有面积的结构，共用填充阈值（对白底 >= 1.1，
+#'      且 <= 10 不得近黑）。取色池代码里它们本来就是合并的一个池（DEFAULT_*_FILLS）。
+#'   2. **线状**：线条 / 文字 —— 都是一两像素宽的笔画，共用线条阈值（>= 1.5，不设上限）。
+#' 原来分三行暗示三套校验规则，但阈值体系只有两档，展示层与断言层对不上。
+#'
+#' **合并后仍保留一个信息**：面积色里**前 3 个是区段的固定语义映射**（灰/橙/绿 =
+#' 侧翼/HA/人源插入），其余是柱子序列。同一张图里这两段必须互不相交 —— 那是
+#' assert_no_palette_collision() 管的**图级**约束，不是颜色本身的属性，所以标注在
+#' 同一行里，而不是拆成两类。
+print_palette_levels <- function() {
   line <- function(cols) paste(sprintf("%s(%.2f)", cols,
                                        vapply(cols, contrast_vs_white, numeric(1))),
                                collapse = "  ")
+  seg_of <- list(A = DEFAULT_A_SEG_FILLS, B = DEFAULT_B_SEG_FILLS)
+  str_of <- list(A = DEFAULT_A_STROKES, B = DEFAULT_B_STROKES,
+                 `3` = TIER1_STROKES, `4` = TIER2_STROKES, `5` = TIER3_STROKES)
   cat("\n================ 配色优先级全量清单 ================\n")
   cat("规则：永远第一优先 Default_A；B 只在【用户点名】或【A 不够用要补充】时出现。\n")
+  cat("分两类：面积(区段/柱子，阈值 1.1-10) · 线状(线条/文字，阈值 >=1.5 无上限)\n")
   for (t in PRIORITY_LEVELS) {
     cat(sprintf("\n---- 第 %s 级：%s ----\n", t, TIER_SOURCE[[t]]))
-    if ("segment" %in% roles) {
-      seg <- switch(t, A = DEFAULT_A_SEG_FILLS, B = DEFAULT_B_SEG_FILLS, NULL)
-      if (!is.null(seg)) {
-        cat("  区段/结构 (3):\n")
-        for (i in seq_along(seg)) {
-          cat(sprintf("    %-32s %s (对比度 %.2f)\n",
-                      names(seg)[i], seg[i], contrast_vs_white(seg[i])))
-        }
-      }
-    }
-    if ("sample" %in% roles) {
-      cat(sprintf("  柱子/分类 (%d):\n    %s\n",
-                  length(SAMPLE_FILLS_BY_LEVEL[[t]]),
-                  line(SAMPLE_FILLS_BY_LEVEL[[t]])))
-    }
-    if ("stroke" %in% roles) {
-      st <- switch(t, A = DEFAULT_A_JUNC_STROKES, B = DEFAULT_B_JUNC_STROKES,
-                   `3` = TIER1_STROKES, `4` = TIER2_STROKES, `5` = TIER3_STROKES)
-      cat(sprintf("  线条/文字 (%d):\n    %s\n", length(st), line(unname(st))))
-    }
+    segs <- if (!is.null(seg_of[[t]])) unname(seg_of[[t]]) else character(0)
+    fills <- c(segs, SAMPLE_FILLS_BY_LEVEL[[t]])
+    tag <- if (length(segs)) sprintf("（前 %d 个是区段的固定语义映射，其余为柱子序列）",
+                                     length(segs)) else ""
+    cat(sprintf("  面积 · 区段/柱子 (%d)%s:\n    %s\n", length(fills), tag, line(fills)))
+    cat(sprintf("  线状 · 线条/文字 (%d):\n    %s\n",
+                length(str_of[[t]]), line(unname(str_of[[t]]))))
   }
-  cat("\n括号内是对白底 WCAG 对比度：填充需 >= 1.1，线条/文字需 >= 1.5，填充不得 > 10（近黑）。\n")
+  cat("\n括号内是对白底 WCAG 对比度。面积需 >= 1.1 且 <= 10（不得近黑）；")
+  cat("线状需 >= 1.5，越深越好、不设上限。\n")
   cat("====================================================\n")
+  .warn_if_swatch_stale()
+  invisible(TRUE)
+}
+
+#' 色卡比源文件旧就提醒 —— 否则常量改了、PNG 还是旧的，那张图就是在骗人。
+.warn_if_swatch_stale <- function() {
+  f <- grep("^--file=", commandArgs(FALSE), value = TRUE)[1]
+  src <- if (is.na(f)) NA_character_ else normalizePath(sub("^--file=", "", f), mustWork = FALSE)
+  if (is.na(src) || !file.exists(src)) return(invisible(FALSE))   # 被 source() 进来时跳过
+  png <- file.path(dirname(src), "palette_levels_swatch.png")
+  if (!file.exists(png)) {
+    cat(sprintf("[提示] 还没有色卡：跑 `Rscript %s --swatch` 生成\n", basename(src)))
+  } else if (file.mtime(png) < file.mtime(src)) {
+    cat(sprintf("[警告] palette_levels_swatch.png 比 %s 旧 —— 颜色可能已改，跑 `Rscript %s --swatch` 刷新\n",
+                basename(src), basename(src)))
+  }
   invisible(TRUE)
 }
 
 #' 把每一级的每个颜色画成**色卡**存盘 —— 数字看不出美丑，这个可以用眼睛看。
 #'
 #' 与 Python 版 `palette_priority.py` 的 `save_palette_swatch()` 同版式、同内容。
-#' 格内写十六进制与白底对比度；不满足该角色阈值的格子右上角标红 X
-#' （填充需 >= 1.1 且 <= 10 不得近黑；线条/文字需 >= 1.5，越深越好、不设上限）。
+#' **只分两类**：面积（区段/柱子）与 线状（线条/文字）—— 见 print_palette_levels()。
+#' 格内写十六进制与白底对比度；不满足该角色阈值的格子右上角标红 X。
 save_palette_swatch <- function(out_stem = NULL) {
   suppressPackageStartupMessages(library(ggplot2))
   if (is.null(out_stem)) {
@@ -305,23 +460,24 @@ save_palette_swatch <- function(out_stem = NULL) {
   }
 
   seg_of <- list(A = DEFAULT_A_SEG_FILLS, B = DEFAULT_B_SEG_FILLS)
-  str_of <- list(A = DEFAULT_A_JUNC_STROKES, B = DEFAULT_B_JUNC_STROKES,
+  str_of <- list(A = DEFAULT_A_STROKES, B = DEFAULT_B_STROKES,
                  `3` = TIER1_STROKES, `4` = TIER2_STROKES, `5` = TIER3_STROKES)
   rows <- list()
-  add <- function(title, cols, thr, cap) rows[[length(rows) + 1]] <<-
-    list(title = title, cols = unname(cols), thr = thr, cap = cap)
+  ## 近黑 >10 只对面积是硬伤；线状越深越好，黑色 21.00 是首选笔画色。
+  add <- function(title, cols, thr, cap, nseg) rows[[length(rows) + 1]] <<-
+    list(title = title, cols = unname(cols), thr = thr, cap = cap, nseg = nseg)
   for (t in PRIORITY_LEVELS) {
     tag <- switch(t, A = "第1优先 Default_A", B = "第2优先 Default_B", paste0("第", t, "级"))
-    if (!is.null(seg_of[[t]])) add(paste(tag, " 区段/结构（填充）"), seg_of[[t]], 1.1, TRUE)
-    add(paste(tag, " 柱子/分类（填充）"), SAMPLE_FILLS_BY_LEVEL[[t]], 1.1, TRUE)
-    add(paste(tag, " 线条/文字"), str_of[[t]], 1.5, FALSE)
+    segs <- if (!is.null(seg_of[[t]])) unname(seg_of[[t]]) else character(0)
+    add(paste(tag, " 面积 · 区段/柱子"), c(segs, SAMPLE_FILLS_BY_LEVEL[[t]]), 1.1, TRUE, length(segs))
+    add(paste(tag, " 线状 · 线条/文字"), str_of[[t]], 1.5, FALSE, 0)
   }
 
   d <- do.call(rbind, lapply(seq_along(rows), function(i) {
     r <- rows[[i]]
     cr <- vapply(r$cols, contrast_vs_white, numeric(1))
     data.frame(row = i, title = r$title, x = seq_along(r$cols), col = r$cols,
-               cr = cr, bad = cr < r$thr | (r$cap & cr > 10),
+               cr = cr, bad = cr < r$thr | (r$cap & cr > 10), nseg = r$nseg,
                ink = ifelse(cr > 4.5, "white", "black"),
                stringsAsFactors = FALSE, row.names = NULL)
   }))
@@ -338,12 +494,19 @@ save_palette_swatch <- function(out_stem = NULL) {
               colour = "#B00020", fontface = "bold", size = 3.6) +
     geom_text(data = titles, aes(x = 0.35, y = y, label = title),
               hjust = 1, size = 3.1, family = fam) +
+    ## 面积行里前 nseg 个是区段的固定语义映射 —— 画条竖虚线与柱子序列分开，
+    ## 提醒"同一张图里这两段必须互不相交"（图级约束，不是颜色本身的属性）。
+    geom_segment(data = unique(d[d$nseg > 0, c("y", "nseg")]),
+                 aes(x = nseg + 0.5, xend = nseg + 0.5, y = y - 0.5, yend = y + 0.5),
+                 colour = "#555555", linewidth = 0.4, linetype = "dashed") +
     scale_fill_identity() + scale_colour_identity() +
     scale_x_continuous(limits = c(-6.2, max(d$x) + 0.6), expand = c(0, 0)) +
     labs(title = paste0("配色优先级色卡 —— 永远第一优先 Default_A；",
                         "B 只在【用户点名】或【A 不够用】时补充"),
          subtitle = paste0("格内 = 十六进制 + 白底 WCAG 对比度　红 X = 该角色不可用",
-                           "（填充需 ≥1.1 且 ≤10 不得近黑；线条/文字需 ≥1.5，越深越好不设上限）")) +
+                           "（面积需 ≥1.1 且 ≤10 不得近黑；线状需 ≥1.5，越深越好不设上限）\n",
+                           "面积行的竖虚线左侧 = 区段的固定语义映射（侧翼/HA/人源插入），",
+                           "右侧 = 柱子色序列；同一张图里这两段必须互不相交")) +
     theme_void(base_family = fam) +
     theme(plot.title = element_text(hjust = 0.5, size = 11, face = "bold"),
           plot.subtitle = element_text(hjust = 0.5, size = 9),
@@ -352,7 +515,55 @@ save_palette_swatch <- function(out_stem = NULL) {
 
   finalize_figure(p, out_stem, formats = c("png", "pdf"), dpi = 200,
                   width = 1.35 * max(d$x) + 5.2, height = 0.62 * max(d$row) + 1.4)
-  invisible(paste0(out_stem, c(".png", ".pdf")))
+  save_palette_swatch_html(paste0(out_stem, ".html"), rows)
+  invisible(paste0(out_stem, c(".png", ".pdf", ".html")))
+}
+
+#' 同一份色表再出一个 **HTML** 版 —— 不依赖任何编辑器扩展就能看到颜色。
+#'
+#' 为什么需要它：`.R` / `.py` 都是纯文本，`#80B1D3` 在里面只是 7 个字符；
+#' 要在编辑器里显示成色块，必须装颜色预览扩展（如 VS Code 的
+#' `naumovs.color-highlight`）。**本机两个环境都没装**，所以源码里看不到颜色是正常的。
+#' HTML 版用浏览器/编辑器预览直接打开就有色块，且十六进制可以选中复制 —— PNG 做不到后者。
+#' 与 Python 版 save_palette_swatch_html() 同版式、同内容。
+save_palette_swatch_html <- function(out_path, rows) {
+  cell <- function(col, thr, cap, sep) {
+    cr <- contrast_vs_white(col)
+    bad <- cr < thr || (cap && cr > 10)
+    ink <- if (cr > 4.5) "#fff" else "#000"
+    mark <- if (bad) "<span class=\"x\">X</span>" else ""
+    style <- if (sep) "border-left:3px dashed #555;margin-left:10px;padding-left:7px" else ""
+    sprintf(paste0("<td style=\"%s\"><div class=\"sw\" style=\"background:%s;color:%s\">",
+                   "%s<code>%s</code><br><small>%.2f</small></div></td>"),
+            style, col, ink, mark, col, cr)
+  }
+  body <- vapply(rows, function(r) {
+    tds <- paste(vapply(seq_along(r$cols), function(i)
+      cell(r$cols[i], r$thr, r$cap, r$nseg > 0 && i == r$nseg + 1), character(1)), collapse = "")
+    sprintf("<tr><th>%s</th>%s</tr>", r$title, tds)
+  }, character(1))
+
+  html <- paste0(
+    "<!doctype html><meta charset=\"utf-8\"><title>配色优先级色卡</title>\n<style>\n",
+    " body{font-family:\"Noto Sans CJK JP\",sans-serif;margin:24px;background:#fff;color:#222}\n",
+    " h1{font-size:18px;margin:0 0 4px} p.sub{color:#555;font-size:13px;margin:0 0 18px;line-height:1.6}\n",
+    " table{border-collapse:separate;border-spacing:6px 8px}\n",
+    " th{text-align:right;font-weight:normal;font-size:13px;white-space:nowrap;padding-right:6px}\n",
+    " .sw{width:104px;height:52px;border:1px solid #000;border-radius:3px;display:flex;\n",
+    "      flex-direction:column;align-items:center;justify-content:center;position:relative}\n",
+    " code{font-size:11.5px} small{font-size:10.5px;opacity:.9}\n",
+    " .x{position:absolute;top:1px;right:5px;color:#B00020;font-weight:bold;font-size:13px;\n",
+    "     text-shadow:0 0 2px #fff}\n</style>\n",
+    "<h1>配色优先级色卡 —— 永远第一优先 Default_A；B 只在【用户点名】或【A 不够用】时补充</h1>\n",
+    "<p class=\"sub\">格内 = 十六进制 + 白底 WCAG 对比度　红 X = 该角色不可用\n",
+    "（面积需 ≥1.1 且 ≤10 不得近黑；线状需 ≥1.5，越深越好不设上限）<br>\n",
+    "面积行的竖虚线左侧 = 区段的固定语义映射（侧翼/HA/人源插入），右侧 = 柱子色序列；\n",
+    "同一张图里这两段必须互不相交<br>\n",
+    "<b>本页与 palette_levels_swatch.png 同源</b>，都出自 palette_priority.R 的常量；\n",
+    "用浏览器或编辑器预览打开即可看到颜色，<b>不需要任何编辑器扩展</b>。</p>\n",
+    "<table>", paste(body, collapse = ""), "</table>\n")
+  writeLines(html, out_path, useBytes = TRUE)
+  invisible(out_path)
 }
 
 #' 回归守卫：通用候选池现在是否仍然产出 Default_B 那套已冻结的样本色。
