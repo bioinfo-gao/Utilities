@@ -160,7 +160,9 @@ def collect():
     if gh.is_dir():
         w(f"另有 **git hooks**（与 Claude Code 无关，是 git 自己的）："
           f"`{gh}` -> {', '.join(p.name for p in gh.iterdir())}；"
-          f"各 projects 仓库用 `core.hooksPath .githooks` 指向同款 >10MB 拦截。")
+          f"`Utilities` / `projects_2026M7` / `projects_2026H2` 三个仓库用 "
+          f"`core.hooksPath .githooks` 指向**同一份三类拦截 hook**"
+          f"（大文件 / 隐藏文件目录 / 密码密钥）—— 规则与处理方式见下方 **C 段**。")
         w("")
 
     # ---- 用户自定义 subagent / 命令 ----

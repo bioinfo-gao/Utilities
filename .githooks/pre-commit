@@ -1,27 +1,237 @@
 #!/usr/bin/env bash
-# 大文件自动拦截 —— /git skill 的核心目标：系统自动检测，免去手动逐次排查的痛苦。
-# 任何暂存文件 > LIMIT_MB 直接拒绝 commit，列出文件并提示如何处理。
+# ============================================================================
+# pre-commit 三类拦截 —— /git skill 的核心目标：系统自动检测，免去手动逐次排查。
+#   1) 大文件      暂存文件 > LIMIT_MB
+#   2) 隐藏文件/目录  路径中任一段以 "." 开头（白名单除外）
+#   3) 密码/密钥    文件名即凭据（.env/.pem/id_rsa…）或文件内容含高置信度密钥
+#
+# 处理方式（刻意分两种，别改成一刀切）：
+#   · 新增文件(A) 命中 1/2/3-文件名  → 自动追加 .gitignore + git rm --cached + 放行
+#   · 已跟踪文件(M) 命中任一类        → 硬拦截。对已入库文件做 git rm --cached
+#                                      会在下次提交记录成"删除"，等于把文件移出仓库，
+#                                      绝不能自动做。
+#   · 内容里扫到密钥（无论 A/M）      → 硬拦截并报行号。该文件本就该入库，
+#                                      要改的是那一行，不是整个文件。
+#   想要全自动（不推荐）：把下面 STRICT_ON_MODIFIED / STRICT_ON_SECRET_CONTENT 改成 0。
+#
 # 生效方式：git config core.hooksPath .githooks（本仓库已设）。
 # 紧急放行（确知无害）：git commit --no-verify
-LIMIT_MB=10
-LIMIT=$(( LIMIT_MB * 1024 * 1024 ))
-big=""
-# 只查将被提交的新增/修改文件（--diff-filter=AM），用暂存 blob 的真实大小
-while IFS= read -r -d '' f; do
-    [ -f "$f" ] || continue
-    sz=$(git cat-file -s ":$f" 2>/dev/null || stat -c %s "$f" 2>/dev/null || echo 0)
-    if [ "$sz" -gt "$LIMIT" ]; then
-        big+=$(printf '  %6.1f MB  %s\n' "$(echo "scale=1; $sz/1048576" | bc)" "$f")$'\n'
-    fi
-done < <(git diff --cached --name-only --diff-filter=AM -z)
+# ============================================================================
 
-if [ -n "$big" ]; then
-    echo "❌ pre-commit 拦截：以下暂存文件超过 ${LIMIT_MB} MB —" >&2
-    printf '%s' "$big" >&2
+LIMIT_MB=10
+STRICT_ON_MODIFIED=1          # 1=已跟踪文件命中则拦截；0=也自动 ignore（会删文件，慎用）
+STRICT_ON_SECRET_CONTENT=1    # 1=内容含密钥则拦截；0=自动 ignore 整个文件
+SCAN_MAX_BYTES=$((2*1024*1024))   # 超过此大小的文件不做内容扫描（正文不会是密钥文件）
+
+# 允许入库的隐藏文件/目录（git 自身、常见工程配置、各家 AI agent 的配置目录）
+# ⚠ 白名单只放行"这一段隐藏名本身"，不豁免下面的 CRED_NAME_RE 与内容扫描 ——
+#   `.codex/auth.json`、`.gemini/gemini-credentials.json` 之类仍会被拦，这是刻意的。
+HIDDEN_WHITELIST=(
+    # git 自身与通用工程配置
+    .gitignore .gitattributes .gitmodules .gitkeep .keep
+    .githooks .github .continueignore .editorconfig .Rprofile .Renviron
+    # AI agent / CLI 配置目录（2026-08-06 加入）
+    .claude .codex .gemini .kimi .qwen .qoder .deepseek .lingma
+    .agent .agents .ovagent .ollama
+)
+
+# 文件名即凭据 —— 命中即整份文件不该入库；**压过 HIDDEN_WHITELIST**
+# 后半段专治 AI agent 配置目录里的凭据文件（auth.json / credentials / *-credentials.json …）
+CRED_NAME_RE='(^|/)(\.env(\..*)?|.*\.env|.*\.pem|.*\.key|.*\.p12|.*\.pfx|.*\.jks|.*\.keystore|id_rsa.*|id_dsa.*|id_ecdsa.*|id_ed25519.*|\.netrc|\.pgpass|\.htpasswd|auth\.json|\.?credentials|\.?credentials\.(json|toml|ya?ml)|.*[-_.]credentials\.(json|toml|ya?ml)|google_accounts\.json|\.claude\.json)$'
+
+LIMIT=$(( LIMIT_MB * 1024 * 1024 ))
+ROOT=$(git rev-parse --show-toplevel) || exit 1
+cd "$ROOT" || exit 1
+
+added=(); modified=()
+while IFS= read -r -d '' f; do added+=("$f"); done \
+    < <(git diff --cached --name-only --diff-filter=A -z)
+while IFS= read -r -d '' f; do modified+=("$f"); done \
+    < <(git diff --cached --name-only --diff-filter=M -z)
+
+blob_size() { git cat-file -s ":$1" 2>/dev/null || stat -c %s "$1" 2>/dev/null || echo 0; }
+mb() { echo "scale=1; $1/1048576" | bc; }
+
+is_whitelisted_hidden() {
+    local f="$1" seg
+    while IFS= read -r seg; do
+        [[ "$seg" == .* ]] || continue
+        local ok=0 w
+        for w in "${HIDDEN_WHITELIST[@]}"; do [[ "$seg" == "$w" ]] && ok=1 && break; done
+        [ "$ok" -eq 1 ] || return 1        # 有一段是非白名单的隐藏段
+    done < <(tr '/' '\n' <<< "$f")
+    return 0
+}
+
+has_hidden_segment() {
+    local f="$1" seg
+    while IFS= read -r seg; do [[ "$seg" == .* ]] && return 0; done < <(tr '/' '\n' <<< "$f")
+    return 1
+}
+
+# .gitignore 条目：路径中若有隐藏目录段，忽略到那一层目录；否则忽略该文件本身
+ignore_entry_for() {
+    local f="$1" acc="" p n i
+    IFS='/' read -ra P <<< "$f"; n=${#P[@]}
+    for (( i=0; i<n; i++ )); do
+        p="${P[$i]}"
+        acc="${acc:+$acc/}$p"
+        if [[ "$p" == .* ]] && (( i < n-1 )); then printf '/%s/\n' "$acc"; return; fi
+    done
+    printf '/%s\n' "$f"
+}
+
+# ---------- 分类 ----------
+declare -a auto=() auto_why=() block=() block_why=()
+classify() {                                  # $1=file  $2=A|M
+    local f="$1" kind="$2" why=""
+    local sz; sz=$(blob_size "$f")
+    [ "$sz" -gt "$LIMIT" ] && why="大文件 $(mb "$sz") MB"
+    if [ -z "$why" ] && has_hidden_segment "$f" && ! is_whitelisted_hidden "$f"; then
+        why="隐藏文件/目录"
+    fi
+    if [ -z "$why" ] && [[ "$f" =~ $CRED_NAME_RE ]]; then why="凭据类文件名"; fi
+    [ -z "$why" ] && return
+    if [ "$kind" = "A" ] || [ "$STRICT_ON_MODIFIED" -eq 0 ]; then
+        auto+=("$f"); auto_why+=("$why")
+    else
+        block+=("$f"); block_why+=("$why（已跟踪文件，自动 ignore 会把它移出仓库）")
+    fi
+}
+for f in "${added[@]}";    do classify "$f" A; done
+for f in "${modified[@]}"; do classify "$f" M; done
+
+# ---------- 内容密钥扫描 ----------
+scan_list=()
+for f in "${added[@]}" "${modified[@]}"; do
+    skip=0
+    for a in "${auto[@]}"; do [ "$a" = "$f" ] && skip=1 && break; done
+    for b in "${block[@]}"; do [ "$b" = "$f" ] && skip=1 && break; done
+    [ "$skip" -eq 1 ] && continue
+    [ "$(blob_size "$f")" -le "$SCAN_MAX_BYTES" ] && scan_list+=("$f")
+done
+
+secret_hits=""
+if [ ${#scan_list[@]} -gt 0 ]; then
+    secret_hits=$(printf '%s\0' "${scan_list[@]}" | /usr/bin/python3 -c '
+import re, subprocess, sys
+
+TIER1 = [
+    (r"-----BEGIN [A-Z ]*PRIVATE KEY-----",                     "私钥块"),
+    (r"\bgh[pousr]_[A-Za-z0-9]{30,}\b",                         "GitHub token"),
+    (r"\bgithub_pat_[A-Za-z0-9_]{40,}",                         "GitHub fine-grained PAT"),
+    (r"\bsk-ant-[A-Za-z0-9_\-]{24,}",                           "Anthropic API key"),
+    (r"\bsk-[A-Za-z0-9]{32,}\b",                                "OpenAI 式 API key"),
+    (r"\b(?:AKIA|ASIA)[0-9A-Z]{16}\b",                          "AWS access key id"),
+    (r"(?i)aws_secret_access_key\s*[:=]\s*[A-Za-z0-9/+=]{40}",  "AWS secret key"),
+    (r"\bxox[baprs]-[A-Za-z0-9-]{10,}",                         "Slack token"),
+    (r"\bAIza[0-9A-Za-z_\-]{35}\b",                             "Google API key"),
+    (r"\bglpat-[A-Za-z0-9_\-]{20,}",                            "GitLab PAT"),
+    (r"\beyJ[A-Za-z0-9_\-]{10,}\.eyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}", "JWT"),
+    (r"[a-zA-Z][a-zA-Z0-9+.\-]*://[^/\s:@]{1,64}:[^/\s:@]{3,64}@", "URL 内嵌账号密码"),
+]
+TIER1 = [(re.compile(p), t) for p, t in TIER1]
+
+KEY = r"(?:password|passwd|pwd|secret|token|api[_-]?key|access[_-]?key|auth[_-]?token|app[_-]?password|client[_-]?secret)"
+TIER2 = re.compile(
+    r"(?i)\b" + KEY + r"\b\s*[\"\x27]?\s*[:=]\s*"
+    r"(?:[\"\x27](?P<q>[^\"\x27\n]{8,})[\"\x27]|(?P<b>[^\s\"\x27#,;)\]}]{12,}))")
+# 占位符 / 从环境读取 / 变量引用 —— 只用于 TIER2，TIER1 一律不放过
+EXCLUDE = re.compile(r"(?i)(os\.environ|getenv|process\.env|Deno\.env|ENV\[|\$\{|\$\(|%\(|\{\{|"
+                     r"<[^>]{1,40}>|\byour[_-]|\bexample|\bplaceholder|x{4,}|\*{4,}|redacted|"
+                     r"changeme|\bdummy\b|\bfake\b|\bsample\b|\bnone\b|\bnull\b|\bnil\b|\btodo\b|"
+                     r"input\(|prompt|keyring|vault|\.get\(|config\[|settings\[|argv|opts\.|args\.)")
+ENVVAR = re.compile(r"^[A-Z][A-Z0-9_]{4,}$")
+
+def mask(s):
+    s = s.strip()
+    return s if len(s) <= 6 else s[:4] + "*" * (len(s) - 4)
+
+for path in sys.stdin.buffer.read().split(b"\0"):
+    if not path:
+        continue
+    p = path.decode("utf-8", "surrogateescape")
+    try:
+        data = subprocess.run(["git", "show", ":" + p], capture_output=True).stdout
+    except Exception:
+        continue
+    if b"\0" in data[:8192]:
+        continue
+    for i, line in enumerate(data.decode("utf-8", "replace").splitlines(), 1):
+        if len(line) > 4000:
+            continue
+        hit = None
+        for rx, tag in TIER1:
+            m = rx.search(line)
+            if m:
+                hit = (tag, m.group(0)); break
+        if not hit:
+            m = TIER2.search(line)
+            if m and not EXCLUDE.search(line):
+                v = m.group("q") or m.group("b")
+                if not ENVVAR.match(v.strip()):
+                    hit = ("疑似写死的口令/令牌", v)
+        if hit:
+            print("%s\t%d\t%s\t%s" % (p, i, hit[0], mask(hit[1])))
+' 2>/dev/null)
+fi
+
+# ---------- 拦截 ----------
+if [ -n "$secret_hits" ] && [ "$STRICT_ON_SECRET_CONTENT" -eq 1 ]; then
+    echo "❌ pre-commit 拦截：以下暂存内容里扫到密码/密钥 —" >&2
+    while IFS=$'\t' read -r p l t v; do
+        printf '  %s:%s  [%s]  %s\n' "$p" "$l" "$t" "$v" >&2
+    done <<< "$secret_hits"
     echo "" >&2
-    echo "大文件（数据/中间结果/大交付表）不应进 git。请二选一：" >&2
-    echo "  1) 加进 .gitignore（可再生数据），然后 git rm --cached <file> 撤出暂存；" >&2
-    echo "  2) 确知必须入库且无害 → git commit --no-verify 放行。" >&2
+    echo "这类命中不自动 ignore —— 文件本身通常必须入库，该改的是那一行：" >&2
+    echo "  1) 把密钥挪进仓库外的凭据文件（如 *.env）或环境变量，代码里只留键名；" >&2
+    echo "  2) 确认是占位符/示例、纯属误报 → git commit --no-verify 放行。" >&2
+    echo "  ⚠ 若该密钥已经推到过远端，改文件不够，必须去平台上吊销并换新。" >&2
     exit 1
 fi
+if [ -n "$secret_hits" ]; then
+    while IFS=$'\t' read -r p l t v; do
+        found=0; for a in "${auto[@]}"; do [ "$a" = "$p" ] && found=1 && break; done
+        [ "$found" -eq 0 ] && auto+=("$p") && auto_why+=("内容含密钥（$t）")
+    done <<< "$secret_hits"
+fi
+
+if [ ${#block[@]} -gt 0 ]; then
+    echo "❌ pre-commit 拦截：以下已跟踪文件命中禁入库规则 —" >&2
+    for i in "${!block[@]}"; do printf '  %-60s %s\n' "${block[$i]}" "${block_why[$i]}" >&2; done
+    echo "" >&2
+    echo "已跟踪文件不自动 ignore（那会记录成删除，把文件移出仓库）。请自行三选一：" >&2
+    echo "  1) 撤出本次改动：git restore --staged <file>；" >&2
+    echo "  2) 确实要移出仓库：先 echo '<path>' >> .gitignore，再 git rm --cached <file>；" >&2
+    echo "  3) 确知必须入库且无害 → git commit --no-verify 放行。" >&2
+    exit 1
+fi
+
+# ---------- 自动 ignore ----------
+if [ ${#auto[@]} -gt 0 ]; then
+    entries=(); shown=(); hdr=""
+    for i in "${!auto[@]}"; do
+        e=$(ignore_entry_for "${auto[$i]}")
+        dup=0; for x in "${entries[@]}"; do [ "$x" = "$e" ] && dup=1 && break; done
+        [ "$dup" -eq 1 ] && continue
+        grep -qxF -- "$e" .gitignore 2>/dev/null && { entries+=("$e"); shown+=("${auto[$i]}|${auto_why[$i]}|$e"); continue; }
+        entries+=("$e"); shown+=("${auto[$i]}|${auto_why[$i]}|$e")
+        {   [ -s .gitignore ] && [ -z "$hdr" ] && printf '\n# --- pre-commit hook 自动追加 %s ---\n' "$(date +%F)"
+            printf '%s\n' "$e"
+        } >> .gitignore
+        hdr=1
+    done
+    for f in "${auto[@]}"; do git rm --cached --quiet -- "$f" >/dev/null 2>&1; done
+    git add -- .gitignore
+
+    echo "⚠ pre-commit 自动处理：以下新增文件已写入 .gitignore 并撤出暂存（文件仍在磁盘上）—" >&2
+    for s in "${shown[@]}"; do
+        IFS='|' read -r p w e <<< "$s"
+        printf '  %-50s %-16s → .gitignore: %s\n' "$p" "$w" "$e" >&2
+    done
+    echo "" >&2
+    echo "本次提交将包含更新后的 .gitignore。若某个文件确实必须入库：" >&2
+    echo "  先从 .gitignore 删掉对应行，再 git add -f <file> 重新提交。" >&2
+fi
+
 exit 0

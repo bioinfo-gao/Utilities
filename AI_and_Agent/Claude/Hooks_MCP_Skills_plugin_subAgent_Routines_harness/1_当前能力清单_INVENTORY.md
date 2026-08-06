@@ -7,22 +7,24 @@
 
 ## 怎么维护
 
-分两段，维护方式完全不同 —— 这是本文的关键设计：
+分三段，维护方式完全不同 —— 这是本文的关键设计：
 
 | 段 | 内容 | 怎么更新 | 会不会漂 |
 | :--- | :--- | :--- | :---: |
 | **A. 本机配置** | skills / 插件 / MCP / hooks / 自定义 subagent / settings | **跑一次脚本**：<br>`python3 refresh_inventory.py` | 不会（每次重扫） |
 | **B. 内置能力** | Claude Code 自带的 skill、subagent 类型、工具、harness 特性 | **只能人工更新** —— 这些不在本机配置里，是版本自带、只在会话中对模型可见 | 会（随版本变） |
+| **C. git pre-commit** | 大文件 / 隐藏文件 / 密码密钥 三类拦截的规则与处理方式 | **人工更新** —— 改了 `.githooks/pre-commit` 就同步改这段 | 会（跟着 hook 改） |
 
 **给未来的自己 / 下一次会话**：本机配置有增删（装了新 skill/插件/MCP、加了 hook）→ 跑脚本；
-发现 Claude Code 出了新内置能力 → 手工改 B 段并更新下面的"实测日期"。
+发现 Claude Code 出了新内置能力 → 手工改 B 段并更新下面的"实测日期"；
+改了 git pre-commit 的判据/阈值/白名单 → 手工改 C 段。
 用户明确要求**随时维护**这份清单（2026-08-05）。
 
 ---
 
 <!-- AUTO:BEGIN -->
 
-> 本段由 `refresh_inventory.py` 自动扫描生成，**不要手改** —— 重新跑一遍脚本即可。扫描时间：2026-08-05 22:21
+> 本段由 `refresh_inventory.py` 自动扫描生成，**不要手改** —— 重新跑一遍脚本即可。扫描时间：2026-08-06 12:08
 
 ### A1. 个人 skills（`~/.claude/skills/`）—— 13 个
 
@@ -67,7 +69,7 @@
 | :--- | :---: | :--- |
 | plugin superpowers@claude-plugins-official | `SessionStart` | matcher=`startup|clear|compact` |
 
-另有 **git hooks**（与 Claude Code 无关，是 git 自己的）：`/home/gao/Utilities/.githooks` -> pre-commit；各 projects 仓库用 `core.hooksPath .githooks` 指向同款 >10MB 拦截。
+另有 **git hooks**（与 Claude Code 无关，是 git 自己的）：`/home/gao/Utilities/.githooks` -> pre-commit；`Utilities` / `projects_2026M7` / `projects_2026H2` 三个仓库用 `core.hooksPath .githooks` 指向**同一份三类拦截 hook**（大文件 / 隐藏文件目录 / 密码密钥）—— 规则与处理方式见下方 **C 段**。
 
 ### A5. 用户自定义 subagent（`~/.claude/agents/*.md`）—— 0 个
 
@@ -163,6 +165,93 @@
 | 记忆 | `~/.claude/projects/-home-gao/memory/` + `MEMORY.md` 索引，跨会话持久 |
 | IDE 集成 | VSCode 扩展内运行；能看到用户当前打开的文件与选中内容 |
 | 通知 | `PushNotification`（仅会话存活时）· tty · Gmail SMTP（见 [[reference_notification_channels]]） |
+
+---
+
+# C. git pre-commit 三类拦截（人工维护）
+
+**C 段更新日期：2026-08-06**（本次新增隐藏文件、密码密钥两项检查）。
+这不是 Claude Code 的能力，是 **git 自己的 hook**，但它决定了"什么东西进不了库"，
+放在这里以免每次重新推导。
+
+**唯一一份源文件**：`/home/gao/Utilities/.githooks/pre-commit`，逐字节复制到
+`projects_2026M7` 与 `projects_2026H2`（三份 md5 必须一致；改了一处要同步另两处）。
+生效靠各仓库 `git config core.hooksPath .githooks`。
+**`/home/gao/.claude` 仓库刻意不装** —— 它靠 `.gitignore` 的白名单模式（默认 deny-all）兜底。
+
+## C1. 查什么
+
+| # | 检查 | 判据 |
+| :--- | :--- | :--- |
+| 1 | **大文件** | 暂存 blob > `LIMIT_MB`（当前 10 MB） |
+| 2 | **隐藏文件/目录** | 路径中任一段以 `.` 开头，白名单除外 |
+| 3 | **密码/密钥** | ① 文件名即凭据：`*.env` `*.pem` `*.key` `*.p12` `id_rsa*` `.netrc` `.pgpass`、<br>　 以及 agent 目录里的 `auth.json` `credentials` `*-credentials.{json,toml,yaml}` `google_accounts.json` `.claude.json`<br>② 文件**内容**含高置信度密钥（见 C3） |
+
+**隐藏文件白名单**（照常入库）—— 改白名单 = 改 hook 顶部的 `HIDDEN_WHITELIST` 数组：
+
+| 类别 | 条目 |
+| :--- | :--- |
+| git 自身 + 通用工程配置 | `.gitignore` `.gitattributes` `.gitmodules` `.gitkeep` `.keep` `.githooks/` `.github/` `.continueignore` `.editorconfig` `.Rprofile` `.Renviron` |
+| **AI agent / CLI 配置目录**（2026-08-06 加入） | `.claude` `.codex` `.gemini` `.kimi` `.qwen` `.qoder` `.deepseek` `.lingma` `.agent` `.agents` `.ovagent` `.ollama` |
+
+⚠ **白名单只放行"这一段隐藏名本身"，不豁免凭据文件名规则、也不豁免内容扫描。**
+这几个 agent 目录里恰恰躺着活凭据 —— 本机实测：`.codex/auth.json`、
+`.gemini/gemini-credentials.json`、`.gemini/google_accounts.json`、`.kimi/credentials`、
+`.claude/.credentials.json`、`~/.claude.json`（MCP env 里有 Gmail app password）。
+**结论：配置文件（`settings.json` / `config.toml` / `AGENTS.md` …）进得去，凭据文件进不去。**
+`.ollama` 里的模型 blob 由第 1 条（>10 MB）兜住。
+本机没有 `.qwen` `.qoder` `.deepseek` 目录，先列上备用；`.agents` `.lingma` `.ovagent` 是实测存在的名字
+（用户口述的 `.agent` 也保留）。
+
+## C2. 命中了怎么办 —— 刻意分两种，别改成一刀切
+
+| 命中情形 | 动作 |
+| :--- | :--- |
+| **新增文件**（`A`）命中 1 / 2 / 3① | **自动**追加 `.gitignore`（同时 `git add .gitignore`）+ `git rm --cached` + **放行提交**。文件仍在磁盘上，只是不入库。 |
+| **已跟踪文件**（`M`）命中任一类 | **硬拦截**。对已入库文件做 `git rm --cached` 会在下次提交记录成**删除**，等于把文件移出仓库 —— 绝不能自动做。 |
+| **内容**扫到密钥（3②，无论 A/M） | **硬拦截**并报 `文件:行号 + 类型 + 掩码后的值`。该文件本就该入库，要改的是**那一行**，不是整个文件。 |
+
+**自动写入 `.gitignore` 的条目规则**：路径里若有隐藏目录段，忽略到**那一层目录**
+（`.venv/lib/a.py` → `/.venv/`）；否则忽略文件本身（`/big.bin`）。一律带前导 `/` 锚定仓库根，
+避免过度匹配；追加时带 `# --- pre-commit hook 自动追加 <日期> ---` 分节注释。
+
+**顶部三个开关**（想改行为只动这里，别改逻辑）：
+
+| 变量 | 默认 | 含义 |
+| :--- | :---: | :--- |
+| `LIMIT_MB` | 10 | 大文件阈值 |
+| `STRICT_ON_MODIFIED` | 1 | 1=已跟踪文件命中则拦截；**0=也自动 ignore（会把文件移出仓库，慎用）** |
+| `STRICT_ON_SECRET_CONTENT` | 1 | 1=内容含密钥则拦截；0=自动 ignore 整个文件 |
+
+紧急放行（确知无害）：`git commit --no-verify`。
+
+## C3. 密钥内容扫描 —— 两层，只有第二层受"占位符豁免"约束
+
+- **TIER 1（强特征，一律不放过）**：私钥块 `-----BEGIN … PRIVATE KEY-----`、
+  GitHub `ghp_/gho_/ghu_/ghs_/ghr_/github_pat_`、Anthropic `sk-ant-`、OpenAI 式 `sk-`、
+  AWS `AKIA/ASIA` + `aws_secret_access_key`、Slack `xox[baprs]-`、Google `AIza`、
+  GitLab `glpat-`、JWT `eyJ….eyJ….`、URL 内嵌账号密码 `<scheme>://<user>:<pass>@<host>`。
+  （⚠ 示例**刻意加了尖括号** —— 去掉尖括号写成裸形式会被本 hook 自己抓住，2026-08-06
+  首次提交时实测触发过两次。**文档里举密钥例子一律用占位符形式。**）
+- **TIER 2（通用 key=value）**：`password|passwd|pwd|secret|token|api_key|access_key|
+  auth_token|app_password|client_secret` 后面**真的跟了值**（引号内 ≥8 字符，或裸值 ≥12 字符）。
+  仅此层套**豁免正则**：`os.environ` / `getenv` / `process.env` / `${…}` / `$(…)` /
+  `<占位符>` / `your_` / `example` / `placeholder` / `xxxx` / `changeme` / `REDACTED` /
+  `None|null|nil` / `input(` / `keyring` / `vault` 等，以及值本身是全大写环境变量名。
+
+因为分了两层，**文档里写 `GMAIL_APP_PASSWORD` 这种纯键名不会误报**，
+而 `password = "真口令"` 会被抓住。扫描跳过二进制文件与 > 2 MB 的文件（`SCAN_MAX_BYTES`）。
+
+## C4. 实测结果（2026-08-06）
+
+- **专项测试 39/39 通过**（`T0`–`T7`）：大文件/隐藏文件/凭据文件名自动 ignore 且文件留在磁盘；
+  五种密钥全部拦截；已跟踪文件命中时拦截且**没有**被移出仓库；占位符/文档不误报；
+  **12 个 agent 配置文件全部入库、6 个 agent 凭据文件全部被拦**。
+- **凭据文件名规则回归**：新规则对四个仓库的已跟踪文件命中 **0 条**，不误伤存量。
+- **全量误报回归**：对三个仓库 + `~/.claude` 共 **6738 个已跟踪文件**跑扫描，
+  **零误报**，并扫出 **1 个真命中** —— `projects_2026H2/1_opossum_YuFan/script_opposum/API/key`
+  含一个已进 git 历史的 Anthropic API key（commit `abd146c`）。
+  **已进历史的密钥改文件无用，必须去平台吊销换新。**
 
 ---
 
