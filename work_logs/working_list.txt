@@ -78,3 +78,93 @@ Performed extensive data management and cleanup, successfully freeing up 2.8 TB 
 
 Total Billable Hours: 20 Hours
 Date of Submission: July 30, 2026
+
+
+
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period: July 30, 2026 – Aug 06, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 20 Hours
+
+1. RNA-seq outlier diagnostics Analysis – Jinlonf Yu (2.5 Hours)
+Diagnosed why one animal (J_902) sat apart from its group mates in a 12-sample mouse skeletal-muscle RNA-seq time course, 
+Showed the sample is partly a different tissue (7.0% adipose-derived transcriptome vs 0.06–1.60% elsewhere; type IIa fibers 18.4% vs 0.2–7.2%), 
+Scored every sample on a treatment signature in units of baseline SD, reproducing the design cleanly (G1 = 22.1, G3 = 15.3, G2 = 6.4, baseline = 0.0) 
+and placing J_902 at 6.3 — collected with an effect-present group but transcriptionally at the effect-resolved level. 
+Left the two remaining explanations (wrong collection point/label vs genuinely faster resolution),
+noting the client's PK data argues against drug clearance. Also quantified that the deviation is moderate (1.5–1.8× normal).
+
+2.WGS reanalysis  — Ellen, knock-in junction sequences (8.5 hours)
+Resolved the knock-in junctions to base resolution from read-level alignment evidence for six humanized lines (MTTH ×3, RAGH ×2, CD1A ×1), 
+All 12 junction windows per package showing 100.0% identity to the client's targeted-allele reference. 
+Supplied the individual reads that span each human/mouse boundary in a single 150 bp read at MAPQ 60, and reported exact coordinates. 
+Characterised the designed vector remnants — an 87 bp vector segment containing the residual FRT scar on the 3′ side, plus two retained loxP sites in CD1A — 
+and flagged that the CD1A construct is integrated in reverse orientation relative to chr3. 
+Carried out the structural confirmation the July 12 report had recommended for MTTH_284, resolving its multi-copy on-target integration as a complex array with both direct and inverted junctions, 
+Recommended MTTH_412 and MTTH_524 as the founders to take forward.
+
+3.Sample Registration Form Redesign (9.0 Hours)
+Transformed the original fill-in-the-blank sample submission form into a checkbox-driven structured document, 
+covering RNAseq/WGS/single-cell/spatial transcriptomics/gene targeting/cell line characterization across all business scenarios.
+**Core changes:**
+1. **Format overhaul** — Converted open-ended questions into `□` checkbox lists; the client's main task shifted from "typing" to "checking" (□→☑)
+2. **Main sheet simplification** — Moved specialized content (Gene Targeting, Cell Line, Humanized System, Other Services, Special Design) to dedicated Sheets 2-7; 
+The main sheet now only shows a one-line jump pointer, so general clients aren't overwhelmed by technical jargon
+3. **Section restructuring** — merged all sections in one Unbrella strucuture, unified numbering sequence
+4. **Visual consistency** — Standardized color scheme across the workbook (required = orange-red, jump pointers = unified purple tone, warnings = amber), condensed loosely-spaced checkbox groups into single compact cells
+5. **Usability** — Added a prominent instruction banner at the top of every sheet teaching clients how to type the checkmark character
+**Benefits**:
+1. **Reduced client time** — Not much writing is needed anymore
+2. **Improved client experience** less intellegual and labor burdon for clients 
+2. **reduced misunderstanding** — avoid confusion in oral or informal commuinication
+
+Total Billable Hours: 20 Hours
+Date of Submission: Aug 06, 2026
+
+
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period: July 30, 2026 – Aug 06, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 19 Hours
+
+1. RNA-seq Outlier Diagnostics Analysis — Jinlong Yu (2.5 Hours)
+Diagnostic Investigation: Investigated an outlier sample (J_902) in a 12-sample mouse skeletal-muscle RNA-seq time course.
+Tissue Contamination Identification: Demonstrated that the sample contains partial contamination from a different tissue, 
+exhibiting a 7.0% adipose-derived transcriptome (vs. 0.06–1.60% elsewhere) and 18.4% type IIa fibers (vs. 0.2–7.2% elsewhere).
+Treatment Signature Scoring: Scored every sample based on a treatment signature in units of baseline SD, which cleanly reproduced 
+the experimental design (G1 = 22.1, G3 = 15.3, G2 = 6.4, baseline = 0.0). Sample J_902 scored 6.3, indicating it was collected 
+with an effect-present group but transcriptionally matched the effect-resolved level.
+Conclusion & Recommendations: Quantified the deviation as moderate (1.5–1.8× normal). 
+Narrowed the cause down to either incorrect collection timing/labeling or genuinely faster biological resolution, 
+noting that the client's PK data argues against drug clearance.
+
+2. WGS Reanalysis — Ellen, Knock-in Junction Sequences (8.5 Hours)
+Junction Resolution: Resolved knock-in junctions to base-pair resolution using read-level alignment evidence for six humanized lines (MTTH ×3, RAGH ×2, CD1A ×1). 
+Confirmed that all 12 junction windows per package showed 100.0% identity to the client's targeted-allele reference.
+Data Delivery: Supplied individual reads spanning each human/mouse boundary in a single 150 bp read at MAPQ 60, alongside exact coordinates.
+Vector Remnant Characterization: Characterized the designed vector remnants, identifying an 87 bp vector segment containing the residual FRT scar on the 3′ side 
+and two retained loxP sites in CD1A. Flagged that the CD1A construct is integrated in a reverse orientation relative to chr3.
+Structural Confirmation: Performed the structural confirmation recommended in the July 12 report for MTTH_284. Resolved its multi-copy on-target integration as 
+a complex array featuring both direct and inverted junctions. Actionable Recommendation: Recommended MTTH_412 and MTTH_524 as the optimal founders to take forward.
+
+3. Sample Registration Form Redesign (8.0 Hours)
+Redesigned the original fill-in-the-blank sample submission form into a structured, checkbox-driven document. 
+The new form comprehensively covers RNA-seq, WGS, single-cell, spatial transcriptomics, gene targeting, and cell line characterization across all business scenarios.
+Core Changes Implemented:
+Format Overhaul: Converted open-ended questions into checkbox lists (□), shifting the client's primary task from typing to checking (☑).
+Main Sheet Simplification: Moved specialized content (Gene Targeting, Cell Line, Humanized System, Other Services, Special Design) to dedicated Sheets 2–7. 
+The main sheet now features a single-line jump pointer, preventing general clients from being overwhelmed by technical jargon.
+Section Restructuring: Merged all sections under a single umbrella structure with a unified numbering sequence.
+Visual Consistency: Standardized the color scheme across the workbook (Required = orange-red, Jump Pointers = unified purple, Warnings = amber). 
+Condensed loosely-spaced checkbox groups into compact, single cells.
+Usability Enhancements: Added a prominent instruction banner at the top of every sheet detailing how to type the checkmark character.
+Projected Benefits:
+Time Efficiency: Significantly reduces the time required for clients to complete submissions.
+Enhanced User Experience: Lowers the cognitive and manual burden on clients by replacing open-ended text fields with structured choices.
+Increased Accuracy: Minimizes ambiguities, misunderstandings, and data entry errors that commonly arise from informal or written communication.
+
+Total Billable Hours: 19 Hours
+Date of Submission: Aug 06, 2026
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
