@@ -1,0 +1,9 @@
+scheme,name,colors,tiers
+01_Default_A_fills,Default_A — 面积族（柱子/区段色）,#BEBADA #FB8072 #FFED6F #FCCDE5 #BC80BD #CCEBC5,A A A A A A
+02_Default_A_strokes,Default_A — 线状族（线条/文字色）  ★ proj28 实际采用,#8E0152 #003C30 #0000CD #8B4500 #9400D3 #E41A1C,A A A A A B
+03_Default_B_fills,Default_B — 面积族,#8DD3C7 #FB8072 #FFED6F #C75C9F #E9A6A1 #B87542,B B B B B B
+04_Default_B_strokes,Default_B — 线状族,#E41A1C #1F78B4 #0000CD #CD5B45 #32CD32 #000000,B B B B B 3
+05_L3_ColorBrewer_fills,第 3 级 — ColorBrewer Set3（蓝换中灰）面积族,#8DD3C7 #FB8072 #999999 #FDB462 #B3DE69 #FCCDE5,3 3 3 3 3 3
+06_L3_ColorBrewer_strokes,第 3 级 — STROKE_COLORS 线状族,#000000 #E41A1C #1F78B4 #006D2C #8C510A #762A83,3 3 3 3 3 3
+07_L4_handtuned_fills,第 4 级 — 手调全彩,#73C6CF #C75C9F #E9A6A1 #B87542 #70487E #6B6B2F,4 4 4 4 4 4
+08_L5_greyscale,第 5 级 — 黑白灰,#ABABAB #828282 #5A5A5A #73C6CF #C75C9F #B87542,5 5 5 4 4 4
