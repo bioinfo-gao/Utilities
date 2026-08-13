@@ -14,6 +14,9 @@
 | Nextflow（现代 nf-core 模板） | [nextflow.md](nextflow.md) | 裸布尔 CLI flag 被新版 Nextflow 变成字符串 → nf-schema 校验全灭，`-profile test` 测不出；自定义 resource config 漏配某个通用 label（如 process_high）→ 该步骤悄悄吃官方默认值，并发被压低、负载虚低 |
 | git（`.gitignore`） | [git.md](git.md) | 两个静默失效：① 目录规则写成文件系统绝对路径（而非仓库根相对路径）时永远匹配不到，无任何报错，已跟踪文件还需额外 `git rm --cached`；② 仓库根的宽泛后缀规则（`*.yml`/`*.json`）无差别吃掉子项目**必需**的配置文件（`_quarto.yml` 等），`git status` 不提示，proj22/proj23 两次踩到 |
 | fastp | [fastp.md](fastp.md) | 大文件跑到 ~99.5% 卡死且**三次停在同一输入位置**（wchan=futex + `/proc/io` 零变化）⇒ **既不是并发争用**（改串行照卡）**也不是输入损坏**（`gzip -t` 8/8 全通过后第三次仍卡死，2026-08-12 证伪）⇒ **根因在 fastp 1.3.3 自身**；确认输入完整后别再纠缠它——换显式 adapter/cutadapt，或先问这步是否必需（WGS 插入位点分析可不 trim）。⚠ 两个判据陷阱：`ps -o %cpu` 是生命周期均值会误导成"它在忙"；**`/proc/io` 零变化不能单独判卡死**（bwa-mem2 建索引同样零变化但 CPU ticks 满载）—— **ticks 才是"在算 vs 在等"的分界** |
+| mosdepth vs `samtools depth` | [mosdepth_vs_samtools_depth.md](mosdepth_vs_samtools_depth.md) | 同 BAM 同区间同 MAPQ，两者深度差可达 19%：mosdepth 默认做 **mate-overlap 校正**（重叠段计一次），samtools depth 不做（计两次），`mosdepth --fast-mode` 关掉校正后两者完全吻合。**危险在于偏差跟着文库插入片段走**，会凭空造出一个长得像真实生物学差异的假差异 —— 分子分母必须同工具同口径 |
+| DELLY | [delly.md](delly.md) | v2 把短读 SV 的 `call` 子命令改名为 **`sr`**，旧命令只回一行 "Unrecognized command call" 并非零退出；若调用处写成 `\|\| echo` 就会**静默吞掉**，编排链照常显示 "Step 7 OK" 而零 BCF 产出。退出码 0 ≠ 产物存在，必须补存在性断言 + "产物数==样本数"收尾断言 |
+| awk | [awk.md](awk.md) | pattern 与 `{action}` 之间**换行**会被解析成两条独立规则（pattern 单独 → 默认打印整行；action 单独 → 每行都执行），**过滤条件彻底失效且零报错**，输出格式还完全正常。P29 因此把接头读段数虚报 20–30 倍并据此下了结论 |
 | `conda run` | [conda_run.md](conda_run.md) | 子进程隔离：进程替换 `<(...)` 失效 + 跨两次 `conda run` 管道 BrokenPipe + 复杂命令替换被搅乱 |
 | conda 同名 env（不同前缀） | [conda_env_duplicate_names.md](conda_env_duplicate_names.md) | 两个不同路径下的 env 恰好同名（如 `DE_R45`）时 `conda run -n <name>` 解析错环境，悄悄换成别的 env 的解释器，缺包报错才暴露；改用绝对路径可执行文件即可 |
 | tmux self-relaunch | [tmux.md](tmux.md) | `tee` 写日志的目录不存在时静默失败，日志文件永不产生，下游编排器 ~24h 后误报 FAILURE |
