@@ -13,6 +13,7 @@
 | nf-core/mag | [nfcore_mag.md](nfcore_mag.md) | DASTool 精炼后 final bins 与 QC/分类报告跑在的原始 per-binner bins 命名不同、数量差 ~5.8 倍，不做名字映射会把基因组数报大近 6 倍 |
 | Nextflow（现代 nf-core 模板） | [nextflow.md](nextflow.md) | 裸布尔 CLI flag 被新版 Nextflow 变成字符串 → nf-schema 校验全灭，`-profile test` 测不出；自定义 resource config 漏配某个通用 label（如 process_high）→ 该步骤悄悄吃官方默认值，并发被压低、负载虚低 |
 | git（`.gitignore`） | [git.md](git.md) | 两个静默失效：① 目录规则写成文件系统绝对路径（而非仓库根相对路径）时永远匹配不到，无任何报错，已跟踪文件还需额外 `git rm --cached`；② 仓库根的宽泛后缀规则（`*.yml`/`*.json`）无差别吃掉子项目**必需**的配置文件（`_quarto.yml` 等），`git status` 不提示，proj22/proj23 两次踩到 |
+| fastp | [fastp.md](fastp.md) | 大文件跑到 ~99.5% 卡死且**三次停在同一输入位置**（wchan=futex + `/proc/io` 零变化）⇒ **既不是并发争用**（改串行照卡）**也不是输入损坏**（`gzip -t` 8/8 全通过后第三次仍卡死，2026-08-12 证伪）⇒ **根因在 fastp 1.3.3 自身**；确认输入完整后别再纠缠它——换显式 adapter/cutadapt，或先问这步是否必需（WGS 插入位点分析可不 trim）。⚠ 两个判据陷阱：`ps -o %cpu` 是生命周期均值会误导成"它在忙"；**`/proc/io` 零变化不能单独判卡死**（bwa-mem2 建索引同样零变化但 CPU ticks 满载）—— **ticks 才是"在算 vs 在等"的分界** |
 | `conda run` | [conda_run.md](conda_run.md) | 子进程隔离：进程替换 `<(...)` 失效 + 跨两次 `conda run` 管道 BrokenPipe + 复杂命令替换被搅乱 |
 | conda 同名 env（不同前缀） | [conda_env_duplicate_names.md](conda_env_duplicate_names.md) | 两个不同路径下的 env 恰好同名（如 `DE_R45`）时 `conda run -n <name>` 解析错环境，悄悄换成别的 env 的解释器，缺包报错才暴露；改用绝对路径可执行文件即可 |
 | tmux self-relaunch | [tmux.md](tmux.md) | `tee` 写日志的目录不存在时静默失败，日志文件永不产生，下游编排器 ~24h 后误报 FAILURE |
