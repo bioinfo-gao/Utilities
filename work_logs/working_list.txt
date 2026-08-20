@@ -225,10 +225,10 @@ Prepared by: Gao Zhen
 Total Billable Hours: 20 Hours
 
 1. WGS Sequencing Run - Keqiang, Second Batch (2.5 Hours)
-Completed the sequencing run and initial data processing for the second batch of samples,
+Completed the data processing for the second batch of samples,
 bringing the two-batch dataset to a state where it could be analyzed as a single cohort.
 
-2. Integrative WGS Analysis - Keqiang (12.0 Hours)
+2. Integrative WGS Analysis - Keqiang (12 Hours)
 Integrative Analysis: Performed a highly complex integrative analysis across the two sequencing batches,
 resolving numerous inconsistencies in the sample and reference materials before any conclusion could be drawn.
 Integration Assessment: Determined transgene copy number and integration structure for the clones at the targeted
@@ -244,15 +244,13 @@ Reporting: All details, evidence and reasoning were provided to the client in th
 accompanying communication.
 
 3. RNA-seq Analysis - Junqiang (3.0 Hours)
-Complete Analysis: Performed the end-to-end analysis of a 12-sample, four-group dataset and delivered all six
-pairwise comparisons.
+Complete Analysis: Performed the end-to-end analysis and delivered all pairwise comparisons.
 Interpretation under an Undisclosed Design: The submission provided no biological meaning for the four groups.
 Gene-, cluster- and pathway-level results were therefore reported strictly as measured and discussed with additional
 care, explicitly separating what the data show from what cannot be concluded without the experimental design.
 Statistical Caveats Documented: Explained why the comparisons with the largest number of differentially expressed
-genes return the fewest enriched terms (a property of over-representation testing, not an absence of biology), and
-flagged the pathway terms that are driven by mitochondrial-genome-encoded transcripts as compositional rather than
-as evidence of pathway induction.
+genes return the fewest enriched terms, and flagged the pathway terms that are driven by mitochondrial-genome-encoded 
+transcripts as compositional rather than as evidence of pathway induction.
 
 4. Client Service and Internal Communication (2.5 Hours)
 Communicated with clients to clarify sample details, experimental designs, sequences used, and cell line and naming
