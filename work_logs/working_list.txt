@@ -192,4 +192,74 @@ Provided ongoing customer feedback and support via email and WeChat.
 Total Billable Hours: 14 Hours
 Date of Submission: Aug 13, 2026
 ====================================================
+Weekly Work Report
+Period: Aug 13, 2026 – Aug 20, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 20 Hours
 
+1. WGS running — Keqiang-2nd batch continue (2.5 Hours)
+Finished the second batch of sample running and initial analysis.
+
+2. The integrative WGS analysis — Keqiang (12 Hours)
+Extremely complex analysis of the data set composed of 2 batches and numerous mistakes.
+(All details are provided in the costume communication)
+
+3. RNA-seq of Junqiang  (3 Hours)
+Whole analysis of the RNAseq dataset with all possible comparisons.
+The RNAseq dataset lacks of sample groups information,
+Hence significancy of genes/gene cluters. and pathways were more delicated discussed in case of unknown issues.
+
+4. Custom service and interal communication (2.5 Hours)
+Communication with clients to clarify sample details, experimental designs, sequences used, cell line and name discrepancies. 
+Answered numerous technical, statistical, methodological inquiries. 
+Internal discussion via WeChat.
+
+
+Total Billable Hours: 14 Hours
+Date of Submission: Aug 20, 2026
+====================================================
+
+Weekly Work Report
+Period: Aug 13, 2026 - Aug 20, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 20 Hours
+
+1. WGS Sequencing Run - Keqiang, Second Batch (2.5 Hours)
+Completed the sequencing run and initial data processing for the second batch of samples,
+bringing the two-batch dataset to a state where it could be analyzed as a single cohort.
+
+2. Integrative WGS Analysis - Keqiang (12.0 Hours)
+Integrative Analysis: Performed a highly complex integrative analysis across the two sequencing batches,
+resolving numerous inconsistencies in the sample and reference materials before any conclusion could be drawn.
+Integration Assessment: Determined transgene copy number and integration structure for the clones at the targeted
+safe-harbour locus, distinguishing clones that carry the complete plasmid including backbone from those carrying
+the intended cassette only.
+Off-target Screening: Screened the genome for additional integration events. During the pre-delivery audit, the
+large majority of the initial candidate list was excluded as PCR-duplicate artefacts rather than genuine events,
+and two clones were shown to share base-identical junctions and therefore not to represent independent events.
+Host-background Caveat: Documented a host cell line background that inflates the apparent vector signal for certain
+elements, with a falsification test showing the excess is constant across a wide copy-number range and is therefore
+additive background rather than true integration.
+Reporting: All details, evidence and reasoning were provided to the client in the written report and the
+accompanying communication.
+
+3. RNA-seq Analysis - Junqiang (3.0 Hours)
+Complete Analysis: Performed the end-to-end analysis of a 12-sample, four-group dataset and delivered all six
+pairwise comparisons.
+Interpretation under an Undisclosed Design: The submission provided no biological meaning for the four groups.
+Gene-, cluster- and pathway-level results were therefore reported strictly as measured and discussed with additional
+care, explicitly separating what the data show from what cannot be concluded without the experimental design.
+Statistical Caveats Documented: Explained why the comparisons with the largest number of differentially expressed
+genes return the fewest enriched terms (a property of over-representation testing, not an absence of biology), and
+flagged the pathway terms that are driven by mitochondrial-genome-encoded transcripts as compositional rather than
+as evidence of pathway induction.
+
+4. Client Service and Internal Communication (2.5 Hours)
+Communicated with clients to clarify sample details, experimental designs, sequences used, and cell line and naming
+discrepancies.
+Answered numerous technical, statistical and methodological inquiries.
+Internal discussion and coordination via WeChat.
+
+Total Billable Hours: 20 Hours
+Date of Submission: Aug 20, 2026
+====================================================
