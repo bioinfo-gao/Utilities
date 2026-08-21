@@ -18,7 +18,8 @@
 | mosdepth vs `samtools depth` | [mosdepth_vs_samtools_depth.md](mosdepth_vs_samtools_depth.md) | 同 BAM 同区间同 MAPQ，两者深度差可达 19%：mosdepth 默认做 **mate-overlap 校正**（重叠段计一次），samtools depth 不做（计两次），`mosdepth --fast-mode` 关掉校正后两者完全吻合。**危险在于偏差跟着文库插入片段走**，会凭空造出一个长得像真实生物学差异的假差异 —— 分子分母必须同工具同口径 |
 | DELLY | [delly.md](delly.md) | v2 把短读 SV 的 `call` 子命令改名为 **`sr`**，旧命令只回一行 "Unrecognized command call" 并非零退出；若调用处写成 `\|\| echo` 就会**静默吞掉**，编排链照常显示 "Step 7 OK" 而零 BCF 产出。退出码 0 ≠ 产物存在，必须补存在性断言 + "产物数==样本数"收尾断言 |
 | awk | [awk.md](awk.md) | pattern 与 `{action}` 之间**换行**会被解析成两条独立规则（pattern 单独 → 默认打印整行；action 单独 → 每行都执行），**过滤条件彻底失效且零报错**，输出格式还完全正常。P29 因此把接头读段数虚报 20–30 倍并据此下了结论 |
-| `conda run` | [conda_run.md](conda_run.md) | 子进程隔离：进程替换 `<(...)` 失效 + 跨两次 `conda run` 管道 BrokenPipe + 复杂命令替换被搅乱 |
+| openpyxl / `.xlsx` 富文本 | [openpyxl_xlsx_richtext.md](openpyxl_xlsx_richtext.md) | `cell.value` 把 rich text 拍平、**丢掉每个 run 的字体颜色**；客户若用"把模板句里适用的词染成红色"的方式作答（送样单/注册表极常见），读到的字符串与模板逐字相同 ⇒ 误判成"客户什么都没填"，零报错。必须解 `sharedStrings.xml` 逐 run 读色；附带判据：si 索引靠后的单元格 = 客户编辑过的 |
+| `conda run` | [conda_run.md](conda_run.md) | 子进程隔离：进程替换 `<(...)` 失效 + 跨两次 `conda run` 管道 BrokenPipe + 复杂命令替换被搅乱 + **`python - <<EOF` 读不到 stdin：零输出、零报错、exit=0**，会被误读成"检查通过" |
 | conda 同名 env（不同前缀） | [conda_env_duplicate_names.md](conda_env_duplicate_names.md) | 两个不同路径下的 env 恰好同名（如 `DE_R45`）时 `conda run -n <name>` 解析错环境，悄悄换成别的 env 的解释器，缺包报错才暴露；改用绝对路径可执行文件即可 |
 | tmux self-relaunch | [tmux.md](tmux.md) | `tee` 写日志的目录不存在时静默失败，日志文件永不产生，下游编排器 ~24h 后误报 FAILURE |
 | HUMAnN ↔ MetaPhlAn | [humann_metaphlan.md](humann_metaphlan.md) | 版本兼容三连坑：version-check 解析崩 + db 代际不匹配 + 参数名不兼容，需 shim 脚本 |

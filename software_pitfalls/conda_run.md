@@ -1,9 +1,9 @@
 # conda run 坑
 
-## 子进程隔离导致的两类静默/半静默失败
+## 子进程隔离导致的几类静默/半静默失败
 
-`conda run -n ENV cmd` 在**独立子进程**里执行 `cmd`，不继承父 shell 的文件描述符。踩过三个坑
-（proj16 下游脚本，2026-07-17）：
+`conda run -n ENV cmd` 在**独立子进程**里执行 `cmd`，不继承父 shell 的文件描述符。踩过四个坑
+（1–3 来自 proj16 下游脚本 2026-07-17；4 来自 proj31 客户表单解析 2026-08-21）：
 
 1. **进程替换 `<(...)` 失效**——
    ```
@@ -32,6 +32,22 @@
    `$(dirname $(which x))` 加分号会报错。
    **改**：`source .../conda.sh; conda activate ENV` 之后在普通 shell 里跑，别把这种逻辑塞进
    conda-run 的 `bash -lc`。
+
+4. **`conda run ... python - <<'EOF'` 读不到 stdin —— 退出码 0、零输出、零报错**（proj31，2026-08-21）——
+   ```bash
+   conda run -n ENV python - <<'PY'
+   print("HELLO")
+   PY
+   # 实测：无任何输出，exit=0
+   ```
+   `conda run` **不把父 shell 的 stdin 转发给子进程**，`python -` 于是读到空输入，
+   相当于执行了一个空程序，**正常退出**。这是本文件里最阴的一个：前三条至少还会报错，
+   这一条**什么都不说**。若脚本的判据是"有没有输出可疑内容"，空输出会被读成
+   **"检查通过 / 没发现问题"** —— proj31 就是这样差点把客户表单里的三个答案判成"客户没填"。
+   **改**：把代码写成真实 `.py` 文件再 `conda run -n ENV python file.py`；
+   或用 `python -c '...'`（`-c` 不依赖 stdin，实测正常）。
+   **配套判据**：凡是"没有输出 = 没有问题"的检查，脚本必须**先打印一行自证还活着的摘要**
+   （如 `print('scanned N cells')`），没有这行就说明脚本压根没跑，而不是没发现问题。
 
 **通用规避**：一段需要 pipe / 进程替换 / 命令替换的逻辑，用**一次** `conda run -n ENV bash -c '整段'`
 整体包起来，或者先 `conda activate` 再跑——不要对每条命令单独 `conda run`（每次都是新子进程，隔离
