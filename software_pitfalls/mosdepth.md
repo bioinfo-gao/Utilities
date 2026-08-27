@@ -1,11 +1,32 @@
 # mosdepth —— 深度计数的口径：默认参数、去重、配对重叠校正
 
-> **本文位置**：`/home/gao/Utilities/software_pitfalls/mosdepth.md`（已在同目录
-> [`INDEX.md`](INDEX.md) 索引）。**上游权威文档与本机可离线核对的出处见 [§7](#7-参考文档的位置)。**
->
-> 本文讲**机制与口径参数**（一个碱基位点上到底算了几次观测）。
-> **实测事故与具体数字**（P29 上 11–19% 假差异）在
-> [mosdepth_vs_samtools_depth.md](mosdepth_vs_samtools_depth.md)，此处不重复。
+**「去重 + 配对重叠校正（mosdepth 默认）」一句话解释** —— 这是一个**深度口径**说明，
+由两个互相独立的校正组成，两个都是 mosdepth **不加任何参数就会做**的事：
+
+- **去重**：丢掉同一个文库分子被 **PCR 扩增**出的多份拷贝。
+  mosdepth **只是遵守 BAM 里的 `0x400` flag**（`-F` 默认 1796 含它），**它自己不做 markdup**。
+- **配对重叠校正**：一对 PE read 在参考基因组上**重叠的那一段只计一次**
+  （`overlap = max(0, 2R − L)`；重叠段来自同一个物理 DNA 分子）。
+
+合起来回答同一个问题：**「这个位点我有几次*独立*观测？」**
+两者都不做，depth 就不是独立观测数，而是被夸大的 n —— 拷贝数、VAF、断点证据强度全都建立在它上面。
+
+**⚠ 写在 Methods 里 ≠ 它真的生效了**：BAM 若从未跑过 markdup，"去重"就是空操作、零报错
+（判据 `samtools view -c -f 1024`）。展开见 [§0](#0-基本解释去重--配对重叠校正mosdepth-默认这句话说了什么)–[§4](#4-怎么验证这两件事在你的-bam-上真的生效了)。
+
+**参考文档的位置**
+
+| 要找什么 | 在哪 |
+| :--- | :--- |
+| **本文**（机制、全部默认值、验证命令、跨工具对照） | `/home/gao/Utilities/software_pitfalls/mosdepth.md` · 已在同目录 [`INDEX.md`](INDEX.md) 索引 |
+| 实测事故与数字（P29 上 11–19% 假差异） | [`mosdepth_vs_samtools_depth.md`](mosdepth_vs_samtools_depth.md)（同目录） |
+| **本机可离线核对的权威出处**（本文每个默认值的来源） | `mosdepth --help` / `man samtools-depth` / `bcftools mpileup` —— 见 [§7.1](#71-本机可离线核对本文所有默认值的实际出处) |
+| **上游权威文档**（GitHub README / 论文 / htslib 手册 / SAM 规范） | 见 [§7.2](#72-上游权威文档) |
+
+---
+
+> 本文讲**机制与口径参数**（一个碱基位点上到底算了几次观测）；
+> **实测事故与具体数字**放在姊妹篇，此处不重复（两者位置见上表）。
 >
 > 版本基准：本机 `regular_bioinfo` 环境，**mosdepth 0.3.14** / **samtools 1.23.1** /
 > **bcftools 1.23.1**（2026-08-27 实测 `--help`）。⚠ 下面的默认值**是版本相关的**，
