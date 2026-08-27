@@ -1,5 +1,8 @@
 # mosdepth vs `samtools depth` —— 配对重叠区的处理不同，深度差可达 19%
 
+> **机制与全部默认口径参数**（`-F 1796` 位拆解、去重依赖上游 markdup、重叠校正算法、
+> `--fragment-mode`、跨工具对照表）见 [mosdepth.md](mosdepth.md)。本文是**实测事故记录**。
+
 **症状**：同一个 BAM、同一段区间、同样 `-Q 20`，两个工具给出不同的平均深度，
 且**差异大小随样本变化**，看上去像真实的样本间差异。
 
@@ -15,6 +18,11 @@
 `samtools depth` 不做，重叠段计两次。`mosdepth --fast-mode` 的文档原文就是
 "dont look at internal cigar operations or **correct mate overlaps**"，
 关掉校正后与 `samtools depth` 完全吻合（8.98 vs 8.978）⇒ 差异 100% 来自这一条。
+
+⚠ **`samtools depth` 并非"做不到"，是默认值相反**：它有 `-s`
+（"Do not count overlapping reads within a template"），只是默认关。
+`samtools depth -s` 与 `mosdepth`（默认）口径才对齐。
+（另：samtools 1.16 起 `samtools depth` **默认已排除 duplicate**，默认 filter-out 与 mosdepth 的 1796 逐位相同。）
 
 MAPQ 阈值**不是**变量：`-Q 0` 与 `-Q 20` 在这个区段给出同样的差异。
 
