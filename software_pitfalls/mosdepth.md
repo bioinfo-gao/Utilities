@@ -54,8 +54,22 @@
 | :--- | :--- |
 | 原始产出 | 含 PCR 重复、重叠段计两次 |
 | 去重后 | 只做了第一项校正 |
-| **去重 + 配对重叠校正** | 两项都做 = **mosdepth 默认** |
+| **去重 + 配对重叠校正** † | 两项都做 = **mosdepth 默认** |
 | 局部读段计数 | 手工数支持某 junction/indel 的读段（须按读段名去重） |
+
+> **† 注释：「去重 + 配对重叠校正（mosdepth 默认）」**
+> 深度口径说明，两个互相独立的校正，mosdepth 不加参数就会做：
+> **去重** = 丢掉同一文库分子被 PCR 扩增出的多份拷贝（**只是遵守 BAM 的 `0x400` flag，
+> mosdepth 自己不做 markdup**，BAM 没跑过 markdup 时此项为空操作且零报错）；
+> **配对重叠校正** = 一对 PE read 在参考上重叠的那段只计一次
+> （`overlap = max(0, 2R − L)`，重叠段来自同一个物理 DNA 分子）。
+> 两者都是在剔除**不独立的重复计数**。
+>
+> **参考文档**：本文 `/home/gao/Utilities/software_pitfalls/mosdepth.md`
+> —— 机制见 §2（去重）/ §3（重叠校正），验证命令见 §4，
+> **上游权威文档（GitHub / 论文 / htslib 手册）见 §7.2**，
+> 本机可离线核对的出处（`mosdepth --help` 等）见 §7.1。
+> 实测事故与数字见同目录 [`mosdepth_vs_samtools_depth.md`](mosdepth_vs_samtools_depth.md)。
 
 **两者都不做，depth 就不再是独立观测数，而是被夸大的 n** —— 后面所有基于深度的推断
 （拷贝数、VAF、证据强度）用的都是这个被夸大的 n。
