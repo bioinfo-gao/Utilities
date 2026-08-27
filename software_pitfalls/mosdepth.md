@@ -1,5 +1,8 @@
 # mosdepth —— 深度计数的口径：默认参数、去重、配对重叠校正
 
+> **本文位置**：`/home/gao/Utilities/software_pitfalls/mosdepth.md`（已在同目录
+> [`INDEX.md`](INDEX.md) 索引）。**上游权威文档与本机可离线核对的出处见 [§7](#7-参考文档的位置)。**
+>
 > 本文讲**机制与口径参数**（一个碱基位点上到底算了几次观测）。
 > **实测事故与具体数字**（P29 上 11–19% 假差异）在
 > [mosdepth_vs_samtools_depth.md](mosdepth_vs_samtools_depth.md)，此处不重复。
@@ -10,13 +13,35 @@
 
 ---
 
-## 0. 一句话
+## 0. 基本解释：「去重 + 配对重叠校正（mosdepth 默认）」这句话说了什么
 
-深度类结论（拷贝数、VAF、断点证据强度）本质上都在回答
-**「这个位点我有几次*独立*观测？」**。
-「去重」去掉的是**同一个文库分子被 PCR 扩出的多份拷贝**；
-「配对重叠校正」去掉的是**同一个分子的两端读到了同一段参考序列**。
-两者都不做，depth 就不再是独立观测数，而是被夸大的 n。
+这是一个**深度口径**的说明，出现在 Methods 里表示"我报的这个深度是怎么数出来的"。
+它由**两个互相独立的校正**组成，恰好都落在 mosdepth 的默认行为里 ——
+所以才写成"（mosdepth 默认）"。
+
+一句话概括：深度类结论（拷贝数、VAF、断点证据强度）本质上都在回答
+**「这个位点我有几次*独立*观测？」**，而这两个校正就是在剔除**两种不独立的重复计数**。
+
+| | 去掉的是什么 | 为什么它不是独立观测 | mosdepth 怎么做的 |
+| :--- | :--- | :--- | :--- |
+| **去重**<br>(deduplication) | 同一个文库分子被 **PCR 扩增**出的多份拷贝 | 它们是**一次**取样的产物，测到几次只反映扩增次数 | **只是遵守 BAM 里的 `0x400` flag**（`-F` 默认含 1024）——**自己不做 markdup**，见 §2 |
+| **配对重叠校正**<br>(mate-overlap correction) | 一对 PE read 在参考上**重叠的那一段** | 重叠段来自**同一个物理 DNA 分子**，两条 read 读的是同一份模板 | 缓存先到的 mate，算出参考坐标上的交集，对交集再减一次，**净计 1×**，见 §3 |
+
+**"深度" 这个词裸用即错**，同一个 BAM 至少有四个口径，能差到两倍：
+
+| 口径 | 含义 |
+| :--- | :--- |
+| 原始产出 | 含 PCR 重复、重叠段计两次 |
+| 去重后 | 只做了第一项校正 |
+| **去重 + 配对重叠校正** | 两项都做 = **mosdepth 默认** |
+| 局部读段计数 | 手工数支持某 junction/indel 的读段（须按读段名去重） |
+
+**两者都不做，depth 就不再是独立观测数，而是被夸大的 n** —— 后面所有基于深度的推断
+（拷贝数、VAF、证据强度）用的都是这个被夸大的 n。
+
+⚠ **最容易漏的一点**：这句话写在 Methods 里**不等于它真的生效了**。
+"去重"依赖上游有没有跑过 markdup，没跑就是**空操作、零报错、深度看着完全正常**（§2）；
+**验证方法见 §4**。
 
 ---
 
@@ -188,6 +213,37 @@ conda run -n $ENV samtools stats "$BAM" | grep ^SN | grep -E "insert size|averag
 1. **同一项目里深度定量只用一个工具，分子分母口径一致**，偏差自相抵消。比值分析尤其如此。
 2. **同一个数若有两个来源，就必须有一条断言把它们比对起来**（容差 2% 那种）。
    P29 正是靠这条当场拦下了 11–19% 的假差异。
+
+---
+
+## 7. 参考文档的位置
+
+### 7.1 本机可离线核对（**本文所有默认值的实际出处**）
+
+| 内容 | 命令 | 备注 |
+| :--- | :--- | :--- |
+| mosdepth 全部选项与默认值 | `conda run -n regular_bioinfo mosdepth --help` | **mosdepth 只随包装了二进制，本机没有 README/man page** ⇒ `--help` 就是唯一的离线权威 |
+| `samtools depth` 默认 filter-out 等 | `conda run -n regular_bioinfo man samtools-depth` | man page 本机有（`$CONDA_PREFIX/share/man/man1/`） |
+| `bcftools mpileup` 的 `-x` / `--ns` | `conda run -n regular_bioinfo bcftools mpileup` | 无参数即打印完整 help |
+| BAM flag 位的含义 | `conda run -n regular_bioinfo samtools flags 1796` | 直接把数字解成名字，省得心算 |
+
+### 7.2 上游权威文档
+
+⚠ **以下三条是记忆中的出处，2026-08-27 这一轮未联网核对**，引用前请自行确认；
+本文正文里的每一个默认值都来自 §7.1 的本机实测，不依赖这三条。
+
+- **mosdepth 源码与 README**：`https://github.com/brentp/mosdepth`
+  （`--fast-mode` / `--fragment-mode` 的语义、差分数组算法的说明在 README 与源码里）
+- **mosdepth 论文**：Pedersen BS & Quinlan AR, *"mosdepth: quick coverage calculation for
+  genomes and exomes"*, **Bioinformatics** 2018, 34(5):867–868
+- **samtools / bcftools 在线手册**：`https://www.htslib.org/doc/samtools-depth.html` ·
+  `https://samtools.github.io/bcftools/bcftools.html#mpileup`；
+  **SAM 格式与 flag 定义**：`https://samtools.github.io/hts-specs/SAMv1.pdf`
+
+### 7.3 本目录内的相关文档
+
+- [mosdepth_vs_samtools_depth.md](mosdepth_vs_samtools_depth.md) —— P29 实测 11–19% 假差异的事故记录
+- [INDEX.md](INDEX.md) —— 跨项目软件坑总索引，**跑任何新流程前先扫这里**
 
 ---
 
