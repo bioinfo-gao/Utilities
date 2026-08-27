@@ -92,10 +92,10 @@
 **要解决的问题**：常规 CRISPR 一旦递送进细胞就**持续切割** —— 无法控制"何时切""切哪些细胞"，
 更谈不上"只切一条等位基因"；而且核酸酶长时间保持活性会**抬高脱靶**。
 
-**caged gRNA 的做法**：在 gRNA 的关键位置（多在 spacer / seed 区）接上**光敏 caging group**
+**caged gRNA 的做法**：在 gRNA 的关键位置（多在 spacer / seed 区）接上**光敏保护基团（caging group）**
 （photo-labile caging group，如硝基苄类衍生物）。带着 caging group 时无法与靶 DNA 正常配对
 ⇒ **不照光就不切**。用特定波长的光（常见近 UV ~365 nm；新化学可用可见光或双光子）
-把 caging group 切掉，gRNA 恢复活性 ⇒ 从那一刻起开始切割。
+把光敏保护基团（caging group）切掉，gRNA 恢复活性 ⇒ 从那一刻起开始切割。
 
 由此得到三个维度的控制：**时间**（何时开始）、**空间**（只照到的细胞/区域）、
 以及配合聚焦照明时的**亚细胞乃至单等位**选择性。
@@ -217,7 +217,7 @@ UDR（~1604–1631，识别 H2AK15ub）、NLS（~1660–1685）；边界因注�
 | 有读段支持的实际改变 | **event（事件）** | —— |
 | 一个整合有两个 junction | **junction** | 把 junction 数说成"整合位点数" |
 | 深度 | 写明口径：原始 / 去重后 / **去重+配对重叠校正** | 裸写"深度" |
-| 笼锁 gRNA | **caged gRNA**（光敏 caging group，照光才有活性，§4.1） | 把样本名里的 `cg` 想当然读成 "CRISPR guide" |
+| 笼锁 gRNA | **caged gRNA**（带**光敏保护基团 caging group**，照光才有活性，§4.1） | 把样本名里的 `cg` 想当然读成 "CRISPR guide" |
 | 53BP1 reporter | **53BP1-FFR = Focus-Forming Region**，融合荧光蛋白后标记 DSB（§4.1） | 当成被编辑的靶基因 |
 | 读段计数 | 写明**按读段名去重** | 把 BAM 行数当读段数 |
 
