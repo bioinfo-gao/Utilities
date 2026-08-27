@@ -1,27 +1,46 @@
 # mosdepth —— 深度计数的口径：默认参数、去重、配对重叠校正
 
-**「去重 + 配对重叠校正（mosdepth 默认）」一句话解释** —— 这是一个**深度口径**说明，
-由两个互相独立的校正组成，两个都是 mosdepth **不加任何参数就会做**的事：
+## 注解：「去重 + 配对重叠校正（mosdepth 默认）」
 
-- **去重**：丢掉同一个文库分子被 **PCR 扩增**出的多份拷贝。
-  mosdepth **只是遵守 BAM 里的 `0x400` flag**（`-F` 默认 1796 含它），**它自己不做 markdup**。
-- **配对重叠校正**：一对 PE read 在参考基因组上**重叠的那一段只计一次**
-  （`overlap = max(0, 2R − L)`；重叠段来自同一个物理 DNA 分子）。
+这句话是一个**深度口径**说明 —— 它交代"我报的这个深度是怎么数出来的"。
+它由**两个互相独立的校正**组成，两个都是 mosdepth **不加任何参数就会做**的事，
+所以才写成"（mosdepth 默认）"。
+
+- **去重（deduplication）**：丢掉同一个文库分子被 **PCR 扩增**出的多份拷贝 ——
+  它们是**一次**取样的产物，不是多次独立观测。
+  ⚠ mosdepth **只是遵守 BAM 里的 `0x400` flag**（`-F` 默认 1796 含它），**它自己不做 markdup**；
+  BAM 若没跑过 markdup，这一项就是**空操作，且零报错、深度看着完全正常**
+  （判据：`samtools view -c -f 1024 <bam>` 是不是 0）。
+- **配对重叠校正（mate-overlap correction）**：一对 PE read 在参考基因组上**重叠的那一段只计一次**
+  —— 重叠段来自**同一个物理 DNA 分子**，是一次观测。重叠长度 `= max(0, 2R − L)`
+  （R = read length，L = insert size）。
 
 合起来回答同一个问题：**「这个位点我有几次*独立*观测？」**
-两者都不做，depth 就不是独立观测数，而是被夸大的 n —— 拷贝数、VAF、断点证据强度全都建立在它上面。
+两者都不做，depth 就不是独立观测数，而是**被夸大的 n** —— 拷贝数、VAF、断点证据强度全都建立在它上面。
 
-**⚠ 写在 Methods 里 ≠ 它真的生效了**：BAM 若从未跑过 markdup，"去重"就是空操作、零报错
-（判据 `samtools view -c -f 1024`）。展开见 [§0](#0-基本解释去重--配对重叠校正mosdepth-默认这句话说了什么)–[§4](#4-怎么验证这两件事在你的-bam-上真的生效了)。
+### 参考文档
 
-**参考文档的位置**
+**上游权威文档**（⚠ 以下三条未在本机联网核对，本文正文的每个默认值均以下方"本机实测"为准）：
 
-| 要找什么 | 在哪 |
-| :--- | :--- |
-| **本文**（机制、全部默认值、验证命令、跨工具对照） | `/home/gao/Utilities/software_pitfalls/mosdepth.md` · 已在同目录 [`INDEX.md`](INDEX.md) 索引 |
-| 实测事故与数字（P29 上 11–19% 假差异） | [`mosdepth_vs_samtools_depth.md`](mosdepth_vs_samtools_depth.md)（同目录） |
-| **本机可离线核对的权威出处**（本文每个默认值的来源） | `mosdepth --help` / `man samtools-depth` / `bcftools mpileup` —— 见 [§7.1](#71-本机可离线核对本文所有默认值的实际出处) |
-| **上游权威文档**（GitHub README / 论文 / htslib 手册 / SAM 规范） | 见 [§7.2](#72-上游权威文档) |
+- **mosdepth 源码与 README**：`https://github.com/brentp/mosdepth`
+- **mosdepth 论文**：Pedersen BS & Quinlan AR, *"mosdepth: quick coverage calculation for
+  genomes and exomes"*, **Bioinformatics** 2018, 34(5):867–868
+- **samtools / bcftools 手册**：`https://www.htslib.org/doc/samtools-depth.html` ·
+  `https://samtools.github.io/bcftools/bcftools.html#mpileup`；
+  **SAM 格式与 flag 定义**：`https://samtools.github.io/hts-specs/SAMv1.pdf`
+
+**本机可离线核对**（本文所有默认值的实际出处）：
+
+```bash
+conda run -n regular_bioinfo mosdepth --help          # mosdepth 只装了二进制, --help 是唯一离线权威
+conda run -n regular_bioinfo man samtools-depth       # samtools 默认 filter-out / -s 选项
+conda run -n regular_bioinfo bcftools mpileup         # -x / --ns 默认值
+conda run -n regular_bioinfo samtools flags 1796      # 把 flag 数字解成名字
+```
+
+**本文自身**：`/home/gao/Utilities/software_pitfalls/mosdepth.md`（同目录 [`INDEX.md`](INDEX.md) 已索引）——
+机制见 §2/§3，验证见 §4，跨工具对照见 §5。
+**实测事故与数字**（P29 上 11–19% 假差异）：同目录 [`mosdepth_vs_samtools_depth.md`](mosdepth_vs_samtools_depth.md)。
 
 ---
 
