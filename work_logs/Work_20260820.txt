@@ -48,10 +48,6 @@ report. Internal discussion and coordination via WeChat.
 Total Billable Hours: 16 Hours
 Date of Submission: Aug 29, 2026
 
-Note on the period boundary: the six hours caused by the non-ideal control fall
-inside this period - the reverse-direction control was run on Aug 23, and the
-side-by-side inspection of all candidate sites, the re-examination of the
-structural-variant candidates and the rework of every result into two-sample
-form were all done on Aug 25. Work carried out on Aug 28-29 (report revisions,
-delivery finalisation, answering the customer's follow-up question, and the
-internal design record) belongs to the following week and is reported there.
+Note: the additional hours caused by the non-ideal control are reported in the
+following week (Work_20260828), together with the report revisions, the delivery
+finalisation, the customer's follow-up question and the internal design record.

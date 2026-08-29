@@ -1,0 +1,35 @@
+Weekly Work Report
+Period: Aug 28, 2026 - Sep 4, 2026
+Prepared by: Zhen Gao
+Total Billable Hours: 6 Hours (items 2-4 to be added)
+
+1. Additional Analysis Caused by the Non-ideal Control - Yeji Park (6 Hours)
+The control line carries an integrated Cas9 construct and went through the same
+CRISPR treatment, so it is not a CRISPR-naive baseline. The usual approach of
+subtracting the control from the edited sample could not be used, and the
+following had to be done instead:
+ - a reverse-direction control run over the whole filtering chain, to measure
+   the background the pipeline itself produces;
+ - inspection of all 1,587 off-target candidate sites in both samples side by
+   side, rather than in the small set a subtraction would have left;
+ - individual re-examination of every structural-variant candidate, because
+   "present only in the edited sample" no longer implies "caused by the editing";
+ - rework of every result and of the report text into two-sample form, with the
+   sensitivity of each negative result stated explicitly.
+The customer was informed of these six hours; the discount is Jing's decision.
+
+2. Report Revision and Delivery Finalisation - Yeji Park (hours TBD)
+Revisions to the client report, finalisation of the delivery package and its
+date, and a pre-delivery audit that removed an internal build marker from the
+package and documented an empty result file that is correctly empty.
+
+3. Client Service (hours TBD)
+Answered the customer's question on whether more sequencing would give an exact
+editing percentage, and explained why it would not.
+
+4. Internal Records (hours TBD)
+Experimental design record for the project, checked line by line against the
+customer's original submission document.
+
+Total Billable Hours: 6 Hours (items 2-4 to be added)
+Date of Submission: TBD
