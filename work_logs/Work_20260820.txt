@@ -1,0 +1,49 @@
+Weekly Work Report
+Period: Aug 20, 2026 - Aug 27, 2026
+Prepared by: Zhen Gao
+Total Billable Hours: 16 Hours
+
+1. WGS Data Processing - Yeji Park (2.5 Hours)
+Processed the whole-genome samples: alignment to GRCh38, duplicate
+marking, and coverage QC. Usable depth measured at 6.33x and 6.14x after
+duplicate removal and read-pair overlap correction.
+The submission form left the analysis purpose, the experimental design and the
+guide sequences blank. The customer's reply arrived four days later, so the
+first analysis had to proceed without that information.
+
+2. First Integrative WGS Analysis - Yeji Park (4 Hours)
+With no target site or construct information available, the analysis was built
+on sample characteristics only: confirmation that both samples come from the
+same individual, the clonal and passage differences between them, a genome-wide
+copy-number and aneuploidy baseline, a homozygous-deletion scan run in both
+directions, and an unguided genome-wide search for cut-site-like signatures
+together with a swapped-sample control to measure its own background.
+
+3. Reference Construction and Vector Alignment - Yeji Park (2 Hours)
+Once the construct sequences were supplied, built the vector references with the
+human-homologous regions masked out - the 53BP1 portion of one construct is
+human sequence and would otherwise have produced false integration sites - and
+ran the additional alignments needed to locate vector-genome junctions.
+
+4. Second Integrative WGS Analysis - Yeji Park (6 Hours)
+Full re-analysis against the newly supplied target site and constructs:
+base-level confirmation of the intended 202 bp single-allele deletion, its
+consequence for the gene, enumeration and read-level inspection of 1,587
+off-target candidate sites in both samples, the six paired-cut loci that could
+reproduce the intended excision, vector copy number, and vector-genome junction
+mapping.
+Because the control line carries an integrated Cas9 construct and went through
+the same CRISPR treatment, the usual subtraction of control from edited sample
+could not be used. Every result therefore had to be produced for both samples
+side by side, a reverse-direction control had to be run, and each structural
+variant candidate had to be re-examined individually.
+
+5. Client Service and Internal Communication (1.5 Hours)
+Communicated with the customer to obtain the sample details, experimental
+design, guide sequences and construct maps that were missing from the
+submission form, and to establish why the non-ideal control had been used.
+Answered technical, statistical and methodological questions arising from the
+report. Internal discussion and coordination via WeChat.
+
+Total Billable Hours: 16 Hours
+Date of Submission: Aug 29, 2026
