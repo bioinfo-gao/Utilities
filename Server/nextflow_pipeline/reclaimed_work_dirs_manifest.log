@@ -42,3 +42,18 @@ df_before: /dev/sda1       7.3T  5.0T  2.0T  72% /mnt/ex_8T_SSD
 1086977907989	/mnt/ex_8T_SSD/projects_2026H2/14_geneedit_lats12_wgs/work_B
 total_bytes	1086977907989
 df_after: /dev/sda1       7.3T  4.0T  3.0T  58% /mnt/ex_8T_SSD
+===== 2026-08-29 12:50:08  ROOT=/mnt/ex_8T_SSD/projects_2026M7 =====
+df_before: /dev/sda1       7.3T  4.6T  2.4T  67% /mnt/ex_8T_SSD
+109936703230	/mnt/ex_8T_SSD/projects_2026M7/18_Pengpeng_Zhou_gut_metagenomics/work
+1260141643746	/mnt/ex_8T_SSD/projects_2026M7/19_Lijian_Wu_Rell1_TNFa_Tumor_Perfect_QC/scripts/work
+981713834574	/mnt/ex_8T_SSD/projects_2026M7/20_Zhen_Yan_Neuron_KD_OE_RNAseq/scripts/work
+total_bytes	2351792181550
+df_after: /dev/sda1       7.3T  2.4T  4.5T  35% /mnt/ex_8T_SSD
+# ---- 2026-08-29 12:50:27  手工补删（脚本 SKIP：.nextflow.log 在 scripts/ 而 work/ 在项目根，marker 与 work 不同级）
+# 已逐个确认为 Nextflow work：两位十六进制子目录 + .command.sh 计数如下
+2026-08-29 12:50:27	/mnt/ex_8T_SSD/projects_2026M7/27_Yue_Liu_MOLM13_Xray_timecourse/work	243205619507 bytes	.command.sh=433
+2026-08-29 12:50:28	/mnt/ex_8T_SSD/projects_2026M7/28_Xiaokun_Yang_DC_KO_RNAseq/work	375090827581 bytes	.command.sh=625
+2026-08-29 12:50:29	/mnt/ex_8T_SSD/projects_2026M7/30_Junqiang_Ding_HEK_4group_RNAseq/work	241851338792 bytes	.command.sh=433
+# ---- 2026-08-29 12:50:51  proj31 冗余中间 BAM（markdup 已存在且 quickcheck OK，sorted 为其前一步）
+2026-08-29 12:50:51	/mnt/ex_8T_SSD/projects_2026M7/31_Yeji_Park_RPE1_CRISPR_dual_cut_wgs/analysis/stage0_20260822/bam/RPE1_WT_Ctr.sorted.bam	13925705384 bytes
+2026-08-29 12:50:51	/mnt/ex_8T_SSD/projects_2026M7/31_Yeji_Park_RPE1_CRISPR_dual_cut_wgs/analysis/stage0_20260822/bam/RPE1_cg13_Single.sorted.bam	13076071301 bytes
