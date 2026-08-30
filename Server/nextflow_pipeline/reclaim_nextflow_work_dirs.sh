@@ -9,8 +9,12 @@
 #
 # 安全设计：
 #   1. 默认 DRY-RUN，必须显式 --execute 才真删。
-#   2. 只认「同级目录存在 .nextflow.log 或 .nextflow/」的 work 目录 —— 避免误删
-#      任何恰好叫 work 的普通文件夹。不满足 marker 的一律 SKIP 并打印出来。
+#   2. marker 校验，两条判据任一通过即可（2026-08-29 放宽，原先只看同级）：
+#        (a) work/ 的父目录【及其上两层】存在 .nextflow.log 或 .nextflow/
+#        (b) work/ 内部 >= 10 个 .command.sh（Nextflow 任务目录的固有结构）
+#      —— 避免误删任何恰好叫 work 的普通文件夹；两条都不满足的一律 SKIP 并打印出来。
+#      放宽原因：实测「从 scripts/ 启动、work/ 落在项目根」的布局会让 marker 与 work 不同级，
+#      0829 因此漏判 778 GiB（proj27/28/30），只能人工复核后补删。
 #   3. 删除前把清单 + 每个目录的字节数写进 manifest 日志（append-only），
 #      事后可查「当初删了什么、各多大」。
 #   4. 只删 work/ 自身，绝不碰 .nextflow.log / .nextflow/ / output* / results*
@@ -87,11 +91,32 @@ declare -a TARGETS=()
 
 while IFS= read -r d; do
   parent="$(dirname "$d")"
-  # --- 闸门 2: marker 校验 ---
-  if [[ ! -e "$parent/.nextflow.log" && ! -d "$parent/.nextflow" ]]; then
-    printf 'SKIP  %-60s (同级无 .nextflow.log / .nextflow/，不确认是 Nextflow work)\n' "$d"
+  # --- 闸门 2: marker 校验（2026-08-29 放宽 + 加第二判据）---
+  # 原判据只看【同级】有无 .nextflow.log / .nextflow/。实测漏掉 778 GiB：
+  #   proj27 / proj28 / proj30 是「从 scripts/ 启动、work/ 落在项目根」的布局，
+  #   .nextflow.log 在 scripts/ 下、与 work/ 不同级 -> 被判 SKIP。
+  #   若无人复核，这类目录会被当成「没有可回收的东西」而永远留着。
+  # 现在两条判据【任一】通过即可：
+  #   (a) work/ 的父目录【及其上两层】任一处存在 .nextflow.log / .nextflow/
+  #   (b) work/ 内部含 >= 10 个 .command.sh —— 这是 Nextflow 任务目录的固有结构，
+  #       比同级文件更难被伪造，也不受"从哪里启动"影响
+  marker_ok=0
+  probe="$parent"
+  for _ in 1 2 3; do
+    if [[ -e "$probe/.nextflow.log" || -d "$probe/.nextflow" ]]; then marker_ok=1; break; fi
+    probe="$(dirname "$probe")"
+    [[ "$probe" == "/" ]] && break
+  done
+  ncmd=0
+  if [[ "$marker_ok" -eq 0 ]]; then
+    ncmd="$(find "$d" -maxdepth 3 -name '.command.sh' 2>/dev/null | wc -l)"
+    [[ "$ncmd" -ge 10 ]] && marker_ok=2
+  fi
+  if [[ "$marker_ok" -eq 0 ]]; then
+    printf 'SKIP  %-60s (上溯 3 层无 .nextflow.log/.nextflow/，且内部 .command.sh=%s < 10)\n' "$d" "$ncmd"
     continue
   fi
+  [[ "$marker_ok" -eq 2 ]] && printf 'NOTE  %s 依据内部 .command.sh=%s 判定为 Nextflow work（同级/上溯无 marker）\n' "$d" "$ncmd"
   bytes="$(du -sb "$d" 2>/dev/null | cut -f1 || echo 0)"
   printf 'TARGET %9.1f GiB  %s\n' "$(echo "scale=4; $bytes/1073741824" | bc)" "$d"
   TARGETS+=("$d")
