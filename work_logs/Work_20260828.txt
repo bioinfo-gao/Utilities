@@ -1,9 +1,9 @@
 Weekly Work Report
 Period: Aug 27, 2026 - Sep 3, 2026
 Prepared by: Zhen Gao
-Total Billable Hours: 15 Hours 
+Total Billable Hours: 15 hours
 
-1. Additional Analysis Caused by the Non-ideal Control --- Yeji Park -wgs (6 Hours)
+1. Additional Analysis Caused by the Non-ideal Control - Yeji Park, WGS (6 hours)
 The control line carries an integrated Cas9 construct and went through the same
 CRISPR treatment, so it is not a CRISPR-naive baseline. The usual approach of
 subtracting the control from the edited sample could not be used, and the
@@ -18,20 +18,23 @@ following had to be done instead:
    sensitivity of each negative result stated explicitly.
 The customer was informed of these six hours; the discount is Jing's decision.
 
-2. Re-Analysis for RNAseq Mingjun-ZhenYan (1.5 hours)
-Totally check the new requests from the clients and compaired with the previous results.
+2. Re-Analysis for RNAseq - Mingjun, Zhen Yan (1.5 hours)
+Fully checked the new requests from the clients and compared them with the
+previous results.
 Revisions and re-analysis upon the new requests.
 
-3. Client Service and Internal techinical discusiion (5.5 hours)
-Replied more than a dozen Emails for techincal, statisical, filtering, and experiments design questions
-from Yeji, Mingjun, Dan-Yuan, and Keqiang.
-Discussion about why less reads will resulting more analysis time and statisitcally confidence reduction
-Discussion about how to setup the splicing analysis sample repairation and why exon-based and mRNA based 
-analysis are different requests totally diffent sequencing types.
+3. Client Service and Internal Technical Discussion (5.5 hours)
+Replied to more than a dozen emails on technical, statistical, filtering, and
+experimental design questions from Yeji, Mingjun, Dan Yuan, and Keqiang.
+Discussion about why fewer reads result in more analysis time and reduced
+statistical confidence.
+Discussion about how to set up sample preparation for splicing analysis, and why
+exon-based and mRNA-based analyses are different requests that need totally
+different sequencing types.
 
-4. System and data mangement (2 hours) 
-Peformed regular system management and performance monitoring
-Further reduced 3.4T data from the SSD of our server 
+4. System and Data Management (2 hours)
+Performed regular system management and performance monitoring.
+Further reduced 3.4 TB of data from the SSD of our server.
 
-Total Billable Hours: 15 Hours 
+Total Billable Hours: 15 hours
 Date of Submission: Sep 3, 2026
