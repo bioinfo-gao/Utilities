@@ -1,9 +1,9 @@
 Weekly Work Report
-Period: Aug 28, 2026 - Sep 4, 2026
+Period: Aug 27, 2026 - Sep 3, 2026
 Prepared by: Zhen Gao
-Total Billable Hours: 6 Hours (items 2-4 to be added)
+Total Billable Hours: 15 Hours 
 
-1. Additional Analysis Caused by the Non-ideal Control - Yeji Park (6 Hours)
+1. Additional Analysis Caused by the Non-ideal Control --- Yeji Park -wgs (6 Hours)
 The control line carries an integrated Cas9 construct and went through the same
 CRISPR treatment, so it is not a CRISPR-naive baseline. The usual approach of
 subtracting the control from the edited sample could not be used, and the
@@ -18,18 +18,20 @@ following had to be done instead:
    sensitivity of each negative result stated explicitly.
 The customer was informed of these six hours; the discount is Jing's decision.
 
-2. Report Revision and Delivery Finalisation - Yeji Park (hours TBD)
-Revisions to the client report, finalisation of the delivery package and its
-date, and a pre-delivery audit that removed an internal build marker from the
-package and documented an empty result file that is correctly empty.
+2. Re-Analysis for RNAseq Mingjun-ZhenYan (1.5 hours)
+Totally check the new requests from the clients and compaired with the previous results.
+Revisions and re-analysis upon the new requests.
 
-3. Client Service (hours TBD)
-Answered the customer's question on whether more sequencing would give an exact
-editing percentage, and explained why it would not.
+3. Client Service and Internal techinical discusiion (5.5 hours)
+Replied more than a dozen Emails for techincal, statisical, filtering, and experiments design questions
+from Yeji, Mingjun, Dan-Yuan, and Keqiang.
+Discussion about why less reads will resulting more analysis time and statisitcally confidence reduction
+Discussion about how to setup the splicing analysis sample repairation and why exon-based and mRNA based 
+analysis are different requests totally diffent sequencing types.
 
-4. Internal Records (hours TBD)
-Experimental design record for the project, checked line by line against the
-customer's original submission document.
+4. System and data mangement (2 hours) 
+Peformed regular system management and performance monitoring
+Further reduced 3.4T data from the SSD of our server 
 
-Total Billable Hours: 6 Hours (items 2-4 to be added)
-Date of Submission: TBD
+Total Billable Hours: 15 Hours 
+Date of Submission: Sep 3, 2026
