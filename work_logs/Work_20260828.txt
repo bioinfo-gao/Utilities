@@ -34,7 +34,7 @@ different sequencing types.
 
 4. System and Data Management (2 hours)
 Performed regular system management and performance monitoring.
-Further reduced 3.4 TB of data from the SSD of our server.
+Further reduced 3.4 TB of useless data from the SSD of our server.
 
 Total Billable Hours: 15 hours
 Date of Submission: Sep 3, 2026
