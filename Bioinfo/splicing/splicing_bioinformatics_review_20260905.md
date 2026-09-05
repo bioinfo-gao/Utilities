@@ -2,7 +2,7 @@
 
 **版本**：2026-09-05
 **作者**：Zhen Gao（与 Claude Opus 5 协作起草）
-**定位**：写给**已有 splicing 领域知识、但约两年未实际上手**的分析者。因此本文**不做基础科普**（不解释什么是 exon skipping、什么是 PSI 的定义式推导），而是把篇幅压在三件事上：
+**定位**：写给**已有 splicing 领域知识、但约两年未实际上手**的分析者。因此本文**不做基础科普**（不解释什么是 exon skipping、什么是 PSI（percent spliced-in）的定义式推导），而是把篇幅压在三件事上：
   1. **这两年真正变了什么** —— 哪些工具从"可选"变成"默认"，哪些结论被 benchmark 推翻；
   2. **选型判据** —— 面对一个具体项目，凭什么决定用哪一类方法、测多深、用长读长还是短读长；
   3. **成本的完整账** —— **测序成本 + 分析人工成本之和**，分析按内部技术人力 **$60/hour** 折算。
@@ -26,10 +26,27 @@
 | 变化 | 说明 |
 | :--- | :---: |
 | **rMATS-turbo 成为唯一该用的 rMATS** | Nature Protocols 2024 正式化。保留原 rMATS 的统计框架与接口，重写计算流程；可扩展到**上万样本**级别。老的 rMATS 4.0.x 没有再用的理由。**【文献】** |
-| **MAJIQ v2 在 FDR 上确立优势** | 报告 FDR ≈ 0.3%，FNR 与 LeafCutter 相当（2.5–5.5%，随样本量变）；比 LeafCutter 多识别 34% 变化事件。**且它是唯一能做"未注释 intron retention"检测与定量的主流工具。** **【文献】** |
+| **MAJIQ v2 在 FDR 上确立优势** | 报告 FDR ≈ 0.3%，**FNR**<sup>†</sup> 与 LeafCutter 相当（2.5–5.5%，随样本量变）；比 LeafCutter 多识别 34% 变化事件。**且它是唯一能做"未注释 intron retention"检测与定量的主流工具。** **【文献】** |
 | **LeafCutter 的优势重新被定位为"速度 + 无需注释 + p 值校准好"** | 多个 benchmark 中 LeafCutter 的 p 值校准优于同类；在 ≤0.2 的任意 FDR 下检出更多事件；运行时间 1 小时级，而 rMATS / MAJIQ 是数小时级。**【文献】** |
 | **SUPPA2 的定位是"快，但大样本量下 FDR 抬头"** | PSI 定量 24 秒级、差异分析 30 分钟级。代价：**样本量越大 FDR 越高**——因为它直接在 ΔPSI 上做检验，不回看 read 层数据。**【文献】** |
 | **"工具间重叠低"已成公认事实，不再是可以忽略的技术细节** | 事件级 benchmark 中不同工具的排序会随评估口径反转（SUPPA/LeafCutter/DARTS/rMATS 在事件级排序，与 MAJIQ/LeafCutter 在复杂事件上的表现呈**相反趋势**）。**⇒ 单工具结果不可作为终点。** **【文献】** |
+
+> **<sup>†</sup> 注：FNR（false negative rate，假阴性率）** = 在**真实存在**的差异剪接事件中被工具**漏掉**的比例，即 `FN / (FN + TP)` = `1 − sensitivity (recall)`。它与 **FDR（false discovery rate，假发现率）** = `FP / (FP + TP)` 构成**一对相互牵制的指标**，描述两类完全不同的错误：
+>
+> | 指标 | 错在哪 | 对项目的实际代价 |
+> | :--- | :---: | :---: |
+> | **FDR 高** | 报出来的事件里混着假的 | 你会去验证一堆不存在的事件，**浪费湿实验与工时** |
+> | **FNR 高** | 真事件被漏掉 | 你会得出"这个条件下剪接没变"的**假阴性结论**——而这个错误在报告里**看不出来**，没有任何提示 |
+>
+> **为什么这里必须成对给出**：任何工具都能靠调松/调紧阈值在 FDR 与 FNR 之间移动，所以孤立的一句"FDR = 0.3%"是没有信息量的（把阈值调到极严，FDR 必然低，代价是 FNR 飙升）。**只有 FDR 与 FNR 成对报告，性能声明才可比。** MAJIQ v2 值得注意的地方正在于此：**把 FDR 压到 0.3% 的同时，FNR 没有相应变差**（与 LeafCutter 同档）。
+>
+> **⚠ 三处口径提醒**：
+> 1. 此处 FNR 取 `1 − 灵敏度`（漏掉的真事件 ÷ 全部真事件），**不是**另一种少见写法 `FN / (FN + TN)`；
+> 2. **2.5–5.5% 这个区间随样本量变化 —— 样本量越小，FNR 越高。** 我们常做的 **n=3** 项目处在该区间的**上沿甚至之外**，**【判断】** benchmark 数字不能直接搬到小样本项目上做承诺；
+> 3. benchmark 里的"真实事件"由某种金标准定义（RT-qPCR 验证集，或用组内 vs 组间比较构造的近似真值），**不同论文金标准不同 ⇒ FDR/FNR 的绝对数值跨论文不可比**，只能比同一篇内部的相对排序。
+>
+> **⇒ 报告写作含义**：当我们写"未检出显著差异剪接事件"时，**必须同时说明该分析的检出力（power / 1−FNR）受什么限制**（深度、重复数、ΔPSI 阈值），否则读者无法区分"确实没变"与"没测出来"。参见 §11 pitfall #2、#3。
+
 
 **【判断】** 这两年最重要的方法学转变不是出现了更好的工具，而是**共识从"选一个最好的工具"变成了"用两个坐标系互证"**。见 §10.3。
 
@@ -43,12 +60,12 @@
   - **de novo（无注释）时**：所有工具都不可靠，**假 isoform 大量涌现**。
   - 定量指标上（SIRV-Set 4）：IsoQuant ≈ 0.76、FLAIR ≈ 0.73、IsoTools ≈ 0.69、bambu ≈ 0.68（spearman 类相关）。
 - **SQANTI3 从"锦上添花"变成"不做等于没做 QC"。** 长读长的 novel isoform 里混着大量技术假象：RT-switching、intra-priming（内部 polyA 引发的 3' 截断）、5' 降解。SQANTI3 的 SC（structural category：FSM/ISM/NIC/NNC）分类 + rule-based filter 是目前唯一被广泛接受的过滤层。
-- **单细胞/空间长读长成了独立赛道**：Longcell（Nat Commun 2025）、SCOTCH（Nat Commun 2026）、FLAMES、scNanoGPS 等，核心难题是**在高错误率下恢复 cell barcode 与 UMI**，以及**read truncation 导致的 isoform 归属错误**。**【文献】**
+- **单细胞/空间长读长成了独立赛道**：Longcell（Nat Commun 2025）、SCOTCH（Nat Commun 2026）、FLAMES、scNanoGPS 等，核心难题是**在高错误率下恢复 cell barcode 与 UMI（unique molecular identifier）**，以及**read truncation 导致的 isoform 归属错误**。**【文献】**
 
 ### 0.3 变异 → 剪接效应预测：SpliceAI 仍是基准，但盲区被量化了
 
 - **SpliceAI 与 Pangolin 高度冗余**：两者架构与训练集相似，预测值相关系数 **r = 0.97**。**⇒ 同时跑两个并不构成独立验证。** **【文献】**
-- **MPSA（massively parallel splicing assay）benchmark（Genome Biology 2023）**：用 5 个基因 3,616 个变异的实测剪接结果检验 8 个预测器。SpliceAI 与 Pangolin 整体最好，**但外显子内部（exonic）变异仍是明确盲区**——ESE/ESS 破坏类变异预测差。**【文献】**
+- **MPSA（massively parallel splicing assay）benchmark（Genome Biology 2023）**：用 5 个基因 3,616 个变异的实测剪接结果检验 8 个预测器。SpliceAI 与 Pangolin 整体最好，**但外显子内部（exonic）变异仍是明确盲区**——ESE（exonic splicing enhancer）/ ESS（exonic splicing silencer）破坏类变异预测差。**【文献】**
 - **SpliceVault 提供的是正交信息，不是又一个打分器**：它基于 ~30 万份公共 RNA-seq 建立经验性 junction 目录，回答的是"**如果这个 splice site 坏了，实际最常发生的是哪几种替代事件**"（top-4 cryptic sites / exon skipping）。**⇒ SpliceAI 回答"会不会坏"，SpliceVault 回答"坏了以后长什么样"。** **【文献】**
 - **AbSplice 引入组织特异性**，把变异效应绑定到具体组织的剪接背景上。
 - **临床侧**：ACMG PVS1 决策树对剪接类变异的应用已成熟化，**但"预测分数高"永远不能替代 RNA 层验证**（RT-PCR / 靶向 RNA-seq）。
@@ -78,7 +95,7 @@
 | :--- | :---: | :---: | :---: | :---: |
 | **Event-centric（事件级）** | 预定义的 5 类事件：SE / A5SS / A3SS / MXE / RI | rMATS-turbo、SUPPA2、DEXSeq(exon bin) | "这个外显子被跳过的比例变了多少"（ΔPSI） | 复杂事件（>2 种可能的局部剪接图）；未注释的新事件 |
 | **Intron/junction-centric（内含子级）** | intron cluster / LSV（local splicing variation） | LeafCutter、MAJIQ、MntJULiP | 任意复杂度的局部剪接变化；**不依赖完整注释** | 事件类型的直观生物学命名；跨越整条转录本的搭配关系 |
-| **Transcript-centric（转录本级）** | 完整 isoform 的相对丰度 | salmon/kallisto + DRIMSeq/DTU、StringTie2、IsoformSwitchAnalyzeR、（长读长全家） | isoform switch、蛋白编码后果、NMD 靶向、结构域得失 | 短读长下 isoform 归属高度依赖注释与统计推断，**新 isoform 不可靠** |
+| **Transcript-centric（转录本级）** | 完整 isoform 的相对丰度 | salmon/kallisto + DRIMSeq/DTU、StringTie2、IsoformSwitchAnalyzeR、（长读长全家） | isoform switch、蛋白编码后果、NMD（nonsense-mediated mRNA decay）靶向、结构域得失 | 短读长下 isoform 归属高度依赖注释与统计推断，**新 isoform 不可靠** |
 
 ### 1.1 为什么三者不能互相换算
 
@@ -113,7 +130,7 @@ PSI = inclusion / (inclusion + exclusion)，是个**比例**，而比例的方�
 | **事件级差异剪接（rMATS / LeafCutter）** | **80–120 M read pairs** | 60 M 是绝对下限；低于此低表达基因的事件几乎全被过滤掉 |
 | **转录本级 DTU** | **100–150 M read pairs** | isoform 解卷积对深度更敏感 |
 | **短读长 de novo isoform 组装** | ≥150 M，**且仍不建议** | **【判断】** 短读长组装新 isoform 在 2026 已无必要——有长读长这个正确工具 |
-| **长读长 isoform 定量（PacBio HiFi/Kinnex）** | ≥3 M FLNC reads/sample | 5 M 更稳 |
+| **长读长 isoform 定量（PacBio HiFi/Kinnex）** | ≥3 M FLNC（full-length non-concatemer）reads/sample | 5 M 更稳 |
 | **长读长 isoform 定量（ONT cDNA）** | ≥15–20 M pass reads/sample | ONT 需更多 read 来抵消截断与错误 |
 | **长读长 novel isoform 发现** | ≥5–10 M FLNC | 发现比定量更吃深度 |
 
@@ -287,7 +304,7 @@ PSI = inclusion / (inclusion + exclusion)，是个**比例**，而比例的方�
 - **优势**：
   - **不需要注释**——能发现 GENCODE 里没有的 junction，这对肿瘤 / neojunction / 非模式系统是决定性的；
   - **p 值校准好** **【文献】**；
-  - **快**（小时级），可扩展到 GTEx 规模，是 **sQTL** 分析的标准输入格式；
+  - **快**（小时级），可扩展到 GTEx 规模，是 **sQTL（splicing quantitative trait locus）** 分析的标准输入格式；
   - 天然处理复杂事件（cluster 内可有任意多个 intron）。
 - **弱项**：
   - **对 intron retention 基本无能**（IR 没有 split read）；
@@ -318,7 +335,7 @@ PSI = inclusion / (inclusion + exclusion)，是个**比例**，而比例的方�
 **标准组合：salmon/kallisto 定量 → tximport → DRIMSeq 或 DEXSeq → stageR 两阶段校正。**
 
 - **为什么要 stageR**：DTU 有两层问题——"**哪些基因**发生了 isoform usage 改变"（screening）和"**基因内哪条 isoform**"（confirmation）。直接对所有 transcript 做 BH 校正是错的（检验之间强相关）。**stageR 的两阶段过程是这个场景的正确做法，不是可选的精致化。**
-- **IsoformSwitchAnalyzeR**：把 DTU 检验与**功能后果注释**整合在一起——预测 ORF、调用 CPAT/CPC2（编码潜能）、Pfam（结构域得失）、SignalP、IUPred2A（无序区），并判断 isoform switch 是否引入 **PTC → NMD 靶向**。
+- **IsoformSwitchAnalyzeR**：把 DTU 检验与**功能后果注释**整合在一起——预测 ORF（open reading frame）、调用 CPAT/CPC2（编码潜能）、Pfam（结构域得失）、SignalP、IUPred2A（无序区），并判断 isoform switch 是否引入 **PTC（premature termination codon）→ NMD 靶向**。
   - **【判断】这是短读长剪接分析里最被低估的工具。** 它回答的是审稿人和客户真正关心的问题：**"这个剪接变化改变了蛋白吗？"** rMATS 的 ΔPSI 表格回答不了这个。
 - **⚠ 短读长 DTU 的根本局限**：isoform 丰度是**统计推断出来的**，不是观测到的。当两条 isoform 只差一个小外显子、或差别在长基因的一端时，EM 解卷积的不确定性极大。**salmon 的 bootstrap / Gibbs 样本（`--numBootstraps 100`）应该开，并把推断不确定性传到下游**（swish / sleuth 的思路），否则 DTU 的 p 值是虚高的。
 
@@ -417,7 +434,7 @@ SQANTI3  ← 结构分类（FSM/ISM/NIC/NNC）+ artifact 标记 + rule-based fil
 
 ### 6.1 先说不能做什么
 
-**10x Genomics 3' 方案在原理上不能做绝大多数 AS 分析。** 它只测转录本 3' 端 100–200 nt。**这不是算法问题，是数据里根本没有那个信息。** 任何声称"用 10x 3' 数据做了全转录组可变剪接分析"的工作，实际做的要么是 3'UTR 上的少数事件（含 APA），要么是错的。
+**10x Genomics 3' 方案在原理上不能做绝大多数 AS 分析。** 它只测转录本 3' 端 100–200 nt。**这不是算法问题，是数据里根本没有那个信息。** 任何声称"用 10x 3' 数据做了全转录组可变剪接分析"的工作，实际做的要么是 3'UTR 上的少数事件（含 APA，alternative polyadenylation），要么是错的。
 
 - 5' 方案同理（只是换了一端）。
 - **能做 AS 的单细胞数据只有两类**：**Smart-seq2/3（全长、板式、通量低、成本高）** 与 **单细胞长读长**。
