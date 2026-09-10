@@ -104,10 +104,39 @@ mpl 3.11.1 实测五个**全部**单独枚举得到，可以直接按 `"Noto San
 
 ⇒ 期刊要求非 Type 3 时设 `mpl.rcParams["pdf.fonttype"] = 42`，那两行 poppler 告警可以忽略。
 
-## 5. 踩坑记录
+## 5. 改完还是方框？先查内核有没有重新导入模块
+
+**字体设置写在被 import 的共享模块里时，改文件对已经活着的 kernel 无效** ——
+Python 把模块缓存在 `sys.modules`，`from x import setup` 在老内核里**不重新读盘**，
+新代码一次都不会执行。症状与"根本没改"完全一致。
+
+2026-09-10 proj22 实测（同一进程内三步模拟，`setup()` 里设字体）：
+
+| 步骤 | 缺字形告警 | `font.family` |
+| :--- | :---: | :---: |
+| 内核早于改动启动，导入旧模块并 `setup()` | 8 | `['sans-serif']` |
+| **磁盘文件已改好，只重跑 cell、不重启内核** | **8** | `['sans-serif']` |
+| `importlib.reload(mod)` 后再 `setup()` | **0** | `['Noto Sans CJK SC', 'DejaVu Sans']` |
+
+**补救**：重启 kernel 从头跑（最干净）；或在会话里
+
+```python
+import importlib, sc_tut_utils; importlib.reload(sc_tut_utils)
+from sc_tut_utils import setup; setup(chapter="1-1")   # 然后重跑作图 cell
+```
+
+**判据（给人核对用）**：让 `setup()` 把选中的字体打进环境指纹（`中文字体 Noto Sans CJK SC`）。
+**指纹里没有这一行 = 跑的是旧模块**，一眼可辨，不必去猜。
+
+⚠ **对验证方式的教训**：修复方在**新进程**里验证会 100% 通过，而用户的**长活会话**照样是方框 ——
+两边跑的根本不是同一份代码。**验证必须落在用户实际使用的那个会话里，或者至少交给用户一个
+他自己能核对的判据**（上面那行指纹）。同类教训见 [[feedback_verify_every_number_against_source]]。
+
+## 6. 踩坑记录
 
 - **2026-09-10 · proj22（22_python_based_scRNA_tutorial）第 1 次**：24 章教程的共享
   `scripts/_common/sc_tut_utils.py::setup()` 设了 `savefig.*`、`axes.grid`，**唯独没设字体**，
   全部章节图内中文（标题/轴标签/注释）渲染成方框。修在 `setup()` 一处（SSOT，24 章一次生效），
   并在 `setup()` 的环境指纹里加打一行 `中文字体 <name>`，让状态每次运行都可见。
-  同一轮里还连带踩了 2.1（回退机制搞反）和 2.2（假通过检测器）。
+  同一轮里还连带踩了 2.1（回退机制搞反）、2.2（假通过检测器），以及 §5 —— 在新进程里验证通过并汇报“已修好”，
+  而用户长活的 Positron 内核（早于改动 58 分钟启动）仍是方框，被当场指出“根本没改好”。
