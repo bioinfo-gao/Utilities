@@ -47,5 +47,42 @@ realpath /home/gao/projects_2026M7             # 先解析再用
 **扫描结果为空时，先怀疑扫描本身，再下"不存在"的结论**
 （与 [[feedback_falsify_vs_confirm_asymmetry]] 同一类：看不见 ≠ 不存在）。
 
+---
+
+## 第二种形态（2026-09-11 实测）：入口是**真目录**，被跳过的是**树里的**软链 —— `grep -r` 同病
+
+上面记的是「入口本身是符号链接」。还有一种更难察觉的：**入口是真目录，`find`/`grep` 正常往下走，
+但走到树里遇到的每个符号链接目录都被静默跳过**。此时 `-L` 之外的修法（末尾加 `/`、用真实路径）
+**全部无效**，因为问题不在入口。
+
+**实测（proj35，找用户正在看的那份文档）**：
+
+```bash
+grep -rl --include="*.md" "本文档的证据等级" /home/gao          # 0 命中
+grep -Rl --include="*.md" "本文档的证据等级" /home/gao/projects_2026M7
+                     # → .../35_Try_of_Claude_Science/docs/P35_benefits_..._0910.md
+```
+
+据第一条向用户断言「这段文字不在 `/home/gao` 下任何 `.md` 文件里」—— **错的**。
+
+| 工具 | 跟随命令行上给出的软链 | 跟随树里遇到的软链 |
+| :--- | :---: | :---: |
+| `grep -r` / `--recursive` | ✅ | **❌** |
+| `grep -R` / `--dereference-recursive` | ✅ | ✅ |
+| `find`（默认 `-P`） | ❌ | ❌ |
+| `find -L` | ✅ | ✅ |
+| `find -H` | ✅ | ❌ |
+
+**为什么在本机特别致命**：`/home/gao` 下有 **13 个**指向别处的目录符号链接
+（`projects_2026M7` `projects_2026H1` `Dropbox` `Work_bio` `download` `.local` `.conda` …），
+**几乎全部实际工作都在软链后面**。⇒ **`grep -r <任何东西> /home/gao` 约等于什么都没搜**，
+而它给你的是 0 命中 + 退出码 0。
+
+**⇒ 已机械化**：`~/.claude/hooks/guard_search_symlink.py`（PreToolUse/Bash）——
+`grep -r` / 无 `-L` 的 `find` 且搜索根下确实有目录软链 ⇒ **deny** 并给出修法；
+根下没有软链则放行（不打扰）。`find … -type l` 不拦（那本来就是在找软链）。
+确属故意不跟随 ⇒ 命令里加 `# no-follow-intended`。
+回归测试 `test_guard_search_symlink.py`（19 条）。
+
 **相关**：[awk.md](awk.md)（另一个"零报错 + 输出格式正常"的静默失败）·
 [../Server/nextflow_pipeline/磁盘回收_三方案实证对比_projects_2026H1_0729.md](../Server/nextflow_pipeline/磁盘回收_三方案实证对比_projects_2026H1_0729.md)（work/ 回收）
