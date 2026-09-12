@@ -17,6 +17,17 @@
 
 ## §1 启动：顺序不能换
 
+> ### ⚠ 先知道一件事：**daemon 本来就一直在跑，你多半只需要第 ② ③ 步**
+>
+> 实测（2026-09-12）：daemon 自 09-10 18:35 **连续运行 2 天**，`ppid=1` 已脱离终端 ——
+> **关终端、断 SSH 都不会杀它**；账号 token 也**自动续期**（`.oauth-tokens/` 有 refresh journal）。
+> 本机服务器已连续运行 **100 天**没重启过。
+>
+> ⇒ **每次真正要做的只有两件：重建 SSH 隧道 + 取一次性登录链接。**
+> 前者可以一次配好永久免手敲（见 §1.1），后者是产品设计（单次有效 ~3 分钟），改不掉。
+> ⚠ 唯一会让 daemon 消失的是**服务器重启** —— 本机**没有装 systemd 用户服务、`Linger=no`**，
+> 那时要手动 `serve` 一次。完整分析见 proj35 的 `P35_operations_runbook_0910.md`。
+
 ```bash
 # ① 在【服务器】确认它在不在跑 —— 绝大多数时候已经在跑，直接跳到 ②
 claude-science status
@@ -32,6 +43,24 @@ claude-science url
 ```
 
 登录页若卡在 claude.ai 回不来 ⇒ 选 **Paste code instead**。
+
+### §1.1 把隧道一次配好，别再手敲 `-L`
+
+`~/.ssh/config` 加这一段（**本机目前没有任何相关配置**，所以每次都在手敲）：
+
+```
+Host us1
+    HostName        <实际地址>
+    User            gao
+    LocalForward    8000 127.0.0.1:8000
+    LocalForward    8001 127.0.0.1:8001
+    ControlMaster   auto
+    ControlPath     ~/.ssh/cm-%r@%h:%p
+    ControlPersist  10m
+    ServerAliveInterval 30
+```
+
+之后 `ssh us1` 自动带上两个转发。⚠ **目标必须写 `127.0.0.1` 不能写 `localhost`**，理由见 §4 第 2 条。
 
 > ### ⚠ `PATH=...` 前缀只有 `serve` 需要，别的一律不要加（2026-09-11 更正）
 >
