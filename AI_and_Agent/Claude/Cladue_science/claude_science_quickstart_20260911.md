@@ -37,10 +37,10 @@ claude-science url
 >
 > 本文初版把前缀加在三行上，是错的 —— 抄来的，没验。实测：
 >
-> | 命令 | 要前缀吗 | 为什么 |
+> | 命令                                          |    要前缀吗    |                                                                            为什么                                                                            |  |
 > | :--- | :---: | :---: | :---: |
-> | `serve` | **要** | 它启动的 daemon **继承启动时的 PATH 并用一辈子**，之后每个代码沙箱都从那里取 `bwrap`。实测运行中的沙箱进程确实是 `~/.local/claude-science-bin/bwrap` |
-> | `status` `url` `open` `stop` `logs` | **不要** | 只是跟**已在跑的 daemon** 通过 socket 说话，根本不碰 bwrap。实测裸跑 `claude-science status` 正常返回 JSON |
+> | `serve`                                     |  **要**  | 它启动的 daemon**继承启动时的 PATH 并用一辈子**，之后每个代码沙箱都从那里取 `bwrap`。实测运行中的沙箱进程确实是 `~/.local/claude-science-bin/bwrap` |  |
+> | `status` `url` `open` `stop` `logs` | **不要** |                      只是跟**已在跑的 daemon** 通过 socket 说话，根本不碰 bwrap。实测裸跑 `claude-science status` 正常返回 JSON                      |  |
 >
 > **为什么 `serve` 非要它**：系统 `/usr/bin/bwrap` 是 **0.6.1**，低于官方要求的 0.8.0；
 > `~/.local/claude-science-bin/bwrap` 是指向 conda-forge **0.11.2** 的软链，而该目录
@@ -54,10 +54,10 @@ claude-science url
 
 **三条原则，比 prompt 里怎么写更重要 —— UI 的授权面板是唯一的硬边界，prompt 只是软约束。**
 
-| # | 原则 | 怎么落地 |
+| # |                              原则                              |                                       怎么落地                                       |
 | :--- | :---: | :---: |
-| 1 | **要给它的东西，先复制/切片到一个当日新建的专用目录** | 绝不把项目根、`raw_data/`、交付目录整棵授权出去。切片本身就是一道过滤 |
-| 2 | **输入目录只读，且目录内不得混进「不该给的东西」** | 答案底牌、凭据、客户原始材料、未剥离的注释 —— 只要在同一个目录里，只读授权照样能看 |
+| 1 |  **要给它的东西，先复制/切片到一个当日新建的专用目录**  |       绝不把项目根、`raw_data/`、交付目录整棵授权出去。切片本身就是一道过滤       |
+| 2 |    **输入目录只读，且目录内不得混进「不该给的东西」**    | 答案底牌、凭据、客户原始材料、未剥离的注释 —— 只要在同一个目录里，只读授权照样能看 |
 | 3 | **读写只给一个输出目录**：`exploration/<任务名>_MMDD/` | 交付目录、项目根、家目录**一律不给**。事后用 `find <交付目录> -newermt` 复核 |
 
 **命名兜底（重要）**：不能给的文件，**文件名自己就要喊出来** ——
@@ -66,10 +66,10 @@ claude-science url
 
 **实例（2026-09-11 两个判据测试的实际授权）**：
 
-| 任务 | 只读给它 | 读写给它 | ⛔ 同目录里但绝不能给 |
+| 任务           |                                                                          只读给它                                                                          |     读写给它     |                                        ⛔ 同目录里但绝不能给                                        |
 | :--- | :---: | :---: | :---: |
 | connector 测试 | `exploration/connector_test_input_0911/Sample_A.test30.vcf.gz`（30 个变异，已 `bcftools annotate -x` 剥掉 `gnomAD_AF`/`CLNSIG`/`CLNDN`/`CSQ`） | `exploration/` | `ANSWER_KEY_do_not_give_to_claude_science.tsv`、`truth_positions.tsv`、`test30_positions.tsv` |
-| 原生渲染测试 | `exploration/render_test_input_0911/` 两个 BAM（各 58 KB，从 15 GB 全基因组 BAM 切出 6 kb 区间） | `exploration/` | `ANSWER_KEY_do_not_give_to_claude_science.md` |
+| 原生渲染测试   |                             `exploration/render_test_input_0911/` 两个 BAM（各 58 KB，从 15 GB 全基因组 BAM 切出 6 kb 区间）                             | `exploration/` |                           `ANSWER_KEY_do_not_give_to_claude_science.md`                           |
 
 ⚠ **注意第二个例子的做法**：原 BAM 15 GB、含全基因组，直接授权等于把整个客户样本给它。
 **切出 6 kb、58 KB 的区间**之后，既够用又把暴露面缩到了最小 —— **这是默认做法，不是特例。**
@@ -137,13 +137,13 @@ PY
 
 ## §5 一定会咬人的五条
 
-| # |                             坑                             |                    症状                    |                                                                                        对策                                                                                        |
+| # |                             坑                             |                    症状                    |                                                                                                       对策                                                                                                       |
 | :--- | :---: | :---: | :---: |
-| 1 | **`serve` 少了 shim PATH 前缀** | daemon 起不来，报 `bwrap too old` | 系统 bubblewrap 0.6.1 < 官方要求 0.8.0；shim 里是 conda-forge 0.11.2，而 shim 目录不在登录 shell 的 PATH 里。**只有 `serve` 要加前缀**，`status`/`url`/`open`/`stop` 一律不加（见 §1 的更正框） |
-| 2 | **`-L` 必须写 `127.0.0.1`，不能写 `localhost`** | **交互图静默退化成静态快照**，不报错 |                                             服务器上 8000 同时听 IPv4/IPv6，**8001 只有 IPv4**；`localhost` 可能解析到 `::1`                                             |
-| 3 |            **登录链接单次有效、约 3 分钟**            |                 显示已过期                 |                                                 重跑`claude-science url`。**别让别人代测链接 —— 一 `curl` 就消耗掉了**                                                 |
-| 4 |                 **daemon 会自己重启**                 |       R/Python 会话里的变量突然不见       |                                2026-09-10 一天内 3 次（2 次 kernel 崩 + 1 次自动升级 0.1.41→0.1.47）。⇒**跨步骤状态一律落盘，不留在会话里**                                |
-| 5 |             **升级会搬动内置 skill 目录**             |               硬编码路径失效               |                                                 用`ls -d ~/.claude-science/runtime/*/skills ~/.claude-science/orgs/*/skills` 现查                                                 |
+| 1 |           **`serve` 少了 shim PATH 前缀**           |     daemon 起不来，报`bwrap too old`     | 系统 bubblewrap 0.6.1 < 官方要求 0.8.0；shim 里是 conda-forge 0.11.2，而 shim 目录不在登录 shell 的 PATH 里。**只有 `serve` 要加前缀**，`status`/`url`/`open`/`stop` 一律不加（见 §1 的更正框） |
+| 2 | **`-L` 必须写 `127.0.0.1`，不能写 `localhost`** | **交互图静默退化成静态快照**，不报错 |                                                            服务器上 8000 同时听 IPv4/IPv6，**8001 只有 IPv4**；`localhost` 可能解析到 `::1`                                                            |
+| 3 |            **登录链接单次有效、约 3 分钟**            |                 显示已过期                 |                                                                重跑`claude-science url`。**别让别人代测链接 —— 一 `curl` 就消耗掉了**                                                                |
+| 4 |                 **daemon 会自己重启**                 |       R/Python 会话里的变量突然不见       |                                               2026-09-10 一天内 3 次（2 次 kernel 崩 + 1 次自动升级 0.1.41→0.1.47）。⇒**跨步骤状态一律落盘，不留在会话里**                                               |
+| 5 |             **升级会搬动内置 skill 目录**             |               硬编码路径失效               |                                                               用`ls -d ~/.claude-science/runtime/*/skills ~/.claude-science/orgs/*/skills` 现查                                                               |
 
 **判断「真在干活」而不只是「进程存在」**：`curl -s -o /dev/null -w '%{http_code}\n' localhost:8000`
 返回 **401 是好事** —— 服务在应答，只是要求登录。
