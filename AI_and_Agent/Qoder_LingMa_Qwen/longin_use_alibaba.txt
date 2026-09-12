@@ -1,1 +1,20 @@
 It loosk only the aliyun can help me login
+（↑ 这是当时的初步判断，已被下面的完整记录修正：阿里云账号登录后回不到 Positron，
+  真正可用的是**淘宝账号**。原句保留不改，作为原始记录。）
+
+---
+
+## 从 Positron 登录 Qoder 的完整踩坑记录
+
+（2026-05-31 原始记录；2026-09-12 由 `projects_2026H1/Utilities/Agent/Qoder/Qoder.ipynb`
+并入此处 —— 该 H1 归档已确认内容全部被本仓库覆盖后退役，故把这段唯一记录搬过来。）
+
+**问题**：从 Positron 登录 Qoder 有问题。
+
+用**阿里云账号**登录 Qoder，登录本身成功，但**无法返回 Positron** —— 界面只提示"返回 vscode"，
+点开之后是 vscode 界面，而不是 Positron 界面。（账号 alakas.philly@gmail.colm）
+
+**解法**：回到 Positron，重新点登录页的**第一个选项**，改用**淘宝账号**登录 ——
+这里直接显示成功，并正常返回 Positron。这样就能顺利登录。
+
+配图（同目录）：`Screenshot 2026-05-31 144449.png`、`Screenshot 2026-05-31 144501.png`
