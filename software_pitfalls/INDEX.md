@@ -7,7 +7,7 @@
 本目录以及本目录下任何新建子目录，目录名必须永远用英文**（不含中文/特殊字符）。
 
 | 工具/主题 | 文件 | 一句话症状 |
-| :--- | :--- | :--- |
+| :--- | :---: | :---: |
 | bowtie2 / bowtie2-build | [bowtie2.md](bowtie2.md) | 本机 conda env 里没有能用的现代版本（没装 / 太老不支持 `--threads`），两个项目各踩一次 |
 | nf-core/sarek | [sarek.md](sarek.md) | `--use_gatk_spark markduplicates` 净倒退+击穿 alignment cache；CNNScoreVariants 隐藏 CPU 大户内存限流管不住 |
 | nf-core/mag | [nfcore_mag.md](nfcore_mag.md) | DASTool 精炼后 final bins 与 QC/分类报告跑在的原始 per-binner bins 命名不同、数量差 ~5.8 倍，不做名字映射会把基因组数报大近 6 倍 |
@@ -33,6 +33,7 @@
 | HUMAnN ↔ MetaPhlAn | [humann_metaphlan.md](humann_metaphlan.md) | 版本兼容三连坑：version-check 解析崩 + db 代际不匹配 + 参数名不兼容，需 shim 脚本 |
 | Nextflow `work/` 磁盘占用 | [../Server/nextflow_pipeline/磁盘回收_三方案实证对比_projects_2026H1_0729.md](../Server/nextflow_pipeline/磁盘回收_三方案实证对比_projects_2026H1_0729.md) | 磁盘满时压缩几乎无效（5.5T 里 87% 是 BAM/fastq.gz 已压缩格式，整压只省 ~8%）；真正占地方的是 Nextflow `work/`（占 87%，其中 BAM+fastq 的 89% 都在 work 下）。**第一动作永远是删 work/，不是压缩**；用 `reclaim_nextflow_work_dirs.sh`。附带坑：进程存活检测的 grep 太宽会匹配到检测脚本自己的路径 |
 | Positron / VS Code（fileWatcher） | [../IDE/Positron/5_high_CPU_rg_and_fileWatcher.md](../IDE/Positron/5_high_CPU_rg_and_fileWatcher.md) | workspace 挂了 references + 家目录后条目数 57 万 > inotify 上限 52 万，fileWatcher 常年吃满一个核；GTDB-Tk 静态 DB 一家占 30 万。另附 `top` 里 `rg` 高 CPU 是什么（ripgrep，正常短命进程） |
+| gnomAD / bcftools annotate | [gnomad_af_only_rarity.md](gnomad_af_only_rarity.md) | 用 2017 年 hg19-liftover 的 `af-only-gnomad` 当"是否在 gnomAD"的判据，且把 `absent` 当 `rare` ⇒ **已交付候选名单里约一半是常见多态**；零报错、退出码 0、表格全对 |
 
 维护原则：
 - 每条目先在这张表加一行，再建/更新对应文件。
