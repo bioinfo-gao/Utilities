@@ -1,9 +1,10 @@
 # Claude Science — 启动与调用速查（远程服务器 + 本地浏览器）
 
 **2026-09-11 实测于本机。** 只写「按顺序要敲什么」和「一定会咬人的五条」。
-**完整排障表（8 种症状 → 原因 → 处置）不在这里**，在
-`~/projects_2026M7/35_Try_of_Claude_Science/docs/P35_operations_runbook_0910.md` ——
+**完整排障表（8 种症状 → 原因 → 处置）不在这里**，在同目录的
+[`claude_science_full_evaluation_20260912.md`](claude_science_full_evaluation_20260912.md) **Part III** ——
 **不要把那张表抄到本文**，同一份信息存两处必然漂移。
+（⚠ 2026-09-12 路径变更：原指向 proj35 的 `P35_operations_runbook_0910.md`，该文已并入上面这份，不再更新。）
 
 ---
 
@@ -26,7 +27,7 @@
 > ⇒ **每次真正要做的只有两件：重建 SSH 隧道 + 取一次性登录链接。**
 > 前者可以一次配好永久免手敲（见 §1.1），后者是产品设计（单次有效 ~3 分钟），改不掉。
 > ⚠ 唯一会让 daemon 消失的是**服务器重启** —— 本机**没有装 systemd 用户服务、`Linger=no`**，
-> 那时要手动 `serve` 一次。完整分析见 proj35 的 `P35_operations_runbook_0910.md`。
+> 那时要手动 `serve` 一次。完整分析见 [`claude_science_full_evaluation_20260912.md`](claude_science_full_evaluation_20260912.md) §3.4。
 
 ```bash
 # ① 在【服务器】确认它在不在跑 —— 绝大多数时候已经在跑，直接跳到 ②
@@ -195,7 +196,7 @@ PY
 
 ---
 
-**相关**：
-`~/projects_2026M7/35_Try_of_Claude_Science/docs/P35_operations_runbook_0910.md`（完整排障表）·
-`P35_claude_science_one_pager_0911.md`（它是什么、值不值、实测用量）·
-`P35_figure_style_vs_ours_0911.md`（它的出图 skill 与我们的取舍）
+**相关**（均为当前有效版）：
+[`claude_science_full_evaluation_20260912.md`](claude_science_full_evaluation_20260912.md)（详细版：完整排障表在 Part III、实测证据在 Part IV、用量在 Part V）·
+[`claude_science_brief_20260912.md`](claude_science_brief_20260912.md)（提要：它是什么、值不值、什么时候用）·
+[`~/Utilities/color_and_format/figure_style_claude_science_vs_ours_20260911.md`](../../../color_and_format/figure_style_claude_science_vs_ours_20260911.md)（它的出图 skill 与我们的取舍）
