@@ -18,24 +18,31 @@
 **给未来的自己 / 下一次会话**：本机配置有增删（装了新 skill/插件/MCP、加了 hook）→ 跑脚本；
 发现 Claude Code 出了新内置能力 → 手工改 B 段并更新下面的"实测日期"；
 改了 git pre-commit 的判据/阈值/白名单 → 手工改 C 段。
+
+**每 2–3 个月的定期复盘**：覆盖本文前先归档旧版，历史定点与趋势表在 [`snapshots/README.md`](snapshots/README.md)（那里有可直接粘贴的三条命令，顺序不能换）。
 用户明确要求**随时维护**这份清单（2026-08-05）。
 
 ---
 
 <!-- AUTO:BEGIN -->
 
-> 本段由 `refresh_inventory.py` 自动扫描生成，**不要手改** —— 重新跑一遍脚本即可。扫描时间：2026-08-06 12:08
+> 本段由 `refresh_inventory.py` 自动扫描生成，**不要手改** —— 重新跑一遍脚本即可。扫描时间：2026-09-13 19:59
 
-### A1. 个人 skills（`~/.claude/skills/`）—— 13 个
+### A1. 个人 skills（`~/.claude/skills/`）—— 18 个
 
 | skill | 触发 | 一句话 |
 | :--- | :---: | :--- |
+| `/claude-science-guardrails` | 模型可自动调用 | Use in every Claude Science session — the non-negotiable rules that Claude Code enforces |
 | `/corun` | 仅手动 | Use when 要在同一台服务器上同时/排队跑多个重型管线(nextflow/sarek/mag/taxprofiler、长比对、大下载等)且系统资源有限——如何安全并跑、监 |
+| `/delivery` | 模型可自动调用 | Use when 分析跑完要交付、要做增量/补充轮、要拆分交付包或取样本子集——交付前自审(PCA 必须数点数、图例与标签对齐)、output_results 只放正式产物不放 |
 | `/ftp` | 仅手动 | Use when 用户要给客户开 sFTP 上传/下载通道、查回 sFTP 端口/账号/密码、或确认穿透(bore)隧道是否还活着 |
 | `/git` | 仅手动 | Use when 要对本机任一 git 仓库做提交/推送/清理——尤其 commit+push 前必须排除大文件(避免 258G scratch、BAM/work/ 进库或撞  |
 | `/notify` | 仅手动 | Use when writing ANY script that needs to alert the user (watchdog, monitor, cron job, l |
+| `/project-setup` | 模型可自动调用 | Use when 新建一个分析项目,或要在项目里写计划文档/step 脚本/样本表——项目文件夹自动连续编号、scripts/0_sample_table.csv 作为 SSO |
+| `/report` | 模型可自动调用 | Use when 要写或修改客户报告、客户邮件、或任何交付给客户的文字——报告 §1–§9 结构与 §2/§8.2 两份、三处日期一致、署名、缩写首次出现给全称并消歧、交付目录 |
 | `/rnaseq` | 仅手动 | Use when 用户要为一个项目搭建 bulk RNA-seq 分析:nf-core/rnaseq → DESeq2 差异表达 → GO/KEGG ORA + GSEA 富集 |
 | `/scientific-figure-making` | 仅手动 | Use when 要出版级/客户交付级的图: matplotlib 或 ggplot2 的 grouped bar、trend line、heatmap、scatter/PCA |
+| `/splicing` | 模型可自动调用 | Use when 要做可变剪接分析（differential splicing / exon usage / isoform switch）——选型决策树、五条尺子的角色分工、 |
 | `/ssd-swap` | 仅手动 | Use when 需要为跑重型/并发 WGS 管线(sarek、双管线并跑等)在本机加挂或重启后重新激活 64GB SSD swap 缓冲——该 swapfile 不在 fst |
 | `/tax-assembly-mag` | 仅手动 | Use when 用户要做 shotgun 宏基因组 de-novo 组装+分箱+MAG 重建与分类:nf-core/mag |
 | `/tax-functional-humann` | 仅手动 | Use when 用户要做 shotgun 宏基因组 functional profiling（功能通路/基因家族丰度、代谢潜能、KO/EC、SCFA/代谢差异）:HUMAnN |
@@ -48,7 +55,7 @@
 
 | 插件 | 版本 | 启用 | 装在哪 | 带来什么 |
 | :--- | :---: | :---: | :--- | :--- |
-| `superpowers@claude-plugins-official` | 6.2.0 | 是 | `user` 级 | 14 个 skill、SessionStart hook |
+| `superpowers@claude-plugins-official` | 6.3.0 | 是 | `user` 级 | 14 个 skill、SessionStart hook |
 
 `superpowers@claude-plugins-official` 带的 skill（用 `superpowers:<名字>` 调用）：
 
@@ -58,7 +65,7 @@
 
 | 名称 | 类型 | 命令 / 端点 | 需要的 env 键 |
 | :--- | :---: | :--- | :--- |
-| `gmail` | stdio | `/home/gao/.local/bin/uvx claude-gmail-mcp` | GMAIL_ADDRESS, GMAIL_APP_PASSWORD |
+| `gmail` | stdio | `/home/gao/.local/bin/uvx --with mcp<2 claude-gmail-mcp` | GMAIL_ADDRESS, GMAIL_APP_PASSWORD |
 | `github` | http | `https://api.githubcopilot.com/mcp/` | — |
 
 **只列 env 的键名，绝不落盘任何值** —— 那里面是凭据。
@@ -67,6 +74,10 @@
 
 | 来源 | 事件 | 内容 |
 | :--- | :---: | :--- |
+| settings.json | `PreToolUse` | [{"matcher": "Bash", "hooks": [{"type": "command", "command": "python3 |
+| settings.json | `UserPromptSubmit` | [{"hooks": [{"type": "command", "command": "python3 /home/gao/.claude/ |
+| settings.json | `Stop` | [{"hooks": [{"type": "command", "command": "python3 /home/gao/.claude/ |
+| settings.json | `PostToolUse` | [{"matcher": "Write|Edit|NotebookEdit", "hooks": [{"type": "command",  |
 | plugin superpowers@claude-plugins-official | `SessionStart` | matcher=`startup|clear|compact` |
 
 另有 **git hooks**（与 Claude Code 无关，是 git 自己的）：`/home/gao/Utilities/.githooks` -> pre-commit；`Utilities` / `projects_2026M7` / `projects_2026H2` 三个仓库用 `core.hooksPath .githooks` 指向**同一份三类拦截 hook**（大文件 / 隐藏文件目录 / 密码密钥）—— 规则与处理方式见下方 **C 段**。
@@ -88,7 +99,7 @@
 | `permissions.defaultMode` | `bypassPermissions` |
 | `skipDangerousModePermissionPrompt` | `True` |
 | `statusLine` | command: `bash ~/.claude/statusline-command.sh` |
-| 允许规则条数 | settings.json 14 条 + settings.local.json 2 条 |
+| 允许规则条数 | settings.json 14 条 + settings.local.json 3 条 |
 
 <!-- AUTO:END -->
 
