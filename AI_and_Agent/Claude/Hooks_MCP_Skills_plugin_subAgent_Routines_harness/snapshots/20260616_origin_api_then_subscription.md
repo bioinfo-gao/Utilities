@@ -48,8 +48,8 @@
 | 时刻 | 文件 | 发生了什么 |
 | :--- | :---: | :---: |
 | 14:15 | [`agent.ipynb`](../../agent.ipynb) | 最早的一个文件，记 agent 概念 |
-| 14:30 | [`Charge_and_fee/charge.md`](../../Charge_and_fee/charge.md) | 搞清计费模式 —— **但结论是错的，见 §2** |
-| 16:06<br>（落盘 16:17） | [`use_subscription/Screenshot 2026-06-18 160650.png`](../../use_subscription/Screenshot%202026-06-18%20160650.png) | **Claude Code 首次登录界面**（16:06:50 取自文件名＝拍摄时刻；mtime 16:17＝落盘时刻，跑 §5 的证据命令看到的是后者）：`How do you want to log in?` → `Claude.ai Subscription` / `Anthropic Console` / `Bedrock, Foundry, or Vertex` |
+| 14:30 | [`Charge_and_fee/charge.md`](../../Charge_and_fee/charge.md) | 搞清计费模式 —— **但结论是错的，见 §3** |
+| 16:06<br>（落盘 16:17） | [`use_subscription/Screenshot 2026-06-18 160650.png`](../../use_subscription/Screenshot%202026-06-18%20160650.png) | **Claude Code 首次登录界面**（16:06:50 取自文件名＝拍摄时刻；mtime 16:17＝落盘时刻，跑 §6 的证据命令看到的是后者）：`How do you want to log in?` → `Claude.ai Subscription` / `Anthropic Console` / `Bedrock, Foundry, or Vertex` |
 | 16:18 | [`3_method.md`](../../3_method.md) | 开始记使用方法 |
 | 16:33–16:35 | [`5_best_practice.md`](../../5_best_practice.md)、[`4_best_practice.md`](../../4_best_practice.md) | 记最佳实践 |
 
