@@ -186,10 +186,24 @@
 | 2026-06-16 起，API 计费 | `platform.claude.com` | `zorin.gao` |
 | 2026-06-18 起，订阅 | `claude.ai` | **`flyhappyflying`**（= 登录邮箱 `flyhappyflying@gmail.com` 的 `@` 前部分） |
 
-**仍待确认**：订阅开的是哪一档（Pro / Max / Team）：________
+**档位已查明**【实测，`~/.claude.json › oauthAccount`】：
+
+| 字段 | 值 | 含义 |
+| :--- | :---: | :---: |
+| `organizationType` | **`claude_pro`** | **Pro 档** |
+| `billingType` | `stripe_subscription` | 走 Stripe 订阅扣款 |
+| `hasExtraUsageEnabled` | **`False`** | **超额 Usage Credits 兜底未开启** |
+| `accountCreatedAt` | 2026-06-15 18:11 EDT | 与购入 credits 同日 |
+| `subscriptionCreatedAt` | **2026-06-18 17:03:54 EDT** | 订阅开通精确时刻 |
+| `claudeCodeFirstTokenDate` | 2026-06-18 17:04:25 EDT | 订阅下首个 token，**31 秒后** |
+
+**⇒ §2 的因果链因此闭合**：16:06 截图看见登录界面有订阅选项 → **57 分钟后**开通订阅
+→ **31 秒后**发出第一个 token。从"发现有这个选项"到"用上"不到一小时。
 
 **⚠ 两个账号不是一回事，别混**：API balance 与订阅 Usage Credits
 **不能互转、不能合并**（见 §3 的定稿表）。
+**而且这是两个独立账号**：credits 在 `zorin.gao`（Console）名下，订阅在 `flyhappyflying`（claude.ai）名下。
+⇒ 想用那笔 credits，必须**换账号登录**，不是在同一账号里切换模式。
 
 ## §6 证据清单
 
