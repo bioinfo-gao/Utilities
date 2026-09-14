@@ -22,7 +22,7 @@
 | Jun 16–17 区间总量 vs 逐日用量 | **已交叉验证**，两式完全相等（§1.2） |
 | Jun 15 / 19 / 20 为 0 | 未独立核验，采信 dashboard；**但 Jun 15 = 0 与账单的 06-15 充值日互为佐证** |
 | **花费金额** | **已两次更正，现为 $44.04** —— $106.25 是**含税实付**，到账 credits 为 **$100**；消耗 = 100 − 55.96（§1.3 推论 2） |
-| 账号 `zorin.gao` / `flyhppyfliing` | **未核验**，后者拼写你还没确认（§5） |
+| 账号 `zorin.gao` / `flyhappyflying` | 订阅账号 = 登录邮箱 `flyhappyflying@gmail.com` 的 `@` 前部分 |
 | 06-18 的文件时间戳与截图 | **【实测】**，§6 有可自跑的命令 |
 
 ---
@@ -184,7 +184,7 @@
 | 阶段 | 平台 | 账号 |
 | :--- | :---: | :---: |
 | 2026-06-16 起，API 计费 | `platform.claude.com` | `zorin.gao` |
-| 2026-06-18 起，订阅 | `claude.ai` | `flyhppyfliing`（**拼写待你核**，本机记录的邮箱是 `flyhappyflying@gmail.com`） |
+| 2026-06-18 起，订阅 | `claude.ai` | **`flyhappyflying`**（= 登录邮箱 `flyhappyflying@gmail.com` 的 `@` 前部分） |
 
 **仍待确认**：订阅开的是哪一档（Pro / Max / Team）：________
 
