@@ -283,8 +283,18 @@ for name, ad in [("raw", raw), ("filt", filt)]:
 `umi[~called & nz].max()`、以及"按 rank 前 16,934 切"的阈值与误判数。
 在 `sc_tut_main` 里重跑约 4 分钟（读 raw 矩阵是瓶颈）。
 
-**配套代码**：`~/projects_2026M7/22_python_based_scRNA_tutorial/notebooks/01_introduction/1-2_raw_data_processing.py`
-（knee plot、soup profile、头 10 行体检，均带逐行注释）。
+**配套代码（双向引用）**：
+
+| 那边 | 指向本文的哪里 |
+| :--- | :---: |
+| `~/projects_2026M7/22_python_based_scRNA_tutorial/notebooks/01_introduction/0_companion_reference_docs.md` | 章节 ↔ 小节完整对照表（索引文件） |
+| `…/01_introduction/1-2_raw_data_processing.py` 文件头 + 读 raw/filt 那一格 | §1、§1.1、§2、§3 |
+| `…/01_introduction/1-3_anndata_and_scanpy.py` 文件头 | §4 |
+
+代码那边写"这一行在干什么"，本文写"为什么是这样、实测是多少"，互不复述。
+`1-2` 里有 knee plot、soup profile、头 10 行体检的可运行实现，均带逐行注释。
+
+**本文若改名或移动**，需要同步的只有三处：上表的两个 `.py` 文件头 + 那份索引 md。
 
 ---
 
@@ -293,11 +303,16 @@ for name, ad in [("raw", raw), ("filt", filt)]:
 2026-09-14 首版写完后按"聊天里那版更集中"重写了 §1.1；**原有文字已全部还原，现为双份**。
 下面列出重叠处，供你自行取舍（删掉任一侧文档都仍然完整）：
 
-| 内容 | 位置 A（首版行文） | 位置 B（重写版） | 建议 |
+| 内容 | 位置 A（首版行文） | 位置 B（重写版） | 结论 |
 | :--- | :---: | :---: | :---: |
-| EmptyDrops 机制一句话 | §1 正文首段 | §1.1 两段式表格第 ② 行 | 表格更准（区分了 ordmag 与 EmptyDrops） |
+| EmptyDrops 机制一句话 | §1 正文首段（第 44 行） | §1.1 两段式表格第 ② 行 | **两者都留**（用户 2026-09-15 点名 A 段"收获很大"） |
 | 两条 bullet（低 RNA 细胞被救回 / 高 UMI 被判空） | §1 正文 | §1.1「⇒ 最终边界由 ② 决定」下方 | 二选一即可 |
 | "验证方法"段 | §1 正文末 | §1.1 实测表已直接给出结果 | A 讲方法、B 给结果，可并存 |
+
+**⛔ 第 44 行那段不要删**（"cell calling 不是阈值切分…显著不同就判为细胞，即使它 UMI 很低"）。
+它和 §1.1 的表格是互补不是重复：**表格给的是流程（两段式各干什么），这段给的是判据本身
+——比的是"表达谱与 ambient profile 的差异"，不是 UMI 大小**。只看表格容易以为 ② 只是个更
+复杂的阈值；这句话才点破它换了一个完全不同的判定维度。
 
 **删除时注意**：§1.1 的两段式表格（ordmag / EmptyDrops）是首版没有的内容，
 不要连带删掉——"内部确实有一个阈值，但它不是最终边界"这层意思只在那张表里。
