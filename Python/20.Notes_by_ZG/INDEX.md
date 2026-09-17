@@ -10,6 +10,7 @@
 | 笔记 | 主题 | 日期 |
 | :--- | :---: | :---: |
 | [Python_core_modules_for_bioinformatics.md](Python_core_modules_for_bioinformatics.md) | 生信里的 Python 通用与核心模块：依赖分层、numpy↔scipy↔statsmodels 的职责边界、matplotlib/seaborn/plotly 的关系、14 条静默陷阱、本机两环境模块矩阵 | 2026-09-17 |
+| [R_to_Python_stats_and_plotting.md](R_to_Python_stats_and_plotting.md) | **以 R 为参照系**：统计函数与作图方法的逐条双语实测对照。头号陷阱是 `t.test` 默认 Welch 而 `ttest_ind` 默认 Student；另有 pandas 静默丢 NA、矩阵填充顺序、负号索引、ggplot2→plotnine/seaborn 三条路 | 2026-09-17 |
 
 ## 相关但不在本目录的姊妹篇
 
