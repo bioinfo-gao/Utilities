@@ -34,6 +34,7 @@
 | `AI_in_singlecell_and_spatial_1_methods_20260910.md` | AI 赢/没赢的格、四条铁律 | `/scrna` §6；`/spatial` §0-3 §3.6 |
 | `AI_in_singlecell_and_spatial_2_agent_workflow_20260910.md` | agent 失败原型与闸门设计 | 不进 skill（是元层，对应全局 CLAUDE.md 与 hooks） |
 | `AI_in_singlecell_and_spatial_3_llm_biology_20260910.md` | LLM 注释/通路解读的可信度与规程 | `/scrna` §6 |
+| `spatial_analysis_best_practices_20260917.md` | **工程纪律与可验证性**：观测单位的操作化、checkpoint 纪律、Python 空间断言库、12 条交付前自审、报告口径 | `/spatial` §5（Python 侧断言的 canonical 来源；skill 原先只有 R 版） |
 
 ---
 
@@ -44,8 +45,12 @@
 | [`22_python_based_scRNA_tutorial`](/home/gao/projects_2026M7/22_python_based_scRNA_tutorial/) | 4 个 env 已建成并逐模块验证；`output_results/` 有 **ch1-1/1-1s/1-2/1-3/2-1**（后两个 09-16 新增），`done_stamps` 为 0 ⇒ 交互逐章跑，**2-1 之后尚无产物** | `/scrna` 的**可运行参考实现**与共享断言来源 |
 | [`23_R_based_scRNA_tutorial_2026`](/home/gao/projects_2026M7/23_R_based_scRNA_tutorial_2026/) | 20 章写完，**2 个 env 从未建** | `/scrna` 的 R/Seurat 对照写法与 D4/D5/D8/D12/D13 判据来源 |
 | [`24_R_advanced_scRNA_and_Spatial_tutorial_2026`](/home/gao/projects_2026M7/24_R_advanced_scRNA_and_Spatial_tutorial_2026/) | 17 章写完，**3 个 env 从未建** | `/spatial` 的空间断言（含 `assert_yaxis_flipped()`）与 D1/D5/D10 判据来源 |
+| [`37_spatial_visium_heart_pilot`](/home/gao/projects_2026M7/37_spatial_visium_heart_pilot/) | **2026-09-17 建立并跑完**：Visium 人心 LV control 4 切片 / 11,725 spots，step1–6 全部产出，自审 9 PASS / 3 NOTE / 0 FAIL | `/spatial` 的**首个实地验证**；`scripts/_common/spatial_utils.py` 是 Python 空间断言的 canonical 实现 |
 
-**⚠ 引用这些章节时的口径**：说「已写好可参考」，**不要说「已验证跑通」**。
+**⚠ 引用这些章节时的口径**：22/23/24 说「已写好可参考」，**不要说「已验证跑通」**。
+**37 是例外** —— 它 2026-09-17 端到端跑完并留下了全部日志与产物，可以说「已验证跑通」。
+它也是三个静默坑（基因标识符不匹配 / `.raw` 暗线 / Tangram 用 0 个基因照跑）的发现来源，
+这三条已回写进 `spatial_analysis_best_practices_20260917.md` §4.6–§4.7。
 
 ---
 
