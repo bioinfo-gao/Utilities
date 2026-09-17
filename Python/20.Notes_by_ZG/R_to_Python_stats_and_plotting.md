@@ -6,6 +6,7 @@
 > 关注点不是"两边都能做"，而是**默认值不同 / 语义不同导致的静默错误**——
 > 因为 R 用得越熟，越会默认 Python 同名函数是同一件事。
 > 姊妹篇：[Python_core_modules_for_bioinformatics.md](Python_core_modules_for_bioinformatics.md)（Python 侧的生态分层）
+> 反方向：[Python_to_R_migration.md](Python_to_R_migration.md)（Python→R，**陷阱与本篇几乎不重叠**）· 中立选型：[R_vs_Python_neutral_comparison.md](R_vs_Python_neutral_comparison.md)
 > 所有数值均为 **2026-09-17 双语实测**（同一组输入分别跑 R 与 Python），环境与脚本见 §6。
 
 ---

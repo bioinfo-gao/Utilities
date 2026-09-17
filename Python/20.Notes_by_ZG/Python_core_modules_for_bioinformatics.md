@@ -4,6 +4,7 @@
 > 用途：一份"生态地图"——说清做 RNAseq / 单细胞 / WGS 时会碰到的 Python 模块各自的**职责边界**，
 > 以及边界被误解时会产生的**静默错误**。不是 API 手册，重点是"为什么是这么切的"。
 > 姊妹篇：`/home/gao/Utilities/Python/Python_tabular_data_structures.md`（表格类数据结构的 8 种形态）
+> 同目录另三篇：[R_to_Python_stats_and_plotting.md](R_to_Python_stats_and_plotting.md)（R→Python）· [R_vs_Python_neutral_comparison.md](R_vs_Python_neutral_comparison.md)（中立选型）· [Python_to_R_migration.md](Python_to_R_migration.md)（Python→R）
 > 版本号与"装没装"均为**本机实测**，实测环境与命令见 §8。
 
 ---
