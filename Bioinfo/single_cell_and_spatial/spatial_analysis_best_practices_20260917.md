@@ -25,6 +25,7 @@
 | **4** | **每个阶段落一个带前缀与时间戳的 checkpoint**，两类平台前缀不共用 | 拿测序型的中间产物喂成像型的下游，形状碰巧合法 | §2.2 |
 | **5** | **SVG 必须与 Moran's I 并排**；只有一种方法可用时，**把这件事写进 Limitations** | 把单一方法的偏好当成生物学 | §3.4 |
 | **6** | **去卷积前先断言参考是同组织、基因交集足够、训练基因数 > 0**，产出后断言比例和为 1、无负值 | 给出看似合理的细胞类型构成，而它是凭空的；Tangram 用 0 个基因也能"跑完" | §3.5 · §4.3 · **§4.6** |
+| **6b** | **永远用工具输出自带的观测标识，不按位置补名**；并断言输出标识是输入的子集 | 工具静默丢弃不合格观测后，其后每一行错位一格，而比例断言仍全部通过 | **§4.6b** |
 | **7** | **域（domain）数量至少扫三个设置**，报告里给稳定性证据 | 把一个超参数的选择当成组织结构 | §3.3 |
 | **8** | **每张空间图都要能数出点数**，并与该阶段的 `n_obs` 对得上 | 抽稀/截断静默丢点，图看着正常 | §4.4 |
 | **9** | **n=1 或单一条件时，明确写"做不了跨条件统计"**，只给描述与模板 | 拿单样本硬做出一张"显著"的表 | §1.3 · §6 |
@@ -328,6 +329,58 @@ assert n_train >= 100, (
 > 凡是"两个对象按名字取交集"的地方，都要把交集大小断言出来——
 > 交集为 0 在几乎所有库里都是合法输入。
 
+### 4.6b 🔴 算法会静默丢弃观测 —— 按位置重新赋名就会整体错位（2026-09-17 实地发现）
+
+**这条是本文档里最隐蔽的一个**，因为出错后的矩阵**完全合法**。
+
+去卷积/建模工具常会丢弃不合格的观测（RCTD 的 `UMI_min=100`、`pixel_count_min=10`）。
+**被丢的那个不一定在末尾。** 如果拿输入的名字按位置补回去：
+
+```r
+rownames(prop) <- colnames(counts)[seq_len(nrow(prop))]   # ❌ 灾难
+```
+
+被丢位置**之后的每一行都会错位一格**，而每行的和仍然是 1、仍然无负值——
+**比例断言全部通过。**
+
+**实测（`37_spatial_visium_heart_pilot`）**：
+
+| 切片 | 输入 spots | 输出 | 丢弃位置 | 受影响 |
+| :--- | :---: | :---: | :---: | :---: |
+| control_P1 / P17 / P8 | 4279 / 2049 / 2461 | 同上 | — | 0 |
+| **control_P7** | **2936** | **2935** | **第 2093 位（中间）** | **843 行（29%）** |
+
+**为什么极难发现**：错位后 RCTD–Tangram 的一致性只从 ~0.53 掉到 **0.398** ——
+因为 Visium 上相邻 spot 在空间上也相邻、表达相似，**错一格不会把相关性打到 0**。
+若不是同时有另外三个切片做对照，这个数字看起来完全正常。
+
+**正确做法：用输出自带的标识，并断言它是输入的子集。**
+
+```r
+ids <- rownames(w)                 # 工具本来就带正确的名字
+if (is.null(ids)) ids <- colnames(res)
+idchk <- assert_spot_ids_subset(ids, colnames(counts))   # 见下
+if (idchk$n_dropped > 0) log_msg(sprintf("丢弃 %d 个，位置 %s",
+    idchk$n_dropped, paste(idchk$dropped_positions, collapse=",")))
+```
+
+```r
+assert_spot_ids_subset <- function(out_ids, in_ids) {
+  stopifnot(
+    "输出缺少 spot 标识 —— 不许按位置补名，那会整体错位" = !is.null(out_ids),
+    "输出的 spot 标识有重复" = !anyDuplicated(out_ids),
+    "输出的 spot 不是输入的子集" = all(out_ids %in% in_ids))
+  dropped <- setdiff(in_ids, out_ids)
+  list(n_in = length(in_ids), n_out = length(out_ids), n_dropped = length(dropped),
+       dropped_positions = if (length(dropped)) match(dropped, in_ids) else integer(0))
+}
+```
+
+> **教训比这条坑本身更通用**：§4.3 的 `assert_deconv_proportions` 校验的是矩阵的
+> **内部性质**（行和、符号），它对**行的身份**一无所知。
+> **每一个"内部一致性"断言都需要配一个"身份对齐"断言** —— 前者保证数值合法，
+> 后者保证数值挂在对的观测上。只做前者会给出一种虚假的安全感。
+
 ### 4.7 `sc.concat` 会丢弃不一致的 `.var` 列
 
 逐切片算完 HVG 再 `sc.concat` 合并，**`highly_variable` 列不会存活**
@@ -407,7 +460,7 @@ assert "highly_variable" in merged.var, "HVG 标记未在 concat 后存活，下
 | 内容 | 来源 |
 | :--- | :---: |
 | §4.1–§4.5 断言库的代码 | **本文原创**，已由 `37_spatial_visium_heart_pilot` 实地使用；`assert_reference_same_tissue` 与 `assert_deconv_proportions` **在该项目中真的拦下了错误** |
-| §4.6 三连环坑、§4.7 concat 丢 `.var` | **2026-09-17 在 `37_spatial_visium_heart_pilot` 实地踩到并定位**，非文献 |
+| §4.6 三连环坑、§4.6b 标识错位、§4.7 concat 丢 `.var` | **2026-09-17 在 `37_spatial_visium_heart_pilot` 实地踩到并定位**，非文献；§4.6b 的缺陷版产物与脚本快照存于该项目 `superseded_for_comparison/deconv_rctd/v1_*/` |
 | SVG 基准数字（Moran's I 0.76 / SPARK-X 0.88，14 方法 × 96 数据集） | 转引自 `spatial_transcriptomics_R_vs_Python_ecosystem_20260910.md` |
 | 本机 SpatialDE 不可用、R 空间栈未装、cell2location 因 3 GB 显存不可用 | `/spatial` skill §2.2（2026-09-16 实测） |
 | §1–§3 的各条实践 | **我的判断**，依据是 skill 的静默错误清单 + 既往项目的实际失误 |
