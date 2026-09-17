@@ -38,6 +38,7 @@
 
 | 文档 | 路径 |
 | :--- | :---: |
+| **机器学习 / 深度学习 / LLM 三篇**（2026-09-17 新建） | `/home/gao/Utilities/Python/30.ML_and_AI/INDEX.md` |
 | Python 表格类数据结构全景（8 种） | `/home/gao/Utilities/Python/Python_tabular_data_structures.md` |
 | R 表格类数据结构全景（5 种） | `/home/gao/Utilities/R/R_tabular_data_structures.md` |
 | 软件坑索引 | `/home/gao/Utilities/software_pitfalls/INDEX.md` |

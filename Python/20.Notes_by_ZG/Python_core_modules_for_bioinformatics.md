@@ -331,6 +331,57 @@ fig.savefig(out / "fig3_pca.pdf", bbox_inches="tight")   # ✅
 读客户送样单时必须同时检查 `cell.font.color` 与富文本 runs。
 见 `/home/gao/Utilities/software_pitfalls/openpyxl_xlsx_richtext.md`。
 
+### §7.2 ⚠️ 可选依赖（extras）：装没装，要走到那条分支才知道
+
+**层次地图之外还有第二个维度：同一层里，一个包对另一个包的依赖可以是「必装」也可以是「可选」。**
+上层包（尤其 Scanpy）大量使用**惰性可选依赖**——不写进硬依赖，只在真正调用到的那一行才 `import`。
+
+**本机实测（`sc_tut_main` 的 scanpy 1.11.5）**：源码里有 **21 处 `raise ImportError`**，
+涉及 `leidenalg` `python-igraph` `scikit-misc` `scikit-image` `harmonypy` `bbknn`
+`scanorama` `magic-impute` `dca` `palantir` `trimap` `fa2-modified` 等十余个包。
+
+| 走到哪条分支才炸 | 缺哪个包 | 报错 |
+| :--- | :---: | :---: |
+| `sc.pp.highly_variable_genes(flavor="seurat_v3")` | `scikit-misc` | `Please install skmisc package via pip install scikit-misc` |
+| `sc.pp.scrublet(...)`（`threshold=None`，即默认） | **`scikit-image`** | `threshold is None and thus scrublet requires skimage, but skimage is not installed.` |
+| `sc.tl.leiden(...)` | `leidenalg` / `python-igraph` | `Please install the leiden algorithm` |
+| `sc.external.pp.harmony_integrate` / `bbknn` / `scanorama` | 各自的包 | 各自的 `ImportError` |
+
+**为什么 scanpy 要把 `skimage` 做成可选？** 这正是 §0 那条依赖方向的推论：
+scrublet 的最后一步要把 doublet score 直方图**二值化**成"是/不是 doublet"，
+而"从双峰直方图里找谷底"是个**图像处理算法**（`skimage.filters.threshold_minimum`，
+与 Otsu 同族）。scanpy 没有自己重写它，而是向下调用图像处理层——合规，但代价是多一个可选依赖。
+
+**这个守卫写得很好，值得抄**（`scanpy/preprocessing/_scrublet/__init__.py:179`）：
+
+```python
+if threshold is None and not find_spec("skimage"):
+    # Scrublet.call_doublets requires `skimage` with `threshold=None` but PCA
+    # is called early, which is wasteful if there is not `skimage`
+    raise ImportError(...)
+```
+
+真正用到 `skimage` 的是最后一步，但它**在入口就用 `importlib.util.find_spec` 探一次**，
+免得你白跑十几分钟的 PCA + kNN 才发现缺包。**自己写长流程时照这个模式做前置探测。**
+
+**⛔ 这一类不属于 §9 的"静默陷阱"** —— §9 的判据是「**不报错**地产出错结果」，
+而缺可选依赖是**大声报错**的，只是报得晚、且报错信息离"你到底该装什么"有一步之遥。
+它的正确归属是工程层：**环境能不能重建**。
+
+**三条操作规则：**
+
+1. **`scikit-image` 不是 RNAseq / WGS 的核心模块**，不必主动掌握。它出现在两种场合：
+   ① 上面这种 scanpy 可选依赖；② **空间转录组**真的要处理组织切片图像（`squidpy.im`、
+   Visium HD / Xenium 的配准与分割）。本机 `sc_tut_spatial` 里它是 squidpy 带进来的。
+2. **装完必须回填 env yaml，并写明"为什么需要"。** 只装不回填 = 下次从 yaml 重建环境时
+   同一个坑原样复发，而那时已经没人记得当初发生过什么。
+3. **`mamba install --dry-run` 先看解算结果再决定装不装**：关键看**有没有降级/卸载**。
+   纯新增可以放心装；有降级就要先评估会不会碰坏已验证的组合。
+
+> 实例：2026-09-17，`sc_tut_main` 跑教程 2-1 章的 `sc.pp.scrublet` 时命中第 2 行，
+> 补装 `scikit-image 0.26.0`（纯新增 23 包，numpy/scipy/scanpy 均未动）并回填 yaml。
+> 全过程见 `/home/gao/projects_2026M7/22_python_based_scRNA_tutorial/docs/P22_run_and_troubleshooting_log_0903.md` 事件 #7。
+
 ---
 
 ## §8 本机实测：两个环境的模块矩阵
@@ -379,6 +430,8 @@ conda run -n <env> python -c "import sys; print(sys.executable)"
 | polars | 1.39.2 | ❌ 未装 |
 | statsmodels | ❌ **未装** | 0.14.6 |
 | scikit-learn | 1.7.2 | 1.9.0 |
+| scikit-image | ❌ 未装 | 0.26.0（**2026-09-17 补装**，见 §7.2） |
+| scikit-misc | ❌ 未装 | ✅（HVG `seurat_v3` 需要，见 §7.2） |
 | pyarrow | ❌ 未装 | 25.0.1 |
 | h5py | ❌ 未装 | 3.16.0 |
 | xarray | ❌ 未装 | 2026.7.0 |
