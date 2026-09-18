@@ -99,8 +99,37 @@
 好消息是服务器有 **64 逻辑核 / 125 GB RAM**，
 scVI 这类中小模型在几万细胞上 CPU 训练是可接受的（这也是 `/scrna` 一直以来的做法）。
 
-**⚠ 别被 `torch.__version__` 里的 `+cu130` 骗了** —— 它说明**编译时**带了 CUDA，
-不说明**运行时**能用。**唯一可信的判据是 `torch.cuda.is_available()`。**
+### 🔴 但"用 CPU 跑"不等于"不会去碰 CUDA"——两个反直觉点
+
+**① `torch.cuda.is_available()` 不是可信判据，它的答案取决于进程里 import 过什么。**
+
+| 时点 | `PYTORCH_NVML_BASED_CUDA_CHECK` | `is_available()` |
+| :--- | :---: | :---: |
+| 只 `import torch` | 未设置 | **False**（正确） |
+| `import lightning` 之后 | 被 lightning 设成 `1` | **True**（**错误**） |
+
+`import lightning` 会主动设这个变量，探测改走 NVML，而 NVML 能正常枚举这块卡 ——
+于是**正确的 False 被翻成错误的 True**。
+**⇒ 裸 torch 里测得 False，不能推断 scvi-tools 进程里也是 False。**
+
+**② `accelerator="cpu"` 拦不住 CUDA 初始化。** 它只约束"算在哪"，不约束"要不要探测 GPU"；
+Lightning 在训练前收集 RNG 状态那一步（`fabric/utilities/seed.py:146`）只看 `is_available()`，
+不看 accelerator ⇒ `model.train(accelerator="cpu")` 照样抛
+`RuntimeError: The NVIDIA driver on your system is too old`。
+
+**✅ 修法是从进程层面屏蔽显卡，不是重装 torch：**
+
+```python
+import os
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")   # 放在任何库 import 之前最稳
+```
+
+**全过程见 `/home/gao/Utilities/software_pitfalls/torch_lightning_cuda_driver.md`**
+（2026-09-17 proj22 2-5 章 scVI 实测）。
+
+> **⚠ 这一条同时修正了本篇早先的一句话**：我最初写的是"唯一可信的判据是
+> `torch.cuda.is_available()`"。**那是错的** —— 它是进程相关的。
+> 可信的做法是**把"不用 GPU"落成进程事实**（环境变量），而不是去读一个布尔量。
 
 ### §3.2 笔记本（RTX 3060 6GB）：**这才是 GPU 工位**
 
@@ -239,7 +268,7 @@ scvi.model.SCVI.setup_anndata(adata, layer="counts", batch_key="sample")
 | jax | ❌ | 0.6.2 | ❌ | ❌ |
 | tensorflow / keras | ❌ | ❌ | ❌ | ❌ |
 | transformers | ❌ | ❌ | ❌ | ❌ |
-| **GPU 可用** | — | **False** | **False** | — |
+| **GPU 可用** | — | **False**（裸 torch；`import lightning` 后会变成错误的 True，见 §3.1） | 同左 | — |
 
 **读法**：深度学习能力**只集中在 `sc_tut_main` 一个环境**，且是 CPU。
 `sc_tut_spatial` 有 torch 是因为 tangram 的依赖链带进来的，不是为了训练。
@@ -280,4 +309,5 @@ scvi.model.SCVI.setup_anndata(adata, layer="counts", batch_key="sample")
 | **笔记本 RTX 3060 6GB** | **用户口述，未实测** —— 待 §3.3 的命令回填 |
 | sm_86 属于 Ampere、在编译列表内 | 由型号推定 + 本机实测的列表比对 |
 | 显存估算公式与 6 GB 容量表 | **估算与判断**，非实测，仅供规划 |
+| `import lightning` 翻转 `is_available()`、`accelerator="cpu"` 拦不住 CUDA 初始化 | **`software_pitfalls/torch_lightning_cuda_driver.md`**（proj22 2-5 章实测）——**该文证伪了本篇初稿的一句判据，已于同日修正** |
 | 决策树、静默陷阱清单 | 我的整理与判断 |
