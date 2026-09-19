@@ -1,0 +1,46 @@
+https://gemini.google.com/app/053e07830616e3cd?utm_source=app_launcher&utm_medium=owned&utm_campaign=base_all
+
+单细胞 RNA 测序（scRNA-seq）分析在过去 3 年中发生了显著的技术迭代。相比 3 年前，当前的最佳实践更加强调去伪存真（严控假阳性）、数据集成效率以及功能机制分析的标准化。以下是当前（以 R / Seurat v5 + Bioconductor 生态为主线，辅以 Python 优秀工具）的标准单细胞分析完整流程指南。一、 近 3 年单细胞分析的核心变化（最佳实践）双细胞过滤（Doublet Detection）：scDblFinder（R/Bioconductor）凭借最高的准确率和基准测试评分，已全面超越早期的 DoubletFinder 和 Scrublet。多样本差异表达（DE）分析：彻底抛弃以往直接对细胞运行 Wilcoxon 检验的做法（存在严重伪重复导致 $p$ 值过虚），全面采用 Pseudobulk（伪bulk） 结合 DESeq2 / edgeR。数据集成（Integration）：Seurat v5 引入了 Layers 架构与 BPCells，结合 Harmony 或 scVI（通过 Python 交互），极大地提升了大样本量下的计算效率。功能富集与通路转录因子分析：decoupler 成为新一代通路（PROGENy）和转录因子（DoRothEA/MSigDB）活性的标准定量工具。二、 标准单细胞分析七步法详细指南Step 0: 比对与表达矩阵生成（Upstream）推荐工具：Cell Ranger (v8+) 或 STARsolo / salmon-alevin-fry关键参数：确保基因组注释版本最新（如 GRCh38 / mm10 或最新 T2T 参照）。核心输出：表达矩阵（含 barcodes.tsv.gz, features.tsv.gz, matrix.mtx.gz 或 filtered_feature_bc_matrix.h5）。Step 1: 质控与双细胞去除（QC & Doublet Removal）推荐工具：scDblFinder (R) / scater / Seurat质控指标：nCount_RNA（总 UMI 数）& nFeature_RNA（检测基因数）：过滤掉低质量细胞及极高 UMI 的疑似离群细胞。percent.mt（线粒体基因比例）：根据组织类型动态设定阈值（通常 5%–15%）。percent.ribo（核糖体基因比例）与 percent.hb（红细胞血红蛋白基因比例）：评估死细胞与红细胞污染。双细胞过滤：按样本（Sample/Capture Lane）独立运行 scDblFinder，标记并剔除拟合出双细胞得分极高的细胞。交付产物：质控前后 Violin 图、QC 散点图、过滤后的干净 Seurat 对象。Step 2: 标准化、高变基因选取与降维（Normalization & Reduction）推荐工具：Seurat v5 (SCTransform v2 或 LogNormalization)流程策略：推荐使用 SCTransform v2 建模拟合测序深度偏差，自动识别高变基因（HVGs）。运行 PCA 降维，利用 ElbowPlot 结合 JackStraw 确定主成分（PCs）数量（通常 20–30 个 PCs）。交付产物：SCT 矫正后的数据结构、PCA 碎石图（ElbowPlot）、未集成前按样本分布的 UMAP 图。Step 3: 批次效应矫正与数据集成（Integration）推荐工具：Harmony (R) 或 scVI (Python/scvi-tools，通过 seurat-wrappers 调取)流程策略：对不同批次、供体（Donor）或测序板（Batch）进行主成分或隐空间上的矫正。交付产物：集成前与集成后按 Batch/Group 着色的 UMAP 对比图、集成后的近邻图（KNN graph）。Step 4: 聚类与细胞类型注释（Clustering & Annotation）推荐工具：Azimuth / CellTypist (自动注释) + 专家手动 Marker 验证流程策略：构建 SNN 图并运行 Leiden 或 Louvain 聚类算法，设置多重分辨率（Resolution 0.1–1.2）。结合 Azimuth 等预训练模型进行自动化大类推断。提取各 Cluster 的特异性 Marker 基因（FindAllMarkers），结合经典文献与点图（DotPlot）手动修正边界与细分亚群。交付产物：带有清晰细胞类型标签的 UMAP/t-SNE 图、主要亚群 Marker 基因 DotPlot/Heatmap、各组别细胞比例分布条形图（Proportion Barplot）。Step 5: 拟合伪bulk与差异表达/通路分析（Pseudobulk DE & Pathways）推荐工具：DESeq2 / edgeR (用于 Pseudobulk DE) + decoupler / clusterProfiler (用于富集分析)流程策略：将每个生物学重复（Biological Replicate/Donor）内特定细胞亚群的 UMI 进行加总，构建 Pseudobulk 矩阵。使用 DESeq2 拟合负二项分布进行组间差异分析（考虑协变量如性别、年龄等）。使用 decoupler 进行 PROGENy 通路活性和 TF 转录因子活性打分，运行 GO/KEGG/GSEA 分析。交付产物：全基因差异表达表格（Excel/CSV）、火山图（Volcano Plot）、通路富集气泡图。Step 6: 高级下游分析（Downstream Dynamics）推荐工具：CellChat v2 (细胞间通讯分析) / Monocle3 或 scVelo (轨迹与RNA速率分析)流程策略：针对特异细胞类群配体-受体对（L-R pairs）进行信号通路定量，或推算细胞分化路线。交付产物：细胞互作网络图（Circle Plot / Bubble Plot）、轨迹拟时间轴图（Pseudotime UMAP）。三、 流程与交付物对应表以下汇总了每个分析步骤的输入、最佳工具、核心输出与最终产物：阶段 (Step)输入文件当前最佳工具核心分析结果/图表最终交付产物0. Raw Data ProcessingFASTQ 原始测序文件Cell Ranger v8 / STARsolo细胞识别与 UMI 计数矩阵filtered_feature_bc_matrix.h5, web_summary.html1. QC & Doublet Filter原始计数矩阵scDblFinder + scater细胞质控小提琴图、双细胞得分分布01_QC_and_Doublet_Filtered.rds2. Normalization & HVG干净的细胞矩阵Seurat v5 (SCTransform v2)归一化矩阵、高变基因集、PCA 碎石图02_Normalized_PCA.rds3. Batch IntegrationPCA/表达矩阵 + 批次信息Harmony / scVI批次消除前后 UMAP 对比图03_Integrated_Object.rds4. Clustering & Annotation集成后的低维空间Azimuth + 手动 Marker 校验细胞亚群 UMAP 图、Marker 基因点图、细胞比例图04_Annotated_Seurat_Object.rds, Markers_List.xlsx5. Pseudobulk & DE带有注释的 Seurat 对象DESeq2 + decoupler + clusterProfiler组间差异基因火山图、GSEA/PROGENy 富集图DE_results_pseudobulk.xlsx, 通路富集表格6. Cell-Cell Communication带有注释的 Seurat 对象CellChat v2配受体互作网络图、信号通路强弱对比图CellChat_object.rds, 互作网络高清矢量图Markdown| 阶段 (Step) | 输入文件 | 当前最佳工具 | 核心分析结果/图表 | 最终交付产物 |
+| :--- | :--- | :--- | :--- | :--- |
+| **0. Raw Data Processing** | FASTQ 原始测序文件 | Cell Ranger v8 / STARsolo | 细胞识别与 UMI 计数矩阵 | `filtered_feature_bc_matrix.h5`, `web_summary.html` |
+| **1. QC & Doublet Filter** | 原始计数矩阵 | `scDblFinder` + `scater` | 细胞质控小提琴图、双细胞得分分布 | `01_QC_and_Doublet_Filtered.rds` |
+| **2. Normalization & HVG** | 干净的细胞矩阵 | `Seurat v5` (SCTransform v2) | 归一化矩阵、高变基因集、PCA 碎石图 | `02_Normalized_PCA.rds` |
+| **3. Batch Integration** | PCA/表达矩阵 + 批次信息 | `Harmony` / `scVI` | 批次消除前后 UMAP 对比图 | `03_Integrated_Object.rds` |
+| **4. Clustering & Annotation**| 集成后的低维空间 | `Azimuth` + 手动 Marker 校验 | 细胞亚群 UMAP 图、Marker 基因点图、细胞比例图 | `04_Annotated_Seurat_Object.rds`, `Markers_List.xlsx` |
+| **5. Pseudobulk & DE** | 带有注释的 Seurat 对象 | `DESeq2` + `decoupler` + `clusterProfiler` | 组间差异基因火山图、GSEA/PROGENy 富集图 | `DE_results_pseudobulk.xlsx`, 通路富集表格 |
+| **6. Cell-Cell Communication**| 带有注释的 Seurat 对象 | `CellChat v2` | 配受体互作网络图、信号通路强弱对比图 | `CellChat_object.rds`, 互作网络高清矢量图 |
+四、 最终交付文件夹规范结构数据分析完成后，建议整理成如下符合现代化生物信息规范的文件夹目录：Plaintextdeliverables/
+├── 00_raw_matrices/                   # 原始计数矩阵与 QC 报告
+│   ├── sample1_filtered_bc_matrix/
+│   └── web_summary_reports/
+├── 01_rds_objects/                    # 各阶段关键 RDS / H5AD 对象文件
+│   ├── 01_qc_filtered.rds
+│   ├── 02_integrated_harmony.rds
+│   └── 03_final_annotated.rds         # 核心可复用数据对象
+├── 02_figures/                        # 高清矢量图与出版级图片 (PDF / PNG)
+│   ├── 01_QC/                         # 质控相关图表
+│   ├── 02_Clustering_Annotation/      # UMAP, DotPlot, Proportion Barplot
+│   ├── 03_Differential_Expression/    # 火山图、热图、GSEA 圈图
+│   └── 04_CellChat/                   # 细胞通讯网络图
+├── 03_tables/                         # 详细数据表格 (CSV / XLSX)
+│   ├── QC_metrics_summary.xlsx
+│   ├── All_Cluster_Marker_Genes.xlsx
+│   ├── Pseudobulk_DEGs_Control_vs_Treat.xlsx
+│   └── Pathway_Enrichment_Results.xlsx
+└── 04_reports_and_scripts/            # 可复现分析代码与文档
+    ├── run_pipeline.R
+    └── Analysis_Summary_Report.html   # R Markdown / Quarto 编译生成的交互报告
+五、 快速环境构建命令使用 mamba 创建支持现代单细胞分析流程的 conda 环境：Bash# 创建 R 4.4 单细胞分析环境
+mamba create -n R44_scRNA r-base=4.4.0 bioconductor-scdblfinder bioconductor-deseq2 bioconductor-clusterprofiler r-seurat r-harmony r-tidyverse r-cowplot -c conda-forge -c bioconda -y
+
+# 激活环境
+mamba activate R44_scRNA
+
+# 在 R 中安装 Seurat v5, Azimuth 及 Decoupler
+R -e "
+install.packages('Seurat')
+Remotes::install_github('satijalab/azimuth', ref = 'master')
+Remotes::install_github('saezlab/decoupler-R')
+Remotes::install_github('jinworks/CellChat')
+"
+按照此最佳实践整理的脚本和输出文件，能确保分析过程具备高度的可复现性（Reproducibility），且结果符合当前顶刊的审稿标准。

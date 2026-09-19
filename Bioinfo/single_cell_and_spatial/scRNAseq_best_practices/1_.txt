@@ -1,0 +1,84 @@
+https://chat.qwen.ai/c/guest
+
+欢迎回到单细胞数据分析的世界！过去三年（2021-2024），单细胞领域发生了巨大的技术迭代。如果你上次分析还是在3年前，以下是核心演进总结，帮助你快速建立当前（2024年及以后）的认知：
+定量工具：从 Cell Ranger 转向 kb-python (kallisto|bustools)，速度提升10-50倍，且完美支持单细胞多模态（CITE-seq/ATAC）。
+批次校正与整合：从 Seurat CCA/Harmony 转向基于深度学习的 scVI (scvi-tools)，这是目前顶刊处理大规模、多批次数据的 SOTA（当前最佳）。
+差异表达分析 (DEG)：从单细胞级别的 Wilcoxon 检验转向 Pseudobulk（伪批量） 策略（如 pydeseq2 或 R 的 muscat），以大幅降低假阳性。
+细胞注释：从手动找 Marker 转向基于大规模参考图谱的自动注释，如 CellTypist 或 scANVI。
+为了兼顾处理速度、可扩展性和前沿算法，本文档将以 Python (Scanpy 生态) 为主线，辅以必要的 R 语言工具，为你构建一套当前最佳实践 (Best Practices) 的标准流程。
+一、 环境配置与依赖安装
+强烈建议使用 mamba 替代 conda 以加速环境配置。
+bash
+
+123456789101112
+(注：如果涉及空间转录组或特定 R 包如 CellChat/Monocle3，可额外配置一个 R 环境，本文档以 Python 流程为主。)
+二、 标准分析流程 (Step-by-Step)
+Step 1: 原始数据定量 (Alignment & Quantification)
+当前最佳：放弃耗时的 Cell Ranger，使用 kb-python。
+操作：使用 kb count 进行比对和UMI计数。
+结果：生成 counts.mtx (表达矩阵), barcodes.tsv, genes.tsv。
+Step 2: 数据导入与严格质控 (QC & Doublet Removal)
+当前最佳：在常规 QC 前，必须进行双细胞（Doublet）去除。
+操作：
+使用 scrublet 预测并过滤双细胞。
+过滤低质量细胞：线粒体基因比例 (通常 < 10-20%)，核糖体基因比例，总 UMI 数，总基因数。
+过滤极低表达的基因（如在 < 3 个细胞中表达）。
+本步结果：
+adata_raw.h5ad：包含双细胞预测分数的原始对象。
+adata_qc.h5ad：经过严格质控后的高质量细胞矩阵。
+qc_metrics.pdf：质控前后的 violin plot 和 scatter plot。
+Step 3: 标准化、特征选择与降维
+当前最佳：使用 Pearson residuals 进行标准化（比传统的 Log1p 更好地保留高变基因信息）。
+操作：
+sc.pp.normalize_total 和 sc.pp.log1p (或 sc.pp.highly_variable_genes 使用 flavor='pearson_residuals')。
+提取高变基因 (HVGs, 通常 2000-5000 个)。
+PCA 降维（通常取前 50 个 PC）。
+本步结果：
+adata_hvg.h5ad：包含高变基因和 PCA 降维结果的对象。
+pca_variance_ratio.pdf：PCA 碎石图，用于决定后续保留的 PC 数。
+Step 4: 批次校正与数据整合 (核心更新)
+当前最佳：使用 scVI (scvi-tools)。它基于变分自编码器 (VAE)，能完美处理批次效应、零膨胀问题，且支持后续的深度下游分析。如果数据量小 (<5万细胞) 且批次简单，可退回使用 Harmony。
+操作：
+训练 scVI 模型：scvi.model.SCVI(adata).train()
+获取潜在表征 (Latent representation)：adata.obsm["X_scVI"]
+基于 scVI 表征计算 KNN 图，进行 UMAP 降维和 Leiden 聚类。
+本步结果：
+adata_scvi.h5ad：包含 scVI 潜在空间、UMAP 坐标和初步聚类结果的对象。
+umap_clusters.pdf：展示批次混合情况和初步聚类簇的 UMAP 图。
+Step 5: 细胞类型自动与手动注释
+当前最佳：使用 CellTypist (基于数千万细胞的大规模参考图谱) 进行初步自动注释，再结合 Marker 基因手动微调。
+操作：
+下载 CellTypist 最新模型（如 Immune, Pan-Cancer 等）。
+运行 celltypist.annotate() 获取预测标签。
+计算各簇的 Marker 基因（使用 scanpy.tl.rank_genes_groups），通过 dotplot 或 featureplot 验证并手动重命名。
+本步结果：
+adata_annotated.h5ad：包含最终细胞类型注释 (cell_type 列) 的对象。
+marker_genes_dotplot.pdf：各细胞类型的 Marker 基因表达热图。
+cell_proportions.csv：各样本中细胞类型比例的统计表。
+Step 6: 差异表达分析 (DEG) - Pseudobulk 策略
+当前最佳：绝对避免直接在单细胞级别做 Wilcoxon 检验（假阳性极高）。必须使用 Pseudobulk（伪批量） 方法：将同一患者/样本、同一细胞类型的基因表达求和，转化为“批量”数据，再使用 pydeseq2 (Python) 或 DESeq2 (R) 进行负二项分布检验。
+操作：
+使用 pydeseq2 或聚合函数，按 sample_id 和 cell_type 聚合表达矩阵。
+运行 pydeseq2.DeseqDataSet 进行差异分析。
+过滤条件：padj < 0.05 且 |log2FC| > 0.5 (或 1)。
+本步结果：
+deg_results/ 文件夹：包含每个细胞类型、每种对比条件下的 DEG 表格 (CSV)。
+volcano_plots/：关键对比条件的火山图。
+Step 7: 高级下游分析 (根据课题选择)
+细胞通讯 (Cell-Cell Communication)：
+推荐：CellChat (R) 或 Squidpy (Python)。分析特定细胞群之间的信号通路激活情况。
+轨迹推断与 RNA 速率 (Trajectory & RNA Velocity)：
+推荐：scvelo (计算 RNA 剪接动力学，预测细胞分化方向) 结合 PAGA (拓扑轨迹)。
+基因调控网络 (GRN)：
+推荐：SCENIC+ (基于 pySCENIC，推断转录因子与靶基因的调控关系)。
+三、 最终交付文件夹结构
+一个规范、可重复的项目目录结构是生信分析的灵魂。建议按照以下结构组织你的最终交付物：
+text
+
+12345678910111213141516171819202122232425262728293031323334353637
+四、 给您的特别建议（避坑指南）
+内存与算力：现在的单细胞数据动辄 10万 - 100万细胞。请确保你的服务器有 至少 128GB - 256GB 内存。如果内存不足，请在 Step 1 使用 kb-python，并在 Step 4 使用 rapids-singlecell (利用 GPU 加速) 或 scvi-tools 的 mini-batch 训练。
+不要过度依赖自动注释：CellTypist 等工具非常强大，但必须结合生物学背景进行手动校验。特别是对于肿瘤微环境（TME），巨噬细胞和成纤维细胞的亚群细分通常需要手动检查特定 Marker（如 CD68, COL1A1 等）。
+Pseudobulk 是底线：在回复审稿人意见时，如果审稿人质疑你的单细胞 DEG 结果，直接使用 Pseudobulk 结果回应，这是目前无可争议的标准。
+版本控制：单细胞库更新极快。务必使用 environment.yml 锁定当前环境版本，或者使用 Docker/Singularity 容器化你的分析流程。
+这份文档涵盖了从原始数据到最终发表级别结果的全流程。如果您在具体某一步（例如 scVI 的参数调优，或 Pseudobulk 的代码实现）需要具体的代码片段，随时告诉我！

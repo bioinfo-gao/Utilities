@@ -1,0 +1,137 @@
+https://aistudio.google.com/prompts/1hCc6owteCI_j5YdL9_YiSUuSnFFPbiNY
+
+我要分析单细胞测序数据，但上一次已经3年前了，所以这次请根据当前最佳实践，给我写一个详细文档来说明各步骤。包括每个步骤的结果和最终交付文件夹。任何语言和库文件我都可以装，只按照当前最佳办法即可
+Model 09:42
+ThinkingThoughts
+Expand to view model thoughts
+
+chevron_right
+欢迎回归单细胞数据分析领域！在过去的3年里（2021-2024），单细胞分析的“最佳实践”发生了显著的范式转移。
+最大的变化包括：
+生态系统的变迁：处理大规模数据时，基于Python的 scverse 生态（主要是 Scanpy） 已经成为首选，取代了R语言的Seurat（尽管Seurat V5引入了BPCells也有了很大改进，但Python在深度学习集成和内存管理上优势更明显）。
+批次效应消除（Integration）：传统的CCA/Harmony正逐渐被 深度学习模型（如 scvi-tools） 取代，成为新的黄金标准。
+差异表达（DEA）：对于多样本的差异分析，单细胞级别的统计（如Wilcoxon）被证明存在极高的假阳性，现在的最佳实践是 伪相体（Pseudo-bulk）分析。
+以下是为您定制的 2024/2025年单细胞RNA测序（scRNA-seq）最新最佳实践标准操作流程（SOP）。
+🛠️ 推荐技术栈 (Python/scverse)
+基础分析框架：Scanpy
+批次整合/降维：scvi-tools (scVI)
+双细胞去除：Scrublet 或 scDblFinder
+细胞注释：CellTypist (自动化) + 手动Marker验证
+富集/通路分析：Decoupler
+多样本差异分析：PyDESeq2 或转入R使用 edgeR/DESeq2 (Pseudo-bulk)
+📋 详细分析步骤与期望结果
+Step 1: 数据导入与质量控制 (Quality Control)
+当前最佳实践：不再使用“一刀切”的硬性阈值（如粗暴地删除基因数<500的细胞），而是使用中位数绝对偏差 (MAD, Median Absolute Deviation) 来针对每个样本自适应寻找离群值。
+操作：
+导入CellRanger输出的 filtered_feature_bc_matrix。
+计算 QC 指标：总UMI数（n_counts）、基因数（n_genes）、线粒体比例（pct_MT）、核糖体比例（pct_Ribo）。
+剔除低质量细胞和极低表达基因。
+产出结果：
+01_QC_violins_pre.pdf / 01_QC_violins_post.pdf (过滤前后的QC小提琴图)
+01_QC_scatter.pdf (UMI vs 基因数散点图，检查测序深度)
+生成过滤后的初步 AnnData 对象。
+Step 2: 双细胞检测与去除 (Doublet Removal)
+当前最佳实践：必须在整合前、在每个样本（Batch）内部独立运行双细胞检测。
+操作：
+使用 Scrublet 或 scvi-tools 中的 SOLO 对每个独立样本预测双细胞概率。
+剔除预测为Doublet的细胞。
+产出结果：
+02_Doublet_scores_histogram.pdf (双细胞得分分布图)
+02_Doublet_UMAP.pdf (在初步UMAP上高亮双细胞位置)
+清洗后的 adata_singlets.h5ad。
+Step 3: 归一化与高变基因选择 (Normalization & HVG)
+当前最佳实践：对于传统的下游分析，使用Shift-log；但如果使用 scVI 进行整合，模型需要的是未经归一化的原始Count数据（仅选取高变基因即可）。
+操作：
+选取2000-3000个高变基因（HVGs）（推荐使用 flavor="seurat_v3"，基于原始Count）。
+将原始Count保存在 adata.raw 或新的layer中供后续模型使用。
+产出结果：
+03_HVG_plot.pdf (高变基因散点图)
+Step 4: 批次整合与降维 (Integration & Dimensionality Reduction) - 🌟 核心变化
+当前最佳实践：放弃传统的 PCA + Harmony/CCA。使用基于变分自编码器（VAE）的 scVI。
+操作：
+使用 scvi-tools，输入包含多批次的原始Count矩阵（仅限HVGs）。
+将Batch、测序平台等作为分类协变量（covariates）输入模型。
+训练scVI模型，提取潜在表示（Latent representation，替代PCA）和去批次后的归一化表达矩阵。
+基于scVI的Latent表示计算近邻图（Neighborhood graph）和 UMAP。
+产出结果：
+04_UMAP_batch_uncorrected.pdf (整合前的UMAP，通常有严重批次效应)
+04_UMAP_scVI_integrated.pdf (按样本/批次着色的scVI UMAP，应均匀混合)
+训练好的scVI模型文件夹（用于复现或映射新数据）。
+Step 5: 聚类分析 (Clustering)
+当前最佳实践：使用 Leiden 算法替代 Louvain 算法（Leiden解决了Louvain可能出现的社区断裂问题）。
+操作：
+在scVI生成的近邻图上运行Leiden算法。
+尝试多个分辨率（Resolution = 0.5, 0.8, 1.2 等）。
+产出结果：
+05_UMAP_Leiden_res0.8.pdf (按聚类着色的UMAP)
+05_Clustree.pdf (聚类树图，展示不同分辨率下聚类的演变，可选使用R包clustree)
+Step 6: 细胞类型注释 (Cell Type Annotation)
+当前最佳实践：自动化注释工具（如 CellTypist 或 scANVI）与手动Marker检查相结合。
+操作：
+使用 CellTypist 和预训练的免疫/泛组织模型进行初步打分。
+使用 Scanpy.tl.rank_genes_groups (Wilcoxon rank-sum) 找出每个Leiden cluster的特异性Marker。
+结合自动化标签、Marker基因Dotplot、文献，手动确认并合并/重命名Clusters。
+产出结果：
+06_Marker_Dotplot.pdf (经典Marker基因的气泡图)
+06_UMAP_CellTypes.pdf (最终细胞类型注释的UMAP)
+06_Cluster_Markers.csv (每个Cluster的Top 50差异基因表格)
+Step 7: 下游分析 (Downstream) - 差异分析与通讯
+当前最佳实践：
+组间差异表达（DEA）：不要把所有细胞当做独立样本（这违背了统计学独立假设）。必须使用 Pseudo-bulk（伪相体） 方法——将同一个样本内同一类细胞的Count加和，然后使用传统的转录组工具（如 DESeq2 / edgeR）进行分析。
+通路/转录因子活性：使用 Decoupler。
+细胞通讯：使用 CellChat (R) 或 LIANA (Python)。
+产出结果：
+07_Volcano_Treatment_vs_Control_Macrophage.pdf (某种细胞类型在不同分组间的火山图)
+07_Pathway_Enrichment.csv (通路富集结果)
+📁 最终交付文件夹结构 (Deliverable Folder Structure)
+建议按照以下结构整理您的工作目录，这符合计算生物学的可重复性规范：
+code
+Text
+Project_Name_scRNAseq/
+│
+├── 00_Raw_Data/                  <- 原始数据存放处 (Read-only)
+│   ├── Sample_A/
+│   │   ├── barcodes.tsv.gz
+│   │   ├── features.tsv.gz
+│   │   └── matrix.mtx.gz
+│   └── Sample_B/ ...
+│
+├── 01_Scripts/                   <- 所有分析代码
+│   ├── 01_qc_and_doublets.py     <- QC与双细胞过滤代码
+│   ├── 02_integration_scvi.py    <- scVI模型训练与整合代码
+│   ├── 03_clustering_annot.py    <- 聚类与注释代码
+│   └── 04_downstream.py          <- Pseudo-bulk DEA等下游分析
+│
+├── 02_Models/                    <- 保存深度学习模型
+│   └── scvi_model_v1/            <- scVI 训练输出文件 (model.pt等)
+│
+├── 03_Processed_Data/            <- 过程及最终数据对象 (核心交付物)
+│   ├── adata_01_qc_filtered.h5ad <- 过滤后的初步数据
+│   ├── adata_02_integrated.h5ad  <- 包含scVI latent和UMAP的数据
+│   └── adata_03_annotated.h5ad   <- 最终包含细胞类型注释的完整数据 (🌟最重要的交付文件)
+│
+└── 04_Results/                   <- 供汇报和阅览的图表结果
+    ├── 01_QC/
+    │   ├── qc_violins.pdf
+    │   └── doublet_umaps.pdf
+    ├── 02_Integration/
+    │   ├── umap_batch_effect.pdf
+    │   └── umap_scvi_integrated.pdf
+    ├── 03_Annotation/
+    │   ├── umap_leiden.pdf
+    │   ├── umap_celltypes.pdf
+    │   ├── marker_dotplot.pdf
+    │   └── top_markers_per_cluster.csv
+    └── 04_Downstream/
+        ├── pseudobulk_DE_results.csv
+        ├── volcano_plots.pdf
+        └── pathway_enrichment.pdf
+💡 给您的一点建议
+环境配置：由于Python生态的依赖有时比较复杂，强烈建议使用 conda 或 mamba 创建一个干净的环境。可以直接安装 scverse 的官方环境。
+code
+Bash
+conda create -n scRNA python=3.10
+conda activate scRNA
+pip install "scanpy[leiden]" scvi-tools celltypist scrublet pydeseq2 decoupler
+硬件要求：scvi-tools 强依赖 GPU（如果没有GPU，几万个细胞跑CPU大概需要一两小时，有GPU只需几分钟）。如果数据量大于10万个细胞，建议租用一台带NVIDIA显卡（如 RTX 3090 / A5000）的机器或使用云计算平台。
+数据格式：目前的通用数据交换格式是 .h5ad (AnnData)。无论以后用Python还是想转回R处理，都可以通过 anndata2ri 或 SeuratDisk 轻松转换。
