@@ -1,0 +1,48 @@
+by_Codex_free_version
+我现在工作的positron IDE 可以在左边栏看到 git 显示3个文件变化，但是点开图标，看不到任何改动的文件列表
+
+
+我这边查了一下：/home/gao 本身不是 Git 仓库，但你机器上有一个仓库正好是 3 个变化：
+/home/gao/.claude
+状态是：
+ M projects/-home-gao/memory/feedback_git_standing_authorization.md
+ M skills/git/SKILL.md
+?? skills/.trash/
+所以 Positron 左边栏显示的 “3” 很可能来自这个仓库，或者它把某个隐藏/父级工作区也识别进来了。
+你可以先在 Positron 里试这几步：
+1. 打开 Positron 终端，运行：
+pwd
+git status --short --branch
+如果提示 not a git repository，说明当前打开的 folder 不是 Git 仓库根目录。
+2. 用菜单重新打开真正的项目文件夹：
+   File -> Open Folder...，选择包含 .git 的目录，而不是 /home/gao 这种父目录。
+3. 在 Source Control 面板里检查这些区域是不是折叠了：
+   Source Control Repositories、Changes、Untracked Changes。有时候只是列表区域被折起来了，但徽标还显示数量。
+4. 如果 UI 仍然空白，可以打开命令面板运行：
+   Developer: Reload Window
+如果你想直接确认那 3 个变化，可以在终端跑：
+git -C /home/gao/.claude status --short
+当前看到的 3 个变化确实在 /home/gao/.claude 里。
+
+/home/gao/.claude 
+这个文件夹确认成功， 但我以前 能同时显示我的所有repository ， 我记得是我以前是add folder to workspace
+
+对，你记得的是 multi-root workspace：不是打开一个文件夹，而是把多个 Git repo 都加到同一个 workspace 里。这样 Source Control 左栏才会同时显示所有 repository。
+在 Positron 里可以这样恢复：
+1. 菜单：File -> Add Folder to Workspace...
+2. 依次添加你的 repo 文件夹，比如我刚才看到的这些：
+   - /home/gao/.claude
+   - /home/gao/projects_2026H2
+   - /home/gao/Utilities
+   - /home/gao/Python_Tools_Tested
+3. 加完后执行：File -> Save Workspace As...
+4. 保存成例如：
+/home/gao/gao-all-repos.code-workspace
+以后直接打开这个 .code-workspace 文件，Positron 就会恢复“同时显示所有 repository”的状态。
+也可以用命令面板：
+Workspaces: Add Folder to Workspace...
+然后再：
+Workspaces: Save Workspace As...
+你现在只看到 /home/gao/.claude 的变化，很可能是当前 Positron 只打开了这个单独 folder，而不是以前那个 multi-root workspace。
+
+11:35 AM 2026-09-19

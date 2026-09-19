@@ -9,3 +9,14 @@ or
 输入Peacock: change color  
 
 done (see the attached image)
+
+
+
+第二步：确保你已打开一个“工作区/项目文件夹”⚠️ 核心注意点：Peacock 是基于项目工作区生效的。如果你只是在 Positron 中单独打开了一个纯代码文件，Peacock 是无法添加颜色标签的。
+请点击菜单栏 File -> Open Folder...（打开文件夹），随便选择或新建一个项目文件夹打开。
+第三步：使用 Peacock 添加颜色标签按下快捷键 F1 或 Ctrl + Shift + P（Mac 上为 Cmd + Shift + P）打开 Command Palette（命令面板）。输入 Peacock，你会看到一系列相关的控制命令。
+此时你可以选择以下几种方式来快速加标签：使用内置推荐颜色：选择 Peacock: Change to a favorite color，然后从官方推荐的 Vue Green、Angular Red、React Blue 等颜色中选一个。
+随机碰撞（推荐）：选择 Peacock: Surprise me with a random color，系统会为当前项目随机生成一个颜色标签，非常适合用来快速区分多个不同的数据分析项目。
+
+自定义精准颜色：选择 Peacock: Enter a color，输入你喜欢的 Hex 色值（如 #ff5555）或标准颜色名称（如 orange）。
+执行后，你的 Positron 标题栏、活动栏、状态栏 就会立刻变成对应的颜色。
