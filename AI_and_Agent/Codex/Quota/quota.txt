@@ -1,0 +1,35 @@
+我每天为你问题的额度是多少？ 或者其他时段比如5小时和7天的额度限制是多少
+
+
+
+
+
+
+
+10:41 PM
+
+
+
+
+
+
+Worked for 41s
+
+
+
+我查了官方 OpenAI 文档：没有一个固定的“每天多少问”的公开数字。Codex/ChatGPT Work 的限制主要按你的套餐、模型、任务复杂度、本地/云端运行来动态计算，而且要看你的 usage dashboard 才能知道当前账户的真实剩余额度和重置时间。官方也说这些估算“不是固定消息限制”。(developers.openai.com)
+按官方表格，本地消息每 5 小时估算额度大概是：
+模型	Plus	Pro 5x	Pro 20x
+GPT-6 Astra	5-45	25-225	100-900
+GPT-5.6 Sol	10-100	50-500	200-2,000
+GPT-5.6 Terra	25-200	125-1,000	500-4,000
+GPT-5.6 Luna	250-2,000	1,250-10,000	5,000-40,000
+
+
+另外几个关键点：
+- Codex 和 ChatGPT Work 共享用量。(developers.openai.com)
+- 本地消息和云端 chats 也共享同一个套餐额度，并且官方说 weekly limits 也可能适用。(developers.openai.com)
+- 云端 ChatGPT 计划里的 cloud chats 使用 GPT-5.6 Sol，可能比本地消息消耗更多额度。(developers.openai.com)
+- Plus/Pro 达到用量限制后，可以购买额外 credits 继续使用。(developers.openai.com)
+所以最实用的结论是：
+看 5 小时窗口，Plus 大概是 Sol 10-100 条、Terra 25-200 条、Luna 250-2000 条；Pro 5x/20x 按倍数提高。7 天额度官方只说“可能有”，具体数值要看你的 usage dashboard。

@@ -22,3 +22,22 @@ Last updated: 2026-09-19
 - For OpenAI/Codex product documentation questions, use the available OpenAI documentation skill or official sources when needed.
 - For current, time-sensitive, legal, financial, medical, pricing, schedule, or product-status information, verify with up-to-date sources.
 
+## Skill Locations
+
+Codex skills currently visible in this session are mainly stored under these roots:
+
+- System skills: `/home/gao/.codex/skills/.system`
+- Plugin cache skills: `/home/gao/.codex/plugins/cache/openai-curated-remote`
+
+Visible skill files include:
+
+- `imagegen`: `/home/gao/.codex/skills/.system/imagegen/SKILL.md`
+- `openai-docs`: `/home/gao/.codex/skills/.system/openai-docs/SKILL.md`
+- `plugin-creator`: `/home/gao/.codex/skills/.system/plugin-creator/SKILL.md`
+- `skill-creator`: `/home/gao/.codex/skills/.system/skill-creator/SKILL.md`
+- `skill-installer`: `/home/gao/.codex/skills/.system/skill-installer/SKILL.md`
+- `plugin-management:plugin-management`: `/home/gao/.codex/plugins/cache/openai-curated-remote/plugin-management/0.1.0/skills/plugin-management/SKILL.md`
+
+If the document-context preference is later turned into a dedicated Codex skill, a reasonable location would be:
+
+- `/home/gao/.codex/skills/document-context/SKILL.md`
