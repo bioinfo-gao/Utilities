@@ -12,11 +12,14 @@ bash
 
 123456789101112
 (注：如果涉及空间转录组或特定 R 包如 CellChat/Monocle3，可额外配置一个 R 环境，本文档以 Python 流程为主。)
+
 二、 标准分析流程 (Step-by-Step)
+
 Step 1: 原始数据定量 (Alignment & Quantification)
 当前最佳：放弃耗时的 Cell Ranger，使用 kb-python。
 操作：使用 kb count 进行比对和UMI计数。
 结果：生成 counts.mtx (表达矩阵), barcodes.tsv, genes.tsv。
+
 Step 2: 数据导入与严格质控 (QC & Doublet Removal)
 当前最佳：在常规 QC 前，必须进行双细胞（Doublet）去除。
 操作：
@@ -27,6 +30,7 @@ Step 2: 数据导入与严格质控 (QC & Doublet Removal)
 adata_raw.h5ad：包含双细胞预测分数的原始对象。
 adata_qc.h5ad：经过严格质控后的高质量细胞矩阵。
 qc_metrics.pdf：质控前后的 violin plot 和 scatter plot。
+
 Step 3: 标准化、特征选择与降维
 当前最佳：使用 Pearson residuals 进行标准化（比传统的 Log1p 更好地保留高变基因信息）。
 操作：
@@ -36,6 +40,7 @@ PCA 降维（通常取前 50 个 PC）。
 本步结果：
 adata_hvg.h5ad：包含高变基因和 PCA 降维结果的对象。
 pca_variance_ratio.pdf：PCA 碎石图，用于决定后续保留的 PC 数。
+
 Step 4: 批次校正与数据整合 (核心更新)
 当前最佳：使用 scVI (scvi-tools)。它基于变分自编码器 (VAE)，能完美处理批次效应、零膨胀问题，且支持后续的深度下游分析。如果数据量小 (<5万细胞) 且批次简单，可退回使用 Harmony。
 操作：
@@ -45,6 +50,7 @@ Step 4: 批次校正与数据整合 (核心更新)
 本步结果：
 adata_scvi.h5ad：包含 scVI 潜在空间、UMAP 坐标和初步聚类结果的对象。
 umap_clusters.pdf：展示批次混合情况和初步聚类簇的 UMAP 图。
+
 Step 5: 细胞类型自动与手动注释
 当前最佳：使用 CellTypist (基于数千万细胞的大规模参考图谱) 进行初步自动注释，再结合 Marker 基因手动微调。
 操作：
@@ -55,6 +61,7 @@ Step 5: 细胞类型自动与手动注释
 adata_annotated.h5ad：包含最终细胞类型注释 (cell_type 列) 的对象。
 marker_genes_dotplot.pdf：各细胞类型的 Marker 基因表达热图。
 cell_proportions.csv：各样本中细胞类型比例的统计表。
+
 Step 6: 差异表达分析 (DEG) - Pseudobulk 策略
 当前最佳：绝对避免直接在单细胞级别做 Wilcoxon 检验（假阳性极高）。必须使用 Pseudobulk（伪批量） 方法：将同一患者/样本、同一细胞类型的基因表达求和，转化为“批量”数据，再使用 pydeseq2 (Python) 或 DESeq2 (R) 进行负二项分布检验。
 操作：
@@ -64,6 +71,7 @@ Step 6: 差异表达分析 (DEG) - Pseudobulk 策略
 本步结果：
 deg_results/ 文件夹：包含每个细胞类型、每种对比条件下的 DEG 表格 (CSV)。
 volcano_plots/：关键对比条件的火山图。
+
 Step 7: 高级下游分析 (根据课题选择)
 细胞通讯 (Cell-Cell Communication)：
 推荐：CellChat (R) 或 Squidpy (Python)。分析特定细胞群之间的信号通路激活情况。
@@ -71,11 +79,14 @@ Step 7: 高级下游分析 (根据课题选择)
 推荐：scvelo (计算 RNA 剪接动力学，预测细胞分化方向) 结合 PAGA (拓扑轨迹)。
 基因调控网络 (GRN)：
 推荐：SCENIC+ (基于 pySCENIC，推断转录因子与靶基因的调控关系)。
+
+
 三、 最终交付文件夹结构
 一个规范、可重复的项目目录结构是生信分析的灵魂。建议按照以下结构组织你的最终交付物：
 text
 
 12345678910111213141516171819202122232425262728293031323334353637
+
 四、 给您的特别建议（避坑指南）
 内存与算力：现在的单细胞数据动辄 10万 - 100万细胞。请确保你的服务器有 至少 128GB - 256GB 内存。如果内存不足，请在 Step 1 使用 kb-python，并在 Step 4 使用 rapids-singlecell (利用 GPU 加速) 或 scvi-tools 的 mini-batch 训练。
 不要过度依赖自动注释：CellTypist 等工具非常强大，但必须结合生物学背景进行手动校验。特别是对于肿瘤微环境（TME），巨噬细胞和成纤维细胞的亚群细分通常需要手动检查特定 Marker（如 CD68, COL1A1 等）。
