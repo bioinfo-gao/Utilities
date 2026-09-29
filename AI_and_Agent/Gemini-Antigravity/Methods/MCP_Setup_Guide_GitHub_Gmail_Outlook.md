@@ -1,10 +1,13 @@
 # Antigravity MCP 配置指南：GitHub、Gmail 与 Outlook (Hotmail/Live) 实战
 
+zorin.gao@gmail.com
+
 本文档详细记录在 Google Antigravity / Gemini 智能体开发环境中，配置并联调 **GitHub**、**Gmail** 与 **Outlook / Hotmail / Live.com** 三大核心 MCP (Model Context Protocol) 服务的完整方法、关键踩坑点及排错方案。
 
 ---
 
 ## 目录
+
 1. [架构与前置环境准备](#1-架构与前置环境准备)
    - [MCP 配置文件位置](#mcp-配置文件位置)
    - [Node.js 运行时版本适配（关键基础）](#nodejs-运行时版本适配关键基础)
@@ -26,17 +29,22 @@
 ## 1. 架构与前置环境准备
 
 ### MCP 配置文件位置
+
 在 Antigravity 中，全局 MCP 服务器统一在以下路径进行声明和管理：
+
 ```bash
 ~/.gemini/config/mcp_config.json
 ```
+
 Language Server 启动时会自动解析该文件中的 `mcpServers` 字典，并通过 Stdio 或 HTTP 方式与对应的 MCP 进程进行 JSON-RPC 通信。
 
 ### Node.js 运行时版本适配（关键基础）
+
 现代 MCP SDK（如 `@modelcontextprotocol/sdk`、`@gongrzhe/server-gmail-autoauth-mcp`、`@mcp-z/mcp-outlook`）均要求 **Node.js >= 18.0.0**（推荐 Node 20+）。
 
 > [!WARNING]
 > 若系统默认安装的 Node 为旧版本（如 Ubuntu 20.04 默认的 v12.22.9），启动 MCP 时会因不支持可选链语法 `?.` 抛出语法错误：
+>
 > ```text
 > SyntaxError: Unexpected token '.'
 > ```
@@ -62,6 +70,7 @@ npx -v    # 应显示 10.x 或更高
 GitHub MCP 是接入最直接、最标准的服务，采用 Anthropic 官方推荐的 `@modelcontextprotocol/server-github` 包。
 
 ### 获取 Personal Access Token (PAT)
+
 1. 登录 GitHub，点击右上角头像 -> **Settings**。
 2. 页面左下角进入 **Developer settings** -> **Personal access tokens** -> **Tokens (classic)**。
 3. 点击 **Generate new token (classic)**：
@@ -74,6 +83,7 @@ GitHub MCP 是接入最直接、最标准的服务，采用 Anthropic 官方推�
 4. 生成并复制 Token（形如 `your_github_token`）。
 
 ### 配置片段
+
 ```json
 "github": {
   "command": "npx",
@@ -92,13 +102,16 @@ GitHub MCP 是接入最直接、最标准的服务，采用 Anthropic 官方推�
 `@gongrzhe/server-gmail-autoauth-mcp`。
 
 ### Google Cloud 项目与 API 开启
+
 1. 登录 [Google Cloud Console](https://console.cloud.google.com/)。
 2. 新建或选择一个现有项目（例如 `zorin-project`）。
 3. 在左侧菜单进入 **APIs & Services** -> **Library**。
 4. 搜索 **Gmail API**，进入详情页并点击 **Enable（启用）**。
 
 ### Google Auth Platform 配置与 403 避坑
+
 在新版 Google 控制台中，“OAuth 同意屏幕”已整合并重构为 **Google Auth Platform**：
+
 1. **App Information（应用信息）**：
    * **App name**：如 `Antigravity Gmail`。
    * **User support email**：选择当前 Gmail 邮箱（如 `zorin.gao@gmail.com`）。
@@ -109,15 +122,19 @@ GitHub MCP 是接入最直接、最标准的服务，采用 Anthropic 官方推�
      > **核心踩坑点（Error 403: access_denied）**：
      > 应用在未发布前处于“Testing”状态。即便你是该 Google Cloud 项目的所有者，Google 也**不会自动将项目创建者加入测试白名单**！若不显式添加，登录授权时必报 403 拒绝访问。
      > **必做操作**：在 Audience 页面向下找到 **Test users（测试用户）**，点击 **+ ADD USERS**，输入自己的 Gmail 邮箱（如 `zorin.gao@gmail.com`）并点击保存。
+     >
 
 ### 客户端凭据与一次性网页授权
+
 1. 进入左侧 **Clients**（或 Credentials / 凭据）-> 点击 **+ CREATE CLIENT**。
 2. **Application type（应用类型）**：务必选择 **Desktop app（桌面应用）**。
 3. 创建后，获取 Client ID 与 Client Secret（或直接点击 Download JSON）。
 4. 本地建立配置目录并保存凭据文件：
+
    ```bash
    mkdir -p ~/.gmail-mcp
    ```
+
    创建文件 `~/.gmail-mcp/gcp-oauth.keys.json`，内容格式如下：
    ```json
    {
@@ -133,9 +150,11 @@ GitHub MCP 是接入最直接、最标准的服务，采用 Anthropic 官方推�
    }
    ```
 5. **执行首次认证获取 Token**：
+
    ```bash
    npx -y @gongrzhe/server-gmail-autoauth-mcp auth
    ```
+
    * 控制台会打印认证 URL（回调地址为 `http://localhost:3000/oauth2callback`）。
    * 在浏览器中打开该 URL，选择你的 Gmail 账号。
    * 遇到“Google haven't verified this app”提示时，点击 **Advanced（高级）** -> **Go to Antigravity Gmail (unsafe)**。
@@ -150,6 +169,7 @@ GitHub MCP 是接入最直接、最标准的服务，采用 Anthropic 官方推�
 我们选用成熟的 `@mcp-z/mcp-outlook` 包。
 
 ### 个人账号与 Azure 租户冲突解决
+
 * **常见报错 1（AADSTS90072）**：
   浏览器残留了企业/学校组织租户（如 `Athenomics`）的登录态，输入个人邮箱时，Azure 误以为要在该组织租户内认证而阻断。
 * **常见报错 2（租户“Microsoft Services”中不存在）**：
@@ -161,6 +181,7 @@ GitHub MCP 是接入最直接、最标准的服务，采用 Anthropic 官方推�
   * 后续通过终端授权时，实际登录的是你的个人邮箱（如 `zhen-gao@live.com`），数据完全隔离且具有完全私密性。
 
 ### Azure App 注册与必要权限配置
+
 1. 登录 [Azure Portal (portal.azure.com)](https://portal.azure.com/)。
 2. 搜索并进入 **App registrations（应用注册）** -> 点击 **➕ New registration（新注册）**：
    * **Name**：如 `Antigravity-Outlook`。
@@ -168,18 +189,22 @@ GitHub MCP 是接入最直接、最标准的服务，采用 Anthropic 官方推�
      勾选第三项：
      > **Accounts in any organizational directory and personal Microsoft accounts (e.g. Skype, Xbox, Outlook.com)**
      > *(任何组织目录中的账户和个人 Microsoft 账户)*
+     >
    * **Redirect URI**：选择平台为 **Mobile and desktop applications**，填入 `http://localhost`。
    * 点击 **Register（注册）**。
 3. 复制 Overview 页面中的 **Application (client) ID**。
 
 ### 移动/公共客户端流开启（避坑 AADSTS70002）
+
 > [!IMPORTANT]
 > 若未开启公共流，使用设备代码流或客户端调用时会抛出如下错误：
+>
 > ```text
 > AADSTS70002: The provided client is not supported for this feature. The client application must be marked as 'mobile.'
 > ```
 
 **开启步骤**：
+
 1. 进入该 App 页面左侧菜单的 **Authentication（身份验证）**。
 2. 在新版界面中切换到 **“设置” (Settings)** 选项卡（旧版界面拉到页面底部 **“高级设置”**）。
 3. 找到 **Allow public client flows（允许公共客户端流）**：
@@ -187,6 +212,7 @@ GitHub MCP 是接入最直接、最标准的服务，采用 Anthropic 官方推�
 4. 点击页面上方的 **Save（保存）**。
 
 ### 添加 API 委托权限
+
 1. 进入左侧菜单的 **API permissions（API 权限）**。
 2. 点击 **➕ Add a permission** -> 选择 **Microsoft Graph** -> 选择 **Delegated permissions（委托的权限）**。
 3. 勾选以下权限并保存：
@@ -196,14 +222,17 @@ GitHub MCP 是接入最直接、最标准的服务，采用 Anthropic 官方推�
    * `User.Read`
 
 ### 设备代码流（Device Code Flow）极简授权
+
 `@mcp-z/mcp-outlook` 支持设备代码流（`--auth=device-code`），无需本地暴露监听端口，非常适合终端环境。
 
 在配置参数中传入：
+
 * `MS_CLIENT_ID`：你的 Azure Application Client ID
 * `MS_TENANT_ID`：`common`
 * 参数：`--auth=device-code`
 
 **授权操作**：
+
 1. 首次触发调用时，系统会在日志（`~/.mcp-z/logs/mcp-outlook.log`）中输出 9 位验证代码及登录网址：
    ```text
    Please visit: https://login.microsoft.com/device
@@ -265,6 +294,7 @@ npx -y @mcp-z/cli call-tool outlook categories-list '{}' --config ~/.gemini/conf
 ```
 
 ### 验证成果指标
+
 * **GitHub**：加载 26 项功能工具（仓库检索、文件提交、分支合并、Issue/PR 管理等）。
 * **Gmail**：加载 19 项功能工具（邮件搜索/阅读、草稿起草、标签过滤、附件下载等），实测成功检索全部系统标签。
 * **Outlook**：加载 11 项功能工具（全量邮件检索、草稿与发送、分类维护、批量 CSV 导出等），实测成功读取用户邮件分类。
