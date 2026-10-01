@@ -1,0 +1,6 @@
+1.  click the / in the bottom box
+2.  find the switch account in the long list as fiure 1
+3.  click the switch account as figure 2
+4.  The 1st selection the the monthly/yearly subscription, 2nd is the API key   
+5.  click the 2nd button as figure 3
+6   click the conform button in the pop up window in figure 4
