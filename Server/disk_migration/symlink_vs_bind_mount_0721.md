@@ -1,6 +1,3 @@
-
-iimaax
-
 # Symlink vs Bind Mount — 优劣对比
 
 小型参考笔记，基于本机实际案例：`projects_2026H2` 用的是 **bind mount**
