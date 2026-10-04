@@ -47,6 +47,8 @@
 | Nextflow `work/` 磁盘占用 | [../Server/nextflow_pipeline/磁盘回收_三方案实证对比_projects_2026H1_0729.md](../Server/nextflow_pipeline/磁盘回收_三方案实证对比_projects_2026H1_0729.md) | 磁盘满时压缩几乎无效（5.5T 里 87% 是 BAM/fastq.gz 已压缩格式，整压只省 ~8%）；真正占地方的是 Nextflow `work/`（占 87%，其中 BAM+fastq 的 89% 都在 work 下）。**第一动作永远是删 work/，不是压缩**；用 `reclaim_nextflow_work_dirs.sh`。附带坑：进程存活检测的 grep 太宽会匹配到检测脚本自己的路径 |
 | Positron / VS Code（fileWatcher） | [../IDE/Positron/5_high_CPU_rg_and_fileWatcher.md](../IDE/Positron/5_high_CPU_rg_and_fileWatcher.md) | workspace 挂了 references + 家目录后条目数 57 万 > inotify 上限 52 万，fileWatcher 常年吃满一个核；GTDB-Tk 静态 DB 一家占 30 万。另附 `top` 里 `rg` 高 CPU 是什么（ripgrep，正常短命进程） |
 | gnomAD / bcftools annotate | [gnomad_af_only_rarity.md](gnomad_af_only_rarity.md) | 用 2017 年 hg19-liftover 的 `af-only-gnomad` 当"是否在 gnomAD"的判据，且把 `absent` 当 `rare` ⇒ **已交付候选名单里约一半是常见多态**；零报错、退出码 0、表格全对 |
+| Manta | [manta.md](manta.md) | ① `libexec` 脚本 shebang 是 `python2` 而本机 PATH 没有 ⇒ `getChromDepth_*_catChromDepth` 反复重试、没有 VCF，真因只在 `pyflow_tasks_stderr_log.txt`；符号链接垫片修复。② 默认 `graphNodeMaxEdgeCount=10` 会**静默跳过**两端边数都>10 的候选边 = 自动回避重复区，客户要求 unmasked 时必改（P41） |
+| IGV 无头截图 / Xvfb | [igv_headless.md](igv_headless.md) | bioconda 的 `xorg-x11-server-xvfb-cos7` 缺 `libcrypto.so.10` 起不来，改用 conda-forge **`xorg-xvfb-server`**；纯 `-Djava.awt.headless` 不行（HeadlessException），必须有虚拟 X 显示；附可用配方（P41） |
 
 ## 横向索引：「各自版本都对，组合起来不能用」
 
