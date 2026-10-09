@@ -260,9 +260,53 @@ Internal discussion and coordination via WeChat.
 Total Billable Hours: 20 Hours
 Date of Submission: Aug 20, 2026
 ====================================================
+Weekly Work Report
+Period: Oct 2, 2026 – Oct 8, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 23 Hours
+
+1. RNA-seq Analysis – Shin, Nah-Young (3 Hours)
+Performed data analysis and generated the final results report for the dataset (analyzed without biological replicates).
+
+2. Client Communication, Technical Consultation & Reporting (4 Hours)
+Conducted extensive discussions with clients regarding experiment rationale, setups, and project objectives.
+Provided detailed technical consultation, clearly outlining various downstream analysis options.
+Addressed specific client inquiries about volcano plot.
+
+3. FTP Server Management & Troubleshooting (2 Hours)
+Restarted the FTP server daily, synchronized data, and managed client FTP access credentials.
+Troubleshot server instability issues caused by infrastructure limitations 
+(e.g., operating on a free-tier version with no static IP address and restricted external SSH access).
+
+4. Data and System Monitoring (2 Hours)
+Monitored data uploads to ensure full data integrity and completeness.
+Continuously monitored system resources (Memory, Disk space, CPU, and Network) during the execution of large-scale WGS pipelines.
+Identified and restarted failed processes to maintain pipeline efficiency.
+
+5. WGS Analysis — 18 Samples (12 Hours)
+Project Goal: Investigated EBNA1-induced genome instability across 18 samples.
+Massive Data Processing: Performed full alignment of 18 raw FASTQ samples to the hg38 reference genome.
+SV Calling: Executed standard structural variant (SV) callers across all samples.
+Targeted Region Extraction: Subsetted massive BAM and VCF files specifically targeting the ~25kb region of interest on Chr11.
+Background Control: Processed and analyzed an additional 100 unmatched, functionally similar regions to establish a baseline control background.
+Curation & Custom Analysis: Conducted extensive manual data curation and developed custom scripts to directly address the client's specific hypotheses.
+Complex Filtering: Wrote custom scripts to execute complex mathematical subtractions (e.g., filtering out the "Population" background variants to accurately 
+isolate EBNA1-specific or Dox-induced events within the clones).
+
+Total Hours Worked: 23 Hours
+Date of Submission: 10 09, 2026
 
 
 ====================================================
+
+FTP 2 hour
+wgs analysis 3 hours
+wgs meeting and data sharing 1 hour
+look , share the shotgun analysis, and remove the customer information 1h
+
+Date of Submission: 10 09, 2026
+====================================================
+
 ====================================================
 ====================================================
 ====================================================
@@ -288,7 +332,9 @@ Date of Submission: Aug 20, 2026
 ====================================================
 ====================================================
 ====================================================
-====================================================
+commuinication -> 
+communication
+
 ====================================================
 ====================================================
 ====================================================
