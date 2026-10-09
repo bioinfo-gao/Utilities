@@ -19,17 +19,40 @@ bash/home/user/.global_ai_harness/
 └── mcp_config.json          # MCP 服务器全局配置文件
 
 
+2. MCP (Model Context Protocol) 共享
+
+MCP 是连接智能体与外部工具的标准协议。
+
+目前 Claude Code 对 MCP 提供了原生支持（通过 claude.json），
+
+而 Codex 和 Antigravity 需要通过“桥接”或配置文件复用。
+
+统一 MCP 配置文件：在全局目录中维护 mcp_config.json，里面定义好你所有的工具（如：数据库读取、Git 操作、网络检索等）。
+
+各智能体桥接：
+
+Claude Code：直接在 ~/.config/claude/claude.json 中，通过 mcpServers 字段引入你的全局 MCP 配置。
+
+Codex / Antigravity：如果有些智能体本身不原生支持标准的 MCP，可以使用开源的 mcp-cli 或通过包装器（Wrapper）
+
+将 MCP 工具转换成标准命令行工具（CLI Skills），让它们通过终端调用。
 
 
-2. MCP (Model Context Protocol) 共享MCP 是连接智能体与外部工具的标准协议。目前 Claude Code 对 MCP 提供了原生支持（通过 claude.json），而 Codex 和 Antigravity 需要通过“桥接”或配置文件复用。统一 MCP 配置文件：在全局目录中维护 mcp_config.json，里面定义好你所有的工具（如：数据库读取、Git 操作、网络检索等）。各智能体桥接：Claude Code：直接在 ~/.config/claude/claude.json 中，通过 mcpServers 字段引入你的全局 MCP 配置。Codex / Antigravity：如果有些智能体本身不原生支持标准的 MCP，可以使用开源的 mcp-cli 或通过包装器（Wrapper）将 MCP 工具转换成标准命令行工具（CLI Skills），让它们通过终端调用。
 
-3. Rules & Skills 共享：符号链接（Symbolic Links）与自动加载这是让三个智能体共用“提示词/规则（System Prompts）”和“技能（Skills）”的最有效手段。针对项目级别（Harness & Workspace）在你的代码项目根目录下，不要直接写 .claudecode.toml 或智能体的专属配置文件，而是使用 符号链接（Ln -s）：统一的系统规则文件：在项目根目录创建一个 .ai_rules.md。强制读取设置：
+3. Rules & Skills 共享：
 
-Claude Code：在项目根目录的 claude.toml 中配置（或在其系统提示词中指定）：“Always read and obey the rules in .ai_rules.md before executing tasks.”Codex（如果是通过 VS Code / Cursor 等载体）：在 .cursorrules 或 .vscode/settings.json 中配置关联，让其自动载入该 MD 文件。Antigravity：在其特定的初始化配置文件（如 .antigravityrc 或 config.yaml）中，将系统提示词路径指向全局的 system_rules.md。bash# 在你的开发项目目录下建立软链接，直接引用全局规则
+符号链接（Symbolic Links）与自动加载这是让三个智能体共用“提示词/规则（System Prompts）”和“技能（Skills）”的最有效手段。针对项目级别（Harness & Workspace）在你的代码项目根目录下，不要直接写 .claudecode.toml 或智能体的专属配置文件，而是使用 符号链接（Ln -s）：统一的系统规则文件：在项目根目录创建一个 .ai_rules.md。强制读取设置：
+
+Claude Code：在项目根目录的 claude.toml 中配置（或在其系统提示词中指定）：“Always read and obey the rules in .ai_rules.md before executing tasks.”Codex（如果是通过 VS Code / Cursor 等载体）：在 .cursorrules 或 .vscode/settings.json 中配置关联，让其自动载入该 MD 文件。Antigravity：在其特定的初始化配置文件（如 .antigravityrc 或 config.yaml）中，将系统提示词路径指向全局的 system_rules.md。bash# 
+
+在你的开发项目目录下建立软链接，直接引用全局规则
+
 ln -s /home/user/.global_ai_harness/prompts/system_rules.md .ai_rules.md
 Use code with caution.
 
-4. Harness & Environment 
+
+
+4. Harness & Environment
 
 隔离与标准化为了让三个智能体在同一个自动化测试和评估（Harness）环境下工作，必须将环境与智能体本身剥离：
 
