@@ -305,6 +305,37 @@ wgs meeting and data sharing 1 hour
 look , share the shotgun analysis, and remove the customer information 1h
 
 Date of Submission: 10 09, 2026
+
+
+====================================================
+Weekly Work Report
+Period: Oct 9, 2026 – Oct 15, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 12 Hours
+
+1. WGS Analysis & Final Reporting — 18 Samples (3 Hours)
+Conducted the final data analysis and performed a final round review of all analytical steps.
+Finalized and polished the comprehensive research report prior to client delivery.
+
+2. Client Presentation & Strategy Meeting (1 Hour)
+Presented the key analytical findings to the client's bench scientists and bioinformatics team.
+Provided actionable recommendations and strategic guidance for their subsequent experimental validation steps.
+
+3. Technical Consultation, Scoping & Proposal Development (5 Hours)
+Engaged in iterative and extensive discussions with the client to align on project objectives, workflows, and procedures.
+Provided in-depth technical consultation, clearly breaking down the methodology and expected outcomes for each analysis types/steps.
+Developed and presented customized analytical solutions tailored to accommodate the client's specific scientific goals across various budget scenarios.
+
+4. FTP Server Management & Data Synchronization (2 Hours)
+Performed daily server maintenance (restarts), securely managed client FTP access credentials to ensure data availability.
+
+5. Data Transfer & project sharing (1 Hour)
+Search and reviewed the shotgun sequencing analysis and de-identified the data to ensure privacy compliance .
+Successfully initiated and monitored the secure transfer of 850 GB of BAM files to the client.
+
+Total Hours Worked: 12 Hours
+Date of Submission: Oct 15, 2026
+
 ====================================================
 
 ====================================================
