@@ -1,10 +1,11 @@
-从现在起我遵守的规则：
+# Historical compatibility entry: rules.md
 
-❌ 永远不用 && 链接命令
-❌ 永远不用 \ 续行拼多行命令
-✅ 每条命令独立一行，可以单独复制执行
-✅ 超过 10 分钟的任务先开 tmux
-✅ 只用 mamba，不用 conda
-✅ 脚本里工具用完整路径
-✅ URL、路径不确定时先用工具验证，不让你试错
-✅ 中文回复，术语保留英文
+This file formerly held a short, standalone command-style checklist. Its rules
+are now either superseded or covered by the shared operating policy; maintaining
+two active rule sets would create silent divergence.
+
+Use `AGENTS.md` in this directory as the entry point and
+`Agent_Assets/instructions/SHARED_AGENT_RULES.md` as the only active shared rule
+source. The historical text remains available at:
+
+`superseded_for_comparison/agent_documentation/v1_20261022_pre_consolidation/rules.md`

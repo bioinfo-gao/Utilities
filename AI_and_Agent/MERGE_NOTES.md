@@ -1,5 +1,11 @@
 # Utilities 合并说明（2026-07-25）
 
+> **文档角色：** 本文是整个 `/home/gao/Utilities/` 的合并历史记录，不是当前 Agent 行为规则或
+> 客户端配置说明。为避免破坏已知路径，文件暂留在 `AI_and_Agent/`；其范围仍是整个 Utilities 仓库。
+> 当前 Agent 配置入口请从 `AGENTS.md` → `Agent_Assets/AGENT_ENDPOINTS_AND_LINKS.md` 开始。
+>
+> **维护方式：** 历史事实不回写；只有新的合并、退役或核验才在文末追加带日期的条目。
+
 本目录 `/home/gao/Utilities/` 是以下三代 Utilities/facilities 工具库的**合并结果**，
 自本次合并起为 **canonical / single source of truth**：以后新增/更新工具笔记只写在这里，
 不再更新下面三个旧位置。三个旧位置**均未删除、未修改**，作为历史存档保留：
