@@ -9,3 +9,4 @@ This directory is the sole editable source for the shared Claude Code, Codex, an
 - Authentication, secrets, client state, and vendor plugins deliberately remain client-local.
 
 See `MIGRATION_RUNBOOK.md` for the full rollout and rollback procedure.
+See `AGENT_ENDPOINTS_AND_LINKS.md` for the client paths, canonical sources, and mandatory procedure for adding another Agent.

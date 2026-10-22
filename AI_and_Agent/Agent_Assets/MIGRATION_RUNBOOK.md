@@ -246,7 +246,7 @@ Claude Code 当前安全实现位于 `~/.claude/hooks/` 并由 `~/.claude/settin
 ### 2026-10-21 — AA-000 Phase 0 runbook
 
 - 阶段：Phase 0
-- 状态：applied
+- 状态：verified
 - 目标：建立迁移运行手册
 - 前置基线：未改动任何 Agent 配置；`/home/gao/Utilities` 工作树在检查时无本任务相关未提交变更
 - 写入范围：仅本文件
@@ -289,3 +289,12 @@ Claude Code 当前安全实现位于 `~/.claude/hooks/` 并由 `~/.claude/settin
   - `git diff --check` 通过。
 - MCP 状态：`mcp/catalog.yaml` 已建立为唯一无密钥 catalog；现有客户端的认证型 MCP 配置保持原状，未跨端复制任何凭据。新增客户端连接须在该客户端完成原生登录后启用。
 - 残余风险：Codex 会按其安全模型要求在首次使用时 review/trust 本地 hook；Antigravity 使用共享全局 `AGENTS.md` 和官方 global Skills 目录，但其 hooks/MCP 认证尚未声称与 Claude 完全等效。
+
+### 2026-10-22 — AA-003 endpoint and symlink reference map
+
+- 阶段：Phase 6
+- 状态：applied
+- 目标：建立未来所有 Agent 必须参考的客户端地址、唯一源地址与新增接入流程。
+- 写入范围：新增 `AGENT_ENDPOINTS_AND_LINKS.md`；在 `README.md` 增加该文档入口。
+- 验证：实际 `readlink -f` 核验三个规则入口、Codex hook 入口、Antigravity legacy Skill alias，以及三个 Skill 根目录各 21 个共享软链接；随后运行 `scripts/verify.sh`。
+- 回退：删除本次新增的说明文档和 README 链接即可；不影响任何客户端入口或共享资产。
