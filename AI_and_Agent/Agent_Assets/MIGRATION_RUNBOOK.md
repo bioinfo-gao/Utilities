@@ -1,6 +1,6 @@
 # 三 Agent 统一资产库：迁移与回滚运行手册
 
-> **状态：Phase 0 — 仅建立手册（2026-10-21）**  
+> **状态：Phase 1–6 已部署并验证（2026-10-22）**
 > **权威范围：** Claude Code、Codex、Antigravity 的个人可移植资产迁移。  
 > **本文件是迁移过程的唯一操作记录。** 每一次实际变更必须先更新本文件的「变更日志」，再执行；完成后补充验证结果与回退信息。
 
@@ -180,7 +180,7 @@ Claude Code 当前安全实现位于 `~/.claude/hooks/` 并由 `~/.claude/settin
 - Codex/Antigravity 只在其原生 event 可表达同一保证时接入；无法等效的项保留为规则或人工验证，不虚称“已硬拦”。
 - 每添加一个 hook，必须新增该端的正反例测试和失败回退测试。
 
-**验证：** 现有 Claude 88 条测试先全部通过；每端分别记录覆盖率和未能机械化的规则。
+**验证：** 现有 Claude 105 条测试先全部通过；每端分别记录覆盖率和未能机械化的规则。
 
 **回退：** 移除仅本次添加的客户端 hook/adaptor，恢复原有客户端权限；Claude 原 hook 不受影响。
 
@@ -263,3 +263,29 @@ Claude Code 当前安全实现位于 `~/.claude/hooks/` 并由 `~/.claude/settin
 - 影响范围：后续 registry、Skill 分发、checksum 基线和长期维护入口；未改动任何 Agent Skill 文件
 - 验证：本手册的基线和 Phase 2 决策门已更新为同一规则
 - 回退：仅在用户明确撤销本决策后修改本手册；既有 Agent 文件不受影响
+
+### 2026-10-22 — AA-002 shared-asset cutover
+
+- 阶段：Phase 1–6
+- 状态：verified
+- 目标：将共享规则、Skills 与 Claude hook 源切换为 `Agent_Assets` 的唯一真身，并建立三端发现入口
+- 写入范围：
+  - `Agent_Assets/`：共享规则、21 个共享 Skill、hook 源/测试、registry、MCP 无密钥 catalog、Codex hook adapter、部署/验证/回退脚本。
+  - `~/.claude/CLAUDE.md`：链接至 `instructions/SHARED_AGENT_RULES.md`。
+  - `~/.claude/skills/`：20 个原有自建 Skill 替换为链接；新增的 `tax-resemb-mag` 链接指向独立共享资产。
+  - `~/.claude/hooks/`：10 个 Python hook/test 文件和 `checks/` 替换为链接；动态日志和状态文件未移动。
+  - `~/.codex/AGENTS.md`、`~/.codex/hooks.json` 和 `~/.codex/skills/`：建立共享规则、Codex hook adapter、21 个 Skill 的链接。
+  - `~/.gemini/AGENTS.md`、`~/.gemini/config/skills/`：建立共享规则和 21 个 Skill 的链接；旧 `~/.gemini/skills/` 改为指向官方全局 Skill 根的链接。
+- 未写入范围：Claude/Codex/Antigravity 的认证、token、OAuth、会话、模型选择、权限设置、MCP 原始配置和厂商插件缓存。
+- 回退快照：
+  - 完整首次切换：`/home/gao/Utilities/AI_and_Agent/Agent_Assets/snapshots/cutover-20261021T235022/`
+  - Codex hook 入口：`/home/gao/Utilities/AI_and_Agent/Agent_Assets/snapshots/cutover-20261022T151220/`
+  - 快照保留在本机但由 `.gitignore` 排除；不得删除或批量清理。
+- 验证：
+  - `scripts/verify.sh` 通过，确认三端 21 个 Skill、三端规则入口、Claude hook 链接和 Codex hook 入口均解析到唯一真身。
+  - Claude 原有测试通过：destructive guard 21/21、symlink-search guard 19/19、报告/邮件/回复检查 65/65，共 105/105。
+  - Codex adapter 实测：force-push 返回 `deny`；非临时路径删除返回“需要用户确认”的附加上下文并交由 Codex 原生审批处理。
+  - Antigravity CLI 的无写入 `--mode plan --print` 发现测试已发起，但在调用模型前要求该客户端完成 OAuth 登录；遵守无凭据迁移边界，未登录、未复制认证信息，因此仅记录为待客户端首次登录后的手工复验。
+  - `git diff --check` 通过。
+- MCP 状态：`mcp/catalog.yaml` 已建立为唯一无密钥 catalog；现有客户端的认证型 MCP 配置保持原状，未跨端复制任何凭据。新增客户端连接须在该客户端完成原生登录后启用。
+- 残余风险：Codex 会按其安全模型要求在首次使用时 review/trust 本地 hook；Antigravity 使用共享全局 `AGENTS.md` 和官方 global Skills 目录，但其 hooks/MCP 认证尚未声称与 Claude 完全等效。

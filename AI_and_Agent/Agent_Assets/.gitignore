@@ -11,3 +11,4 @@ hooks/core/hook_calls.log
 hooks/core/hook_errors.log
 hooks/core/.stop_block_state.json
 snapshots/*/runtime/
+snapshots/cutover-*/

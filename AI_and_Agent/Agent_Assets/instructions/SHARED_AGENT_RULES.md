@@ -1,3 +1,11 @@
+# Shared Agent Operating Rules
+
+> **Canonical source:** `Agent_Assets/instructions/SHARED_AGENT_RULES.md`.  Claude Code,
+> Codex, and Antigravity load this same file through their own global entry points.
+> References below to `CLAUDE.md` or Claude hook paths document the original, verified
+> baseline; platform-specific implementation coverage and rollback details are recorded in
+> `Agent_Assets/MIGRATION_RUNBOOK.md`.
+
 # Working environment notes
 
 > **本文是 L0 常驻层（2026-08-30 分层重构）。** 只保留两类内容：
