@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "initial_source_policy": "Claude Code is the initial source for every same-named skill; Agent_Assets is the sole editable source after cutover.",
+  "skills": {
+    "claude-science-guardrails": {"source": "claude", "scope": "shared"},
+    "corun": {"source": "claude", "scope": "shared"},
+    "delivery": {"source": "claude", "scope": "shared"},
+    "ftp": {"source": "claude", "scope": "shared"},
+    "git": {"source": "claude", "scope": "shared"},
+    "notify": {"source": "claude", "scope": "shared"},
+    "project-setup": {"source": "claude", "scope": "shared"},
+    "report": {"source": "claude", "scope": "shared"},
+    "rnaseq": {"source": "claude", "scope": "shared"},
+    "scientific-figure-making": {"source": "claude", "scope": "shared"},
+    "scrna": {"source": "claude", "scope": "shared"},
+    "spatial": {"source": "claude", "scope": "shared"},
+    "splicing": {"source": "claude", "scope": "shared"},
+    "ssd-swap": {"source": "claude", "scope": "shared"},
+    "tax-assembly-mag": {"source": "claude", "scope": "shared"},
+    "tax-functional-humann": {"source": "claude", "scope": "shared"},
+    "tax-resemb-mag": {"source": "antigravity", "scope": "shared", "note": "Different name; retained separately."},
+    "taxnom": {"source": "claude", "scope": "shared"},
+    "video2doc": {"source": "claude", "scope": "shared"},
+    "watchdog": {"source": "claude", "scope": "shared"},
+    "wgs": {"source": "claude", "scope": "shared"}
+  }
+}

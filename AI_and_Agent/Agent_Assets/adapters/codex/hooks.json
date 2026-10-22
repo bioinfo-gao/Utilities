@@ -1,0 +1,18 @@
+{
+  "description": "Codex adapter inventory for shared Agent_Assets hooks. Native hook trust remains a Codex client decision.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^Bash$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /home/gao/Utilities/AI_and_Agent/Agent_Assets/adapters/codex/pre_tool_policy.py",
+            "timeout": 10,
+            "statusMessage": "Shared safety policy"
+          }
+        ]
+      }
+    ]
+  }
+}

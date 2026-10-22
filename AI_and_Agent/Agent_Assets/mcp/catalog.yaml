@@ -1,0 +1,29 @@
+# Canonical non-secret MCP capability catalog.
+# This is an inventory and rendering source, not a credential store.
+servers:
+  gmail:
+    initial_source: claude
+    transport: stdio
+    command: /home/gao/.local/bin/uvx
+    args: ["--with", "mcp<2", "claude-gmail-mcp"]
+    required_environment: [GMAIL_ADDRESS, GMAIL_APP_PASSWORD]
+    authentication: client-local environment or login
+    risk: external-draft-write
+    deployment: preserve native client configuration; never copy credentials
+  github:
+    initial_source: claude
+    transport: streamable-http
+    url: https://api.githubcopilot.com/mcp/
+    required_environment: [GITHUB_COPILOT_MCP_AUTHORIZATION]
+    authentication: client-local header or OAuth
+    risk: repository-write
+    deployment: preserve native client configuration; never copy credentials
+  outlook:
+    initial_source: antigravity
+    transport: stdio
+    command: npx
+    args: ["-y", "@mcp-z/mcp-outlook", "--auth=device-code"]
+    required_environment: [MS_CLIENT_ID, MS_TENANT_ID]
+    authentication: client-local device-code login
+    risk: external-draft-write
+    deployment: preserve native client configuration; never copy credentials
