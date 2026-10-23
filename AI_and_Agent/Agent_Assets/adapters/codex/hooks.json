@@ -13,6 +13,18 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /home/gao/Utilities/AI_and_Agent/Agent_Assets/adapters/codex/continuity_stop_guard.py",
+            "timeout": 10,
+            "statusMessage": "Checking active-project continuity"
+          }
+        ]
+      }
     ]
   }
 }

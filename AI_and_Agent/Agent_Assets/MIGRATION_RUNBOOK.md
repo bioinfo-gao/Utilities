@@ -310,3 +310,15 @@ Claude Code 当前安全实现位于 `~/.claude/hooks/` 并由 `~/.claude/settin
 - 实际写入范围：与计划一致；未运行 deploy，未改变任何 Agent 的现有规则入口、认证、会话或客户端设置。
 - 验证：`python3 -m json.tool registry/agents.json`、`bash -n scripts/verify.sh`、`bash -n scripts/deploy.sh` 均通过；registry 断言确认 3 个已注册入口均解析到唯一 canonical rule；`scripts/verify.sh` 通过；`git diff --check` 通过。
 - 回退：仅回退 AA-004 修改的 registry、验证逻辑与说明；不删除任何 Agent 的既有入口链接。
+
+### 2026-10-23 — AA-005 active-project continuity guard across three clients
+
+- 阶段：Phase 5 / 6
+- 状态：verified
+- 目标：阻止任何已授权“自动／全流程”项目在本阶段结束后因没有下一阶段运行而被 Agent 静默搁置。
+- 原因与预期：P42 项目出现过单一步骤正常完成、但后续阶段未启动且没有运行中程序的失败。机制必须跨 Claude Code、Codex、Antigravity 使用同一状态和同一判定，不能各维护近似规则。
+- 唯一真身：`runtime/active_projects.json` 是活动项目状态 SSOT；`hooks/core/continuity_state.py` 是唯一判定实现。适配器只能翻译 Stop 响应协议：Claude/Codex 为 `decision=block`，Antigravity 为 `decision=continue`。
+- 写入范围：新增共享 evaluator、Claude core Stop adapter、Codex 与 Antigravity thin adapter、Antigravity `hooks.json`、协议测试；在 Claude `settings.json` 注册 Stop hook，在 Codex `config.toml` 启用 hooks；部署 `~/.gemini/config/hooks.json` 和新增 Claude core 链接；更新 deploy/verify/endpoint/README 文档。
+- 回退快照：`/home/gao/Utilities/AI_and_Agent/Agent_Assets/snapshots/cutover-20261023T111305/`（本次新建 Antigravity hook 链接的可回退快照）。
+- 验证：`python3 tests/test_continuity_guards.py` 通过，分别验证非活动状态允许结束、虚构的 active-but-absent tmux 被 Claude/Codex 阻断而被 Antigravity 继续；`scripts/verify.sh` 通过；三个入口均用 `readlink -f` 核验。针对真实 P42 active 状态，三端 adapter 分别产生预期的阻断响应。
+- 残余风险：Codex 官方客户端会要求用户对新增或变更的本地 hook 做一次 review/trust；在该客户端完成确认前，配置和静态验证均已就绪，但不能把 UI 运行时拦截表述为已启用。未来第 N 个 Agent 必须新增薄 adapter、协议正反例和 `verify.sh` 断言后，才能宣称受此机制保护。

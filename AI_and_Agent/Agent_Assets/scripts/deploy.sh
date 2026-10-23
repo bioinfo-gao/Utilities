@@ -52,6 +52,7 @@ for agent in registry.get("agents", []):
 PY
 )
 link_entry "$ASSETS/adapters/codex/hooks.json" /home/gao/.codex/hooks.json codex/hooks.json
+link_entry "$ASSETS/adapters/antigravity/hooks.json" /home/gao/.gemini/config/hooks.json gemini/config/hooks.json
 
 # Skills: every client points to the same canonical folders.
 for source in "$ASSETS"/skills/*; do

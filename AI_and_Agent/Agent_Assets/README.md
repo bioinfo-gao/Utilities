@@ -4,6 +4,7 @@ This directory is the sole editable source for the shared setup of every registe
 
 - Edit universal rules only in `instructions/SHARED_AGENT_RULES.md`. `registry/agents.json` is the SSOT for every registered Agent rule entry; every entry must resolve to that same file.
 - Edit shared workflows in `skills/`.
+- Active autonomous-project state exists only in `runtime/active_projects.json`; the shared evaluator in `hooks/core/continuity_state.py` is used by every registered client’s Stop adapter. Do not create per-agent project-status lists.
 - Run `scripts/deploy.sh --apply` to distribute links. It creates a timestamped local rollback snapshot before every change.
 - Run `scripts/verify.sh` after every deployment.
 - Never edit the linked copies in `~/.claude`, `~/.codex`, or `~/.gemini` directly.

@@ -18,8 +18,9 @@
 | :--- | :---: | :---: |
 | 共享全局规则 | `/home/gao/Utilities/AI_and_Agent/Agent_Assets/instructions/SHARED_AGENT_RULES.md` | 各 Agent 全局规则文件的软链接 |
 | 共享 Skills（21 个） | `/home/gao/Utilities/AI_and_Agent/Agent_Assets/skills/<skill-name>/` | 各 Agent Skill 发现目录中的目录软链接 |
+| 活跃项目连续性核心判定 | `/home/gao/Utilities/AI_and_Agent/Agent_Assets/hooks/core/continuity_state.py` | 三端 Stop adapter 调用同一实现；唯一运行态 SSOT 为 `runtime/active_projects.json` |
 | Claude hook 核心和测试 | `/home/gao/Utilities/AI_and_Agent/Agent_Assets/hooks/core/` | Claude hook 源文件/`checks` 的软链接 |
-| Codex hook 适配层 | `/home/gao/Utilities/AI_and_Agent/Agent_Assets/adapters/codex/` | Codex `hooks.json` 的软链接 |
+| Codex / Antigravity hook 适配层 | `/home/gao/Utilities/AI_and_Agent/Agent_Assets/adapters/<agent>/` | 各自 `hooks.json` 的软链接；只转换客户端 Stop 协议，不复制判定逻辑 |
 | 无密钥 MCP catalog | `/home/gao/Utilities/AI_and_Agent/Agent_Assets/mcp/catalog.yaml` | 人工/脚本渲染的输入；**不含认证信息** |
 | 接入、部署、验证与回退脚本 | `/home/gao/Utilities/AI_and_Agent/Agent_Assets/scripts/` | 从资产库直接运行 |
 
@@ -27,9 +28,9 @@
 
 | Agent | 客户端根目录 | 规则入口 → 源地址 | Skill 发现入口 → 源地址 | hook / adapter 入口 → 源地址 |
 | :--- | :---: | :---: | :---: | :---: |
-| Claude Code | `/home/gao/.claude/` | `/home/gao/.claude/CLAUDE.md` → `Agent_Assets/instructions/SHARED_AGENT_RULES.md` | `/home/gao/.claude/skills/<skill-name>` → `Agent_Assets/skills/<skill-name>`（21 个） | `/home/gao/.claude/hooks/<core-file>` 与 `checks` → `Agent_Assets/hooks/core/` |
-| Codex | `/home/gao/.codex/` | `/home/gao/.codex/AGENTS.md` → `Agent_Assets/instructions/SHARED_AGENT_RULES.md` | `/home/gao/.codex/skills/<skill-name>` → `Agent_Assets/skills/<skill-name>`（21 个；系统自带目录不改） | `/home/gao/.codex/hooks.json` → `Agent_Assets/adapters/codex/hooks.json` |
-| Antigravity | `/home/gao/.gemini/` | `/home/gao/.gemini/AGENTS.md` → `Agent_Assets/instructions/SHARED_AGENT_RULES.md` | `/home/gao/.gemini/config/skills/<skill-name>` → `Agent_Assets/skills/<skill-name>`（21 个）；`/home/gao/.gemini/skills` → `/home/gao/.gemini/config/skills` | 当前没有共享 hook adapter |
+| Claude Code | `/home/gao/.claude/` | `/home/gao/.claude/CLAUDE.md` → `Agent_Assets/instructions/SHARED_AGENT_RULES.md` | `/home/gao/.claude/skills/<skill-name>` → `Agent_Assets/skills/<skill-name>`（21 个） | `/home/gao/.claude/hooks/<core-file>` → `Agent_Assets/hooks/core/`；`settings.json` 注册连续性 Stop hook |
+| Codex | `/home/gao/.codex/` | `/home/gao/.codex/AGENTS.md` → `Agent_Assets/instructions/SHARED_AGENT_RULES.md` | `/home/gao/.codex/skills/<skill-name>` → `Agent_Assets/skills/<skill-name>`（21 个；系统自带目录不改） | `/home/gao/.codex/hooks.json` → `Agent_Assets/adapters/codex/hooks.json`；`config.toml` 启用 hooks |
+| Antigravity | `/home/gao/.gemini/` | `/home/gao/.gemini/AGENTS.md` → `Agent_Assets/instructions/SHARED_AGENT_RULES.md` | `/home/gao/.gemini/config/skills/<skill-name>` → `Agent_Assets/skills/<skill-name>`（21 个）；`/home/gao/.gemini/skills` → `/home/gao/.gemini/config/skills` | `/home/gao/.gemini/config/hooks.json` → `Agent_Assets/adapters/antigravity/hooks.json` |
 
 表中所有 `Agent_Assets/...` 相对路径均以
 `/home/gao/Utilities/AI_and_Agent/` 为根；解析后的绝对源地址以第 1 节为准。

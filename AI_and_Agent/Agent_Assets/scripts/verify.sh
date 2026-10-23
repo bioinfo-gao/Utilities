@@ -16,6 +16,7 @@ expect_link() {
 python3 -m json.tool "$ASSETS/registry/skills.json" >/dev/null
 python3 -m json.tool "$AGENT_REGISTRY" >/dev/null
 python3 -m json.tool "$ASSETS/adapters/codex/hooks.json" >/dev/null
+python3 -m json.tool "$ASSETS/adapters/antigravity/hooks.json" >/dev/null
 python3 - "$ASSETS" "$AGENT_REGISTRY" <<'PY'
 import ast
 import json
@@ -35,7 +36,13 @@ for agent in registry["agents"]:
     assert agent["rule_entry_mode"] == "symlink"
     assert pathlib.Path(agent["rule_entry"]).is_absolute()
     ids.add(agent["id"]); entries.add(agent["rule_entry"])
-for path in [root / "adapters/codex/pre_tool_policy.py", *sorted((root / "hooks/core").glob("*.py")), *sorted((root / "hooks/core/checks").glob("*.py"))]:
+for path in [
+    *sorted((root / "adapters/codex").glob("*.py")),
+    *sorted((root / "adapters/antigravity").glob("*.py")),
+    *sorted((root / "hooks/core").glob("*.py")),
+    *sorted((root / "hooks/core/checks").glob("*.py")),
+    *sorted((root / "tests").glob("*.py")),
+]:
     ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
 PY
 test -s "$ASSETS/instructions/SHARED_AGENT_RULES.md"
@@ -50,6 +57,7 @@ for agent in json.load(open(sys.argv[1], encoding="utf-8"))["agents"]:
 PY
 )
 expect_link "$ASSETS/adapters/codex/hooks.json" /home/gao/.codex/hooks.json
+expect_link "$ASSETS/adapters/antigravity/hooks.json" /home/gao/.gemini/config/hooks.json
 for source in "$ASSETS"/skills/*; do
   name=$(basename "$source")
   test -f "$source/SKILL.md" || { printf 'FAIL missing SKILL.md: %s\n' "$source" >&2; fail=1; continue; }
@@ -62,6 +70,7 @@ for source in "$ASSETS"/hooks/core/*.py; do
   expect_link "$source" "/home/gao/.claude/hooks/$(basename "$source")"
 done
 expect_link "$ASSETS/hooks/core/checks" /home/gao/.claude/hooks/checks
+python3 "$ASSETS/tests/test_continuity_guards.py"
 
 if [[ "$fail" -ne 0 ]]; then
   exit 1

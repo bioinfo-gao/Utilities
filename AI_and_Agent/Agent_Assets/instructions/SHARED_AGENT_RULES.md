@@ -281,6 +281,21 @@
   - "autonomous" 是不要人牵着走，**不是跳过验证**：tmux、Phase-1 早失败监控、交付前自审、
     线程/内存上限照做。
 
+### 活跃项目连续性不变量（MANDATORY — user directive 2026-10-23）
+
+  - 用户授权“自动／全流程／全过程”后，项目在完成定义达成前必须登记为 **active**；登记的 SSOT 是
+    `Agent_Assets/runtime/active_projects.json`。每项 active 记录必须有项目绝对路径、当前阶段、下一可运行阶段、
+    期望 tmux session、状态（`running` / `blocked` / `complete`）和最后验证时间。
+  - **任何 stage 正常结束不等于项目结束。** 在当前 turn 结束前，Agent 必须完成且验证以下三者之一：
+    1) 已在 tmux 启动下一可运行 stage；2) 已将项目标为 `complete`，并且交付定义已经满足；3) 已标为
+    `blocked`，明确写出不可由 Agent 解决的阻塞、影响和需要用户作出的唯一决定。没有活跃进程、没有后续
+    tmux、又没有 `complete/blocked` 的项目状态，属于执行失败，**不得以“阶段完成”或“等待用户”结束。**
+  - 每次向用户报告“项目进展”时，必须先实测并写明：运行中的程序、tmux session、已完成 stage、下一 stage；
+    如果没有运行程序，必须把它表述为异常状态并在同一 turn 恢复下一 stage，而不得把资源空闲包装成进展。
+  - 这条规则由各 Agent 的本机 Stop hook 机械执行：active 项目若目标 tmux 不存在，Stop hook 必须继续该 turn，
+    要求启动下一 stage 或更新为有证据的 `complete/blocked`。Agent 专属 adapter 可以不同，但判断状态只能读取
+    上述中心 SSOT；不得创建另一份“活跃项目”清单。
+
 ## "全流程" 的定义 (MANDATORY — user directive 2026-07-17)
 
   - **"全流程" = 分析流程 + 数据提交流程。** 分析步骤跑完、`output_results/` 有产物
