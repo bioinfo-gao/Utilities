@@ -7,6 +7,11 @@
 > `/home/gao/Utilities/AI_and_Agent/Agent_Assets/` 编辑；不得直接编辑下游软链接。
 > 新 Agent 接入或路径变动时，必须先更新本文件、部署脚本和验证脚本，再建立链接。
 
+> **首要一致性规则：** 通用规则的唯一真身是
+> `instructions/SHARED_AGENT_RULES.md`；`registry/agents.json` 列出所有已接入 Agent 的规则入口。
+> 任意第 N 个 Agent 只有在其入口被注册且 `scripts/verify.sh` 确认该入口解析到同一真身后，才算接入。
+> 不允许为新 Agent 复制、摘要或维护另一份通用规则。
+
 ## 1. 唯一共享源
 
 | 资产 | 唯一可编辑源 | 下游引用方式 |
@@ -18,7 +23,7 @@
 | 无密钥 MCP catalog | `/home/gao/Utilities/AI_and_Agent/Agent_Assets/mcp/catalog.yaml` | 人工/脚本渲染的输入；**不含认证信息** |
 | 接入、部署、验证与回退脚本 | `/home/gao/Utilities/AI_and_Agent/Agent_Assets/scripts/` | 从资产库直接运行 |
 
-## 2. 当前三端客户端地址及链接
+## 2. 当前已注册客户端地址及链接
 
 | Agent | 客户端根目录 | 规则入口 → 源地址 | Skill 发现入口 → 源地址 | hook / adapter 入口 → 源地址 |
 | :--- | :---: | :---: | :---: | :---: |
@@ -37,27 +42,30 @@
 | Codex | `/home/gao/.codex/config.toml`、认证和会话状态 | 模型、沙箱、账户与本机状态由 Codex 独立管理 |
 | Antigravity | `/home/gao/.gemini/config/mcp_config.json`、认证和会话状态 | MCP OAuth/账户和客户端状态必须在该客户端原生登录 |
 
-## 4. 新增第四个 Agent 的固定接入顺序
+## 4. 新增第四个及后续 Agent 的固定接入顺序
 
 1. 先查该 Agent 官方文档，确认其全局规则、全局 Skill、MCP 和 hooks 的发现目录与链接支持；不得靠猜测复用路径。
-2. 在本文件新增该 Agent 的客户端根目录、每个入口地址、是否支持软链接，以及未能等效实现的功能。
-3. 在 `Agent_Assets/adapters/<agent-name>/` 新增仅该客户端需要的 adapter；公共逻辑继续放在既有共享源，禁止复制第二份 Skill 或规则。
-4. 修改 `scripts/deploy.sh`：以“已有目标先移入时间戳快照、再建立软链接”的方式接入，绝不覆盖或删除旧配置。
-5. 修改 `scripts/verify.sh`：逐个断言新入口解析到第 1 节的唯一源，并执行该客户端可运行的无写入验证。
-6. 将认证、OAuth、token、cookie、会话及供应商插件继续留在新 Agent 本机；只从 `mcp/catalog.yaml` 取无密钥服务定义。
-7. 运行 `scripts/deploy.sh --apply` 与 `scripts/verify.sh`，记录实际结果、快照路径和残余差异到 `MIGRATION_RUNBOOK.md`，再提交。
+2. 先在 `registry/agents.json` 登记该 Agent 的唯一 `rule_entry`；全局规则入口只允许 `symlink` 到第 1 节的 canonical source。
+3. 在本文件新增该 Agent 的客户端根目录、每个入口地址、是否支持软链接，以及未能等效实现的功能。
+4. 在 `Agent_Assets/adapters/<agent-name>/` 新增仅该客户端需要的 adapter；公共逻辑继续放在既有共享源，禁止复制第二份 Skill 或规则。
+5. `scripts/deploy.sh --apply` 读取 registry，以“已有目标先移入时间戳快照、再建立软链接”的方式接入，绝不覆盖或删除旧配置。
+6. `scripts/verify.sh` 从 registry 逐项断言每个入口解析到第 1 节的唯一源，并执行该客户端可运行的无写入验证。
+7. 将认证、OAuth、token、cookie、会话及供应商插件继续留在新 Agent 本机；只从 `mcp/catalog.yaml` 取无密钥服务定义。
+8. 运行 `scripts/deploy.sh --apply` 与 `scripts/verify.sh`，记录实际结果、快照路径和残余差异到 `MIGRATION_RUNBOOK.md`，再提交。
 
 ## 5. 日常维护与快速核验
 
 ```bash
 ASSETS=/home/gao/Utilities/AI_and_Agent/Agent_Assets
 bash "$ASSETS/scripts/verify.sh"
-readlink -f /home/gao/.claude/CLAUDE.md
-readlink -f /home/gao/.codex/AGENTS.md
-readlink -f /home/gao/.gemini/AGENTS.md
+python3 - <<'PY'
+import json
+for agent in json.load(open('/home/gao/Utilities/AI_and_Agent/Agent_Assets/registry/agents.json'))['agents']:
+    print(agent['id'], agent['rule_entry'])
+PY
 ```
 
-期望三个 `readlink -f` 命令均输出：
+期望 registry 中每个入口经 `readlink -f` 均输出：
 
 `/home/gao/Utilities/AI_and_Agent/Agent_Assets/instructions/SHARED_AGENT_RULES.md`
 

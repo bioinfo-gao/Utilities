@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ASSETS=/home/gao/Utilities/AI_and_Agent/Agent_Assets
+AGENT_REGISTRY="$ASSETS/registry/agents.json"
 fail=0
 
 expect_link() {
@@ -13,20 +14,41 @@ expect_link() {
 }
 
 python3 -m json.tool "$ASSETS/registry/skills.json" >/dev/null
+python3 -m json.tool "$AGENT_REGISTRY" >/dev/null
 python3 -m json.tool "$ASSETS/adapters/codex/hooks.json" >/dev/null
-python3 - "$ASSETS" <<'PY'
+python3 - "$ASSETS" "$AGENT_REGISTRY" <<'PY'
 import ast
+import json
 import pathlib
 import sys
 root = pathlib.Path(sys.argv[1])
+registry_path = pathlib.Path(sys.argv[2])
+registry = json.loads(registry_path.read_text(encoding="utf-8"))
+canonical = root / "instructions" / "SHARED_AGENT_RULES.md"
+assert registry["schema_version"] == 1
+assert pathlib.Path(registry["canonical_rule"]) == canonical
+assert registry["agents"]
+ids, entries = set(), set()
+for agent in registry["agents"]:
+    assert set(agent) == {"id", "display_name", "rule_entry", "rule_entry_mode"}
+    assert agent["id"] not in ids and agent["rule_entry"] not in entries
+    assert agent["rule_entry_mode"] == "symlink"
+    assert pathlib.Path(agent["rule_entry"]).is_absolute()
+    ids.add(agent["id"]); entries.add(agent["rule_entry"])
 for path in [root / "adapters/codex/pre_tool_policy.py", *sorted((root / "hooks/core").glob("*.py")), *sorted((root / "hooks/core/checks").glob("*.py"))]:
     ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
 PY
 test -s "$ASSETS/instructions/SHARED_AGENT_RULES.md"
 
-expect_link "$ASSETS/instructions/SHARED_AGENT_RULES.md" /home/gao/.claude/CLAUDE.md
-expect_link "$ASSETS/instructions/SHARED_AGENT_RULES.md" /home/gao/.codex/AGENTS.md
-expect_link "$ASSETS/instructions/SHARED_AGENT_RULES.md" /home/gao/.gemini/AGENTS.md
+while IFS=$'\t' read -r agent_id rule_entry; do
+  expect_link "$ASSETS/instructions/SHARED_AGENT_RULES.md" "$rule_entry"
+done < <(python3 - "$AGENT_REGISTRY" <<'PY'
+import json
+import sys
+for agent in json.load(open(sys.argv[1], encoding="utf-8"))["agents"]:
+    print(f'{agent["id"]}\t{agent["rule_entry"]}')
+PY
+)
 expect_link "$ASSETS/adapters/codex/hooks.json" /home/gao/.codex/hooks.json
 for source in "$ASSETS"/skills/*; do
   name=$(basename "$source")

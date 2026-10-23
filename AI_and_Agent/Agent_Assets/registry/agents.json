@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "canonical_rule": "/home/gao/Utilities/AI_and_Agent/Agent_Assets/instructions/SHARED_AGENT_RULES.md",
+  "policy": "Every registered Agent must consume the exact same canonical shared-rule file through a symlinked global-rule entry. An Agent is not an active shared-asset client until this registry entry and verification pass.",
+  "agents": [
+    {
+      "id": "claude_code",
+      "display_name": "Claude Code",
+      "rule_entry": "/home/gao/.claude/CLAUDE.md",
+      "rule_entry_mode": "symlink"
+    },
+    {
+      "id": "codex",
+      "display_name": "Codex",
+      "rule_entry": "/home/gao/.codex/AGENTS.md",
+      "rule_entry_mode": "symlink"
+    },
+    {
+      "id": "antigravity",
+      "display_name": "Antigravity",
+      "rule_entry": "/home/gao/.gemini/AGENTS.md",
+      "rule_entry_mode": "symlink"
+    }
+  ]
+}

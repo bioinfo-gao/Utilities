@@ -1,8 +1,9 @@
 # Agent Assets
 
-This directory is the sole editable source for the shared Claude Code, Codex, and Antigravity setup after cutover.
+This directory is the sole editable source for the shared setup of every registered Agent, currently Claude Code, Codex, and Antigravity.
 
-- Edit shared rules in `instructions/` and shared workflows in `skills/`.
+- Edit universal rules only in `instructions/SHARED_AGENT_RULES.md`. `registry/agents.json` is the SSOT for every registered Agent rule entry; every entry must resolve to that same file.
+- Edit shared workflows in `skills/`.
 - Run `scripts/deploy.sh --apply` to distribute links. It creates a timestamped local rollback snapshot before every change.
 - Run `scripts/verify.sh` after every deployment.
 - Never edit the linked copies in `~/.claude`, `~/.codex`, or `~/.gemini` directly.

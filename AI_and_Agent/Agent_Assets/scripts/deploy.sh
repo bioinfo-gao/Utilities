@@ -3,6 +3,7 @@
 set -euo pipefail
 
 ASSETS=/home/gao/Utilities/AI_and_Agent/Agent_Assets
+AGENT_REGISTRY="$ASSETS/registry/agents.json"
 MODE=${1:-}
 
 if [[ "$MODE" != "--apply" ]]; then
@@ -33,10 +34,23 @@ link_entry() {
   printf 'linked: %s -> %s\n' "$target" "$source"
 }
 
-# Global rules: Claude is cut over to the same canonical rules used by Codex and Antigravity.
-link_entry "$ASSETS/instructions/SHARED_AGENT_RULES.md" /home/gao/.claude/CLAUDE.md claude/CLAUDE.md
-link_entry "$ASSETS/instructions/SHARED_AGENT_RULES.md" /home/gao/.codex/AGENTS.md codex/AGENTS.md
-link_entry "$ASSETS/instructions/SHARED_AGENT_RULES.md" /home/gao/.gemini/AGENTS.md gemini/AGENTS.md
+# Global rules: every registered Agent links to the same canonical source.
+while IFS=$'\t' read -r agent_id rule_entry; do
+  link_entry "$ASSETS/instructions/SHARED_AGENT_RULES.md" "$rule_entry" "rules/$agent_id/$(basename "$rule_entry")"
+done < <(python3 - "$AGENT_REGISTRY" "$ASSETS/instructions/SHARED_AGENT_RULES.md" <<'PY'
+import json
+import pathlib
+import sys
+registry = json.load(open(sys.argv[1], encoding="utf-8"))
+canonical = pathlib.Path(sys.argv[2])
+if registry.get("schema_version") != 1 or pathlib.Path(registry.get("canonical_rule", "")) != canonical:
+    raise SystemExit("invalid agent registry canonical_rule")
+for agent in registry.get("agents", []):
+    if agent.get("rule_entry_mode") != "symlink":
+        raise SystemExit(f'unsupported rule entry mode for {agent.get("id")}')
+    print(f'{agent["id"]}\t{agent["rule_entry"]}')
+PY
+)
 link_entry "$ASSETS/adapters/codex/hooks.json" /home/gao/.codex/hooks.json codex/hooks.json
 
 # Skills: every client points to the same canonical folders.

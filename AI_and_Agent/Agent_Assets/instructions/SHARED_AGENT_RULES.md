@@ -6,6 +6,14 @@
 > baseline; platform-specific implementation coverage and rollback details are recorded in
 > `Agent_Assets/MIGRATION_RUNBOOK.md`.
 
+## 首要规则：通用规则只有一个中心真身，适用于任意数量 Agent (MANDATORY — user directive 2026-10-22)
+
+- **所有跨 Agent 的通用规则只允许在本文件编辑：**`/home/gao/Utilities/AI_and_Agent/Agent_Assets/instructions/SHARED_AGENT_RULES.md`。Claude Code、Codex、Antigravity 以及未来第 4 个、第 N 个 Agent 必须读取这一文件的同一真身；不得维护 Agent 专属的通用规则副本、摘要或分叉版本。
+- **“一致”指规则内容的同一来源，不是人工同步后的近似相同。** 每个 Agent 的全局规则入口必须是到本文件的软链接；不能解析到这个绝对路径的 Agent 不得被标记为已接入共享规则体系。
+- **注册表是可扩展性的门槛：**`Agent_Assets/registry/agents.json` 是所有已接入 Agent 的全局规则入口 SSOT。新增任意 Agent 前，必须先在注册表登记其入口，再让 `scripts/deploy.sh --apply` 建立链接并让 `scripts/verify.sh` 通过；未登记或验证失败的 Agent 不得宣称使用通用规则。
+- Agent 专属的认证、会话、权限、UI/事件适配和插件可保留在本机；它们不得覆盖、重述或改写通用规则。确有平台表达限制时，停止接入并向用户说明，不能复制一份“近似规则”绕过一致性要求。
+- 修改本文件后，所有已注册 Agent 的下一次规则加载自动读取同一变更；不得在任一 Agent 的下游入口单独补丁。每次共享规则或注册表变更后必须运行 `Agent_Assets/scripts/verify.sh`。
+
 # Working environment notes
 
 > **本文是 L0 常驻层（2026-08-30 分层重构）。** 只保留两类内容：
@@ -103,6 +111,17 @@
     本条说的是**动手之前**先讲清打算做什么。）
   - 发现工作区已有用户修改时，保留并理解现状，不覆盖、不回退无关改动。
   - 需求存在多种合理解释时，优先采用改动最小、可回退的方案；差异会显著影响结果时先询问。
+
+  ### §2A 科学分析严谨性：先审证据模型，再写脚本或开跑 (MANDATORY — user directive 2026-10-22)
+  - **每一项科学分析在正式运行前，必须把“研究问题 → 观察/证据单位 → 保留与去重规则 → 判定指标 → 允许的结论”写成可审查的 decision table。** 只列工具、参数和阈值不算完成：必须说明每条过滤规则为什么服务于研究问题，以及删掉它会遗漏哪类证据。
+  - **严禁把“不是独立分子”误处理成“没有分析价值”。** 对 read/alignment 数据，independent-molecule count 与 mapping evidence 是两个层次：可按 read/fragment identity 去重计数，但不得仅为避免双计数而删除原始 alignment context。所有被合并的 record 必须仍可追溯到原 FLAG、坐标、CIGAR、MAPQ 和过滤原因。
+  - **当研究问题涉及 repeats、multi-mapping、SV/junction、融合、整合位点、同源区域或“真实位置/来源判定”时，primary、secondary、supplementary alignment 必须分开记录和解释。** secondary 不是额外独立分子，却可能是定位歧义的直接证据；supplementary 不是额外独立分子，却可能是 split/chimeric structure 的直接证据。不得把 primary label、单一 MAPQ 阈值或单一 best hit 写成真实 locus 的充分证明。
+  - **先定义 data universe，再定义 candidate universe。** 若分析目标是某空间窗口、某类原始观测或 discovery，不能先用旧 caller / 旧 candidate table / 旧 read-name 列表封闭输入，再把未入选数据默认写成无关。旧结果可作为 comparison annotation；若要作为唯一输入，必须在计划中论证它不会排除研究问题所关心的 evidence，并经用户确认。
+  - **每个过滤条件都必须有 filter-impact audit。** 正式输出至少给出过滤前后 record、read-name/fragment、candidate 的数目和可追踪的原因；关键过滤应保留 machine-readable excluded/audit table。没有输出“被过滤的是什么、过滤了多少”，不得声称某类证据不存在。
+  - **`SEQ` 可用性与 sequence 完整性必须分开审计。** `SEQ` 非空只证明有可重比对输入；不能自动证明保存了完整原始 read。对需要 base-pair-level 解释的分析，必须检查 hard/soft clipping、sequence length、read-end identity，必要时回溯原始 FASTQ 或完整记录。
+  - **重比对、重调用或再次运行同一数据，不是独立生物学验证。** 报告必须说明它验证的是 algorithmic/mapping reproducibility、multi-fragment support、还是独立样本/assay；不得跨越证据层级下结论。
+  - **若在运行中或审阅中发现 evidence model 与研究问题不匹配，立刻停止将现有产物表述为完整答案。** 保留代码、参数、日志、结果和问题审计；不删除、不原地覆盖。重新设计后以新目录/新日期运行，并将旧版本归档为可比较的历史记录。
+  - **对会改变 data universe、evidence unit、去重口径、候选定义或结论层级的选择，必须在正式运行前向用户说明并取得确认。** “自动/全流程”授权执行已经明确的方案，不授权在上述科学口径存在实质歧义时自行选择。
 
   ### §3 最小修改原则
   - 只修改完成当前任务所必需的文件和代码。

@@ -298,3 +298,15 @@ Claude Code 当前安全实现位于 `~/.claude/hooks/` 并由 `~/.claude/settin
 - 写入范围：新增 `AGENT_ENDPOINTS_AND_LINKS.md`；在 `README.md` 增加该文档入口。
 - 验证：实际 `readlink -f` 核验三个规则入口、Codex hook 入口、Antigravity legacy Skill alias，以及三个 Skill 根目录各 21 个共享软链接；随后运行 `scripts/verify.sh`。
 - 回退：删除本次新增的说明文档和 README 链接即可；不影响任何客户端入口或共享资产。
+
+### 2026-10-22 — AA-004 universal-rule registry and N-agent verification
+
+- 阶段：Phase 3 / 6
+- 状态：verified
+- 目标：把“所有 Agent 的通用规则均来自唯一 canonical source”提升为首要共享规则，并以机器可读 registry 驱动验证，避免 `verify.sh` 仅硬编码 Claude Code、Codex、Antigravity 三端。
+- 原因与预期：当前与未来任意第 N 个 Agent 必须使用同一份纯共享规则；不得因新增客户端复制或分叉通用规则。
+- 前置基线：三个当前入口均为软链接并解析到 `instructions/SHARED_AGENT_RULES.md`；`scripts/verify.sh` 的规则入口检查为三端硬编码。
+- 计划写入范围：`instructions/SHARED_AGENT_RULES.md`、`registry/agents.json`、`scripts/verify.sh`、`AGENT_ENDPOINTS_AND_LINKS.md`、`README.md` 和本变更记录。
+- 实际写入范围：与计划一致；未运行 deploy，未改变任何 Agent 的现有规则入口、认证、会话或客户端设置。
+- 验证：`python3 -m json.tool registry/agents.json`、`bash -n scripts/verify.sh`、`bash -n scripts/deploy.sh` 均通过；registry 断言确认 3 个已注册入口均解析到唯一 canonical rule；`scripts/verify.sh` 通过；`git diff --check` 通过。
+- 回退：仅回退 AA-004 修改的 registry、验证逻辑与说明；不删除任何 Agent 的既有入口链接。
