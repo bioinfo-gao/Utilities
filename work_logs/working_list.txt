@@ -337,7 +337,30 @@ Total Hours Worked: 12 Hours
 Date of Submission: Oct 15, 2026
 
 ====================================================
+Weekly Work Report
+Period: Oct 16, 2026 – Oct 22, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 10 Hours
 
+1. Repeat-Region WGS Read-Rescue Analysis — DLD1 and GM12878 Samples (3 Hours)
+   Performed targeted review and initial read-rescue analysis for the chr11:114,604,000–114,625,500 repeat-rich locus across the expanded S01–S10 cohort.
+   Reviewed rescued read evidence, breakpoint-support patterns, alternative alignments, and per-sample candidate distributions.
+
+2. Technical Quality Audit and Repeat-Aware Reanalysis Design (3 Hours)
+   Conducted a detailed methodological audit of the initial rescue workflow.
+   Identified limitations of candidate-gated read extraction in a repetitive genomic region, including exclusion of MAPQ0, multi-mapping, secondary, supplementary, soft-clipped, and unmapped-mate evidence.
+   Developed a rigorous redesigned analysis framework based on complete window-wide read inventory, molecule-level deduplication, local assembly, breakpoint resolution, and explicit ambiguity assessment.
+
+3. SV Caller Concordance and Comparative Analysis Preparation (3 Hours)
+   Reviewed existing Manta and DELLY outputs, including locus-level caller concordance and evidence availability for the DLD1 parental, control-clone, and +Dox clone comparison.
+   Defined the analytical framework for identifying clone-specific events and for reporting caller support, read support, allele fraction, and filtering criteria.
+
+4. Client Request Review, Scope Reconciliation, and Deliverable Planning (1 Hours)
+   Reviewed the client’s revised technical request, prior scope correspondence, budget commitment, and requested data deliverables.
+   Reconciled the contracted Analysis 1 scope with additional Analysis 2 requirements to ensure the final work will support technically reliable, clone-specific conclusions without altering the frozen prior delivery.
+
+Total Hours Worked: 10 Hours
+Date of Submission: Oct 22, 2026
 ====================================================
 ====================================================
 ====================================================
