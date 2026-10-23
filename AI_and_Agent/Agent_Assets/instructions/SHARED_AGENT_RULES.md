@@ -292,9 +292,9 @@
     tmux、又没有 `complete/blocked` 的项目状态，属于执行失败，**不得以“阶段完成”或“等待用户”结束。**
   - 每次向用户报告“项目进展”时，必须先实测并写明：运行中的程序、tmux session、已完成 stage、下一 stage；
     如果没有运行程序，必须把它表述为异常状态并在同一 turn 恢复下一 stage，而不得把资源空闲包装成进展。
-  - 这条规则由各 Agent 的本机 Stop hook 机械执行：active 项目若目标 tmux 不存在，Stop hook 必须继续该 turn，
-    要求启动下一 stage 或更新为有证据的 `complete/blocked`。Agent 专属 adapter 可以不同，但判断状态只能读取
-    上述中心 SSOT；不得创建另一份“活跃项目”清单。
+  - Client Stop hook 是 defense-in-depth：active 项目若目标 tmux 不存在，**支持该事件且已实际 trust/enabled 的客户端**必须继续该 turn，要求启动下一 stage 或更新为有证据的 `complete/blocked`。Agent 专属 adapter 可以不同，但判断状态只能读取上述中心 SSOT；不得创建另一份“活跃项目”清单。
+  - **不得把某个客户端的 hook 列表或配置文件存在，误报为该客户端已经执行 lifecycle hook。** 若客户端缺少可用的 trust/review 或 Stop-hook 支持，必须明确标为未覆盖。
+  - 跨 Agent 的最低强制层是本机 cron 的 `continuity_guard.py`：它独立读取同一 SSOT，每 **10 分钟**检查 `active` 项目的预期 tmux。`active` 但预期 tmux 缺失定义为**严重事件**：首次发现及持续 30 分钟未恢复时，必须同时写本地审计日志、广播 tty，并使用独立 SMTP notifier 发送邮件；正常、`blocked`、`complete` 状态绝不发信。它只报告、不擅自启动/杀死/改变分析；处理异常后仍须由 Agent 将状态更新为 running、blocked 或 complete。
 
 ## "全流程" 的定义 (MANDATORY — user directive 2026-07-17)
 

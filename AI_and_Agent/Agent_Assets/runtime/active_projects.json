@@ -4,13 +4,13 @@
     {
       "id": "P42_fullcohort_repeat_resolve",
       "project_root": "/home/gao/projects_2026Q4/42_Vedita_18_wgs_advanced_analysis",
-      "status": "blocked",
-      "current_stage": "18-sample raw junction evidence extraction completed; clustering launch paused before a count-unit ambiguity could inflate independent support",
-      "next_stage": "After user confirms the primary independent-support unit, revise 5b to emit both read-end and fragment counts, then run junction clustering in tmux and choose local-assembly inputs from molecule-aware clusters.",
-      "expected_tmux_session": "",
-      "blocked_reason": "The prewritten clustering script labels QNAME+read-end as an independent molecule. For paired-end WGS, R1 and R2 from one QNAME can then be counted twice as independent support. This changes the evidence unit and high-confidence threshold.",
-      "blocking_question": "Use QNAME/template (recommended) as the primary independent-fragment threshold, while reporting QNAME+read-end counts as a separate read-level metric?",
-      "last_verified_at": "2026-10-23T11:20:00-04:00",
+      "status": "active",
+      "current_stage": "Mate audit established five explicit unmapped mates; sequentially scanning the five affected BAMs to recover their stored sequences before local assembly.",
+      "next_stage": "Verify full-BAM unmapped-mate rescue, then run bounded MEGAHIT per sample/local locus and evaluate every contig's placements.",
+      "expected_tmux_session": "p42_unmapped_mate_rescue_20261023",
+      "blocked_reason": "",
+      "blocking_question": "",
+      "last_verified_at": "2026-10-23T11:46:00-04:00",
       "completion_definition": "All approved analyses, figures, audit tables, Chinese internal report and prepared client delivery are generated and verified; user review precedes any external sending."
     }
   ]

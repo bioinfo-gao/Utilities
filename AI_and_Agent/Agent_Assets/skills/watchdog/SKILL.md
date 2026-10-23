@@ -12,7 +12,7 @@ disable-model-invocation: true
 > 启动前 checklist、以及**已知盲区怎么手动补**。
 
 > **📍 关联文件组（绝对路径，一年后仍可寻）**
-> - **完整部署手册 / 标定理由**：`/home/gao/projects_2026H2/facilities/Server/monitoring_alerting/长任务监控与告警投递_完整方案_0716.md`
+> - **完整部署手册 / 标定理由**：`/home/gao/Utilities/Server/monitoring_alerting/长任务监控与告警投递_完整方案_0716.md`
 > - **本轮暴露的新情况 + 缺口清单（喂本 skill 的原始输入）**：`.../monitoring_alerting/看门狗运行情况汇总_喂skill_0717.md`
 > - **0716 空转事故教训（续篇的前篇）**：`.../nextflow_pipeline/resume缓存失效与空转监控_教训_0716.md`
 > - **并跑资源策略**：skill `/corun`（引用同一套看门狗）
@@ -22,7 +22,7 @@ disable-model-invocation: true
 >   互相引用，别只知道其中一个。
 
 > **⚠ 脚本 canonical 位置（2026-07-17 起）**：三个脚本在
-> `/home/gao/projects_2026H2/facilities/Server/monitoring_alerting/`
+> `/home/gao/Utilities/Server/monitoring_alerting/`
 > （`nextflow_watchdog.sh` / `wd_guard.sh` / `wd_sendmail.py`）。
 > **它们被多处文档 + `/corun` skill + crontab 用绝对路径引用——移动即静默失效。**
 > 若在别处看到 `facilities/Server/<脚本>`（旧的根目录路径），那是过时引用，需同步改。
@@ -99,7 +99,7 @@ proj16 事故：11h 无人监控把一个小坑放大成净亏 ~15.4h。本套�
 #!/usr/bin/env bash
 set -uo pipefail
 PROJ=/home/gao/projects_2026H2/<你的项目>
-WD=/home/gao/projects_2026H2/facilities/Server/monitoring_alerting/nextflow_watchdog.sh
+WD=/home/gao/Utilities/Server/monitoring_alerting/nextflow_watchdog.sh
 exec env \
   WD_PERSIST=1 WD_POLL=600 \
   WD_LOG="$PROJ/logs/watchdog.log" \
@@ -121,7 +121,7 @@ tmux new-session -d -s <P>_watch "bash $PROJ/scripts/10_watchdog.sh"
 
 ```bash
 crontab -e   # 追加（注意脚本在 monitoring_alerting/ 子目录）
-9,39 * * * * /home/gao/projects_2026H2/facilities/Server/monitoring_alerting/wd_guard.sh <P>_wgs <P>_watch 'bash /home/gao/projects_2026H2/<项目>/scripts/10_watchdog.sh' >/dev/null 2>&1
+9,39 * * * * /home/gao/Utilities/Server/monitoring_alerting/wd_guard.sh <P>_wgs <P>_watch 'bash /home/gao/projects_2026H2/<项目>/scripts/10_watchdog.sh' >/dev/null 2>&1
 ```
 
 **④ 验证（必做，见 §6）。**
@@ -154,7 +154,7 @@ sarek 02:06 成功完成 → 下游编排 `pan_down`（annotate→filter→HLA�
    `wd_sendmail.py` 邮件**；结尾 `ALL_DONE` 改为如实汇总 `DONE:.. FAILED:..`。模板：
 
    ```bash
-   MAILER=/home/gao/projects_2026H2/facilities/Server/monitoring_alerting/wd_sendmail.py
+   MAILER=/home/gao/Utilities/Server/monitoring_alerting/wd_sendmail.py
    run_step() {  # $1=步骤名 $2..=命令
      local name="$1"; shift
      if "$@"; then echo ">>> OK   $name"; else
@@ -172,8 +172,8 @@ sarek 02:06 成功完成 → 下游编排 `pan_down`（annotate→filter→HLA�
 事故的同型错误就是把「启动」当「生效」。**每一条都要看到期望结果，不是「命令没报错」。**
 
 ```bash
-WD=/home/gao/projects_2026H2/facilities/Server/monitoring_alerting/nextflow_watchdog.sh
-MAILER=/home/gao/projects_2026H2/facilities/Server/monitoring_alerting/wd_sendmail.py
+WD=/home/gao/Utilities/Server/monitoring_alerting/nextflow_watchdog.sh
+MAILER=/home/gao/Utilities/Server/monitoring_alerting/wd_sendmail.py
 
 # ① LONG_TASK 会触发（造一个 7h 的假 task）→ 期望 exit 15
 mkdir -p /tmp/t/proj/work/zz/aa && touch -d "7 hours ago" /tmp/t/proj/work/zz/aa/.command.begin
@@ -187,7 +187,7 @@ touch -d "3 hours ago" /tmp/t/proj/work/zz/aa/.command.begin; rm -f /tmp/.wd_lon
 # ③ 守护能复活看门狗，【在 cron 环境下】也能（手动跑通 ≠ cron 跑通）
 tmux kill-session -t <P>_watch
 env -i HOME=/home/gao PATH=/usr/bin:/bin SHELL=/bin/sh /bin/sh -c \
-  "/home/gao/projects_2026H2/facilities/Server/monitoring_alerting/wd_guard.sh <P>_wgs <P>_watch 'bash <项目>/scripts/10_watchdog.sh'"
+  "/home/gao/Utilities/Server/monitoring_alerting/wd_guard.sh <P>_wgs <P>_watch 'bash <项目>/scripts/10_watchdog.sh'"
 tmux has-session -t <P>_watch && echo "复活成功"
 
 # ④ 邮件真能发出（不看退出码，看收件箱）

@@ -42,6 +42,7 @@ for path in [
     *sorted((root / "hooks/core").glob("*.py")),
     *sorted((root / "hooks/core/checks").glob("*.py")),
     *sorted((root / "tests").glob("*.py")),
+    root / "scripts/continuity_guard.py",
 ]:
     ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
 PY
@@ -71,6 +72,12 @@ for source in "$ASSETS"/hooks/core/*.py; do
 done
 expect_link "$ASSETS/hooks/core/checks" /home/gao/.claude/hooks/checks
 python3 "$ASSETS/tests/test_continuity_guards.py"
+python3 "$ASSETS/tests/test_continuity_guard.py"
+CONTINUITY_CRON="*/10 * * * * /usr/bin/python3 $ASSETS/scripts/continuity_guard.py --once >> /home/gao/.local/state/agent-assets/continuity_guard.cron.log 2>&1 # Agent Assets active-project continuity guard"
+if ! crontab -l 2>/dev/null | grep -Fqx "$CONTINUITY_CRON"; then
+  printf 'FAIL continuity guard cron is absent or changed\n' >&2
+  fail=1
+fi
 
 if [[ "$fail" -ne 0 ]]; then
   exit 1

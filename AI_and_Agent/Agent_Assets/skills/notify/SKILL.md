@@ -39,7 +39,7 @@ alert_ttys() {
 **不要自己写 SMTP、不要复用 Claude Code 的 Gmail MCP 凭据**（原因见下）：
 
 ```bash
-WD_SENDMAIL=/home/gao/projects_2026H2/facilities/Server/monitoring_alerting/wd_sendmail.py
+WD_SENDMAIL=/home/gao/Utilities/Server/monitoring_alerting/wd_sendmail.py
 echo "邮件正文" | "$WD_SENDMAIL" "邮件标题" -
 ```
 

@@ -72,6 +72,14 @@ for source in "$ASSETS"/hooks/core/*.py; do
 done
 link_entry "$ASSETS/hooks/core/checks" /home/gao/.claude/hooks/checks claude/hooks/checks
 
+CRON_RESULT=$(bash "$ASSETS/scripts/install_continuity_guard_cron.sh" --apply "$SNAPSHOT/cron/crontab_before")
+printf '%s\n' "$CRON_RESULT"
+case "$CRON_RESULT" in
+  "installed continuity cron"|"updated continuity cron") changed=1 ;;
+  "continuity cron already installed") ;;
+  *) echo "unexpected continuity-cron installer result" >&2; exit 1 ;;
+esac
+
 if [[ "$changed" -eq 1 ]]; then
   if [[ ! -s "$ASSETS/snapshots/FIRST_CUTOVER" ]]; then
     printf '%s\n' "$SNAPSHOT" > "$ASSETS/snapshots/FIRST_CUTOVER"

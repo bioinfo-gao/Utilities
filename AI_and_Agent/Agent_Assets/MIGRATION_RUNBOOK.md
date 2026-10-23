@@ -311,14 +311,27 @@ Claude Code 当前安全实现位于 `~/.claude/hooks/` 并由 `~/.claude/settin
 - 验证：`python3 -m json.tool registry/agents.json`、`bash -n scripts/verify.sh`、`bash -n scripts/deploy.sh` 均通过；registry 断言确认 3 个已注册入口均解析到唯一 canonical rule；`scripts/verify.sh` 通过；`git diff --check` 通过。
 - 回退：仅回退 AA-004 修改的 registry、验证逻辑与说明；不删除任何 Agent 的既有入口链接。
 
-### 2026-10-23 — AA-005 active-project continuity guard across three clients
+### 2026-10-23 — AA-005 client Stop-hook continuity adapters
 
 - 阶段：Phase 5 / 6
-- 状态：verified
-- 目标：阻止任何已授权“自动／全流程”项目在本阶段结束后因没有下一阶段运行而被 Agent 静默搁置。
+- 状态：partially verified
+- 目标：为支持 lifecycle Stop hook 且已实际 trust/enabled 的客户端提供第二层连续性阻断。
 - 原因与预期：P42 项目出现过单一步骤正常完成、但后续阶段未启动且没有运行中程序的失败。机制必须跨 Claude Code、Codex、Antigravity 使用同一状态和同一判定，不能各维护近似规则。
 - 唯一真身：`runtime/active_projects.json` 是活动项目状态 SSOT；`hooks/core/continuity_state.py` 是唯一判定实现。适配器只能翻译 Stop 响应协议：Claude/Codex 为 `decision=block`，Antigravity 为 `decision=continue`。
 - 写入范围：新增共享 evaluator、Claude core Stop adapter、Codex 与 Antigravity thin adapter、Antigravity `hooks.json`、协议测试；在 Claude `settings.json` 注册 Stop hook，在 Codex `config.toml` 启用 hooks；部署 `~/.gemini/config/hooks.json` 和新增 Claude core 链接；更新 deploy/verify/endpoint/README 文档。
 - 回退快照：`/home/gao/Utilities/AI_and_Agent/Agent_Assets/snapshots/cutover-20261023T111305/`（本次新建 Antigravity hook 链接的可回退快照）。
 - 验证：`python3 tests/test_continuity_guards.py` 通过，分别验证非活动状态允许结束、虚构的 active-but-absent tmux 被 Claude/Codex 阻断而被 Antigravity 继续；`scripts/verify.sh` 通过；三个入口均用 `readlink -f` 核验。针对真实 P42 active 状态，三端 adapter 分别产生预期的阻断响应。
-- 残余风险：Codex 官方客户端会要求用户对新增或变更的本地 hook 做一次 review/trust；在该客户端完成确认前，配置和静态验证均已就绪，但不能把 UI 运行时拦截表述为已启用。未来第 N 个 Agent 必须新增薄 adapter、协议正反例和 `verify.sh` 断言后，才能宣称受此机制保护。
+- **更正（同日）：** Positron 的 Codex 插件实际展示 hook 名称但未提供 CLI `/hooks` 所述的 review/trust 操作；因此不得把 Codex adapter 配置存在误写为 Positron 已执行该拦截。AA-006 增加独立于客户端的 timer 守护，作为三端共同的最低强制层。
+
+### 2026-10-23 — AA-006 client-independent active-project continuity cron guard
+
+- 阶段：Phase 5 / 6
+- 状态：verified
+- 目标：使“active 项目没有预期 tmux session”的异常由服务器本机检测，而不依赖 Claude、Codex、Antigravity 任一客户端是否实现 Stop hook 或 trust UI。
+- 前置基线：AA-005 的三端 adapter 与中心 SSOT 已存在；Positron Codex 插件无可用 trust 控件，故不能作为强制层。启动前发现 `Linger=no`，systemd user timer 在用户登出后不具备持续性保证，因此未部署。
+- 计划写入范围：`scripts/continuity_guard.py`、`scripts/install_continuity_guard_cron.sh`、部署/验证脚本、共享规则、端点地图、README、本记录；部署时仅在已有用户 crontab 保留原行的基础上新增一条唯一 tagged 的每 10 分钟任务。stdout/stderr 重定向至 `~/.local/state/agent-assets/continuity_guard.cron.log`；严重空转的首次及持续 30 分钟告警使用既有独立 SMTP notifier 发送邮件，同时写本地审计日志 / tty 广播；守护不启动、终止或修改分析任务。
+- 前置验证：Python 语法、client-independent guard 的正反例、shell 语法均须通过。
+- 回退：从本轮 `deploy.sh --apply` 创建的时间戳快照取回 crontab 原文；恢复前先比较当前 crontab，不能批量覆盖后来新增的任务。共享源与审计记录保留，不删除。
+- 实际写入：保留原有两条 cron，新增唯一 tagged 第三条；其 stdout/stderr 写入 `/home/gao/.local/state/agent-assets/continuity_guard.cron.log`，不经 cron mailer。已将首次变更前的 crontab 保存于 `/home/gao/Utilities/AI_and_Agent/Agent_Assets/snapshots/cutover-20261023T113203/cron/crontab_before`，并修复 deploy 脚本，使 future cron-only changes 也会更新 `LATEST_CUTOVER` 指针。
+- 验证：`tests/test_continuity_guard.py` 通过（正常状态、active-but-absent tmux 与告警去重）；`scripts/verify.sh` 通过；实际 cron payload 已手动以同样的重定向方式运行，审计日志记录 `CONTINUITY_GUARD_OK`。P42 当前是有明确科学口径原因的 `blocked`，所以正确地没有发出异常告警。
+- 2026-10-23 修订（用户指令）：检查周期由每 3 分钟改为每 **10 分钟**。`active` 而预期 tmux 缺失被定义为严重事件；首次检测及仍未恢复的每 30 分钟，守护以 `/home/gao/Utilities/Server/monitoring_alerting/wd_sendmail.py` 向既有告警收件人发送邮件，并同步 tty / 本地日志。正常和 `blocked` 状态不发信。真实 SMTP helper 与其独立配置文件存在且可读；未人为发送测试邮件，避免制造伪严重告警；测试以临时 fake mailer 验证成功退出路径。最新部署快照：`/home/gao/Utilities/AI_and_Agent/Agent_Assets/snapshots/cutover-20261023T113810/`。
