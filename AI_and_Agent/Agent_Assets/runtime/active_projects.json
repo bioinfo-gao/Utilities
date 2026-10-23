@@ -4,13 +4,13 @@
     {
       "id": "P42_fullcohort_repeat_resolve",
       "project_root": "/home/gao/projects_2026Q4/42_Vedita_18_wgs_advanced_analysis",
-      "status": "active",
-      "current_stage": "Targeted external SV validation v3 is running after two immediate startup failures whose logs and empty/partial stage directories remain intact. v3 uses the validated v1 project-private GRIDSS reference read-only, passes all 18 BAMs through the official ROI-overlap fragment extractor, retains raw extracted context, excludes only secondary alignments in a separate caller-compatible BAM with per-sample filter-impact audits, then runs joint GRIDSS and DLD1-targeted SvABA.",
-      "next_stage": "Audit and normalize external-caller, contig-placement and raw-read evidence; fixed-candidate DLD1 S01-S05 re-genotyping and detection-limit comparison; then figures, internal report, client delivery and final self-audit.",
-      "expected_tmux_session": "p42_external_sv_validation_20261023",
+      "status": "complete",
+      "current_stage": "All approved P42 analyses completed: 18-sample repeat-aware inventory/coverage, local assembly and all-placement audit, corrected external validation, fixed-candidate raw re-genotyping, 12-figure suite, internal summary, prepared full client delivery, and fail-closed delivery self-audit.",
+      "next_stage": "None. The prepared client package awaits user review; it must not be sent by the agent.",
+      "expected_tmux_session": "",
       "blocked_reason": "",
       "blocking_question": "",
-      "last_verified_at": "2026-10-23T16:15:00-04:00",
+      "last_verified_at": "2026-10-23T19:32:51-04:00",
       "completion_definition": "All approved analyses, figures, audit tables, Chinese internal report and prepared client delivery are generated and verified; user review precedes any external sending."
     }
   ]
