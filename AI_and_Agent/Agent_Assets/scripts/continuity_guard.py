@@ -26,7 +26,14 @@ from continuity_state import continuity_violation
 
 STATE_DIR = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "agent-assets"
 DEDUP_FILE = STATE_DIR / "continuity_guard.json"
-ALERT_INTERVAL_SECONDS = 30 * 60
+# Cron checks every ten minutes. A completed stage can legitimately need a few
+# checks for its controller to launch the next stage and update central state;
+# do not turn that hand-off into user-facing noise.  A missing expected session
+# becomes severe only after it has persisted for thirty uninterrupted minutes.
+DEFAULT_GRACE_SECONDS = 30 * 60
+# Once a prolonged unattended state has been reported, retain an occasional
+# reminder without repeatedly paging the user about the same known incident.
+DEFAULT_ALERT_INTERVAL_SECONDS = 6 * 60 * 60
 MAILER = Path(os.environ.get(
     "CONTINUITY_GUARD_MAILER",
     "/home/gao/Utilities/Server/monitoring_alerting/wd_sendmail.py",
@@ -43,6 +50,18 @@ def load_dedup() -> dict:
 def save_dedup(data: dict) -> None:
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     DEDUP_FILE.write_text(json.dumps(data, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def configured_seconds(name: str, default: int) -> int:
+    """Read a non-negative duration override; test fixtures use this hook."""
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    try:
+        value = int(raw)
+    except ValueError:
+        return default
+    return value if value >= 0 else default
 
 
 def alert_ttys(message: str) -> int:
@@ -90,28 +109,64 @@ def main() -> None:
 
     violation = continuity_violation()
     if not violation:
+        # A recovered project starts a new absence episode if it later fails.
+        # Keep the state file instead of deleting it so cleanup is non-destructive.
+        save_dedup({})
         print("CONTINUITY_GUARD_OK: no active project is missing its expected tmux session")
         return
 
     now = time.time()
+    grace_seconds = configured_seconds(
+        "CONTINUITY_GUARD_GRACE_SECONDS", DEFAULT_GRACE_SECONDS
+    )
+    alert_interval_seconds = configured_seconds(
+        "CONTINUITY_GUARD_ALERT_INTERVAL_SECONDS", DEFAULT_ALERT_INTERVAL_SECONDS
+    )
     fingerprint = hashlib.sha256(violation.encode("utf-8")).hexdigest()
     dedup = load_dedup()
+    if dedup.get("fingerprint") == fingerprint:
+        try:
+            missing_since = float(dedup.get("missing_since_epoch", now))
+        except (TypeError, ValueError):
+            missing_since = now
+    else:
+        missing_since = now
+
+    missing_seconds = max(0, now - missing_since)
     try:
         last_alert = float(dedup.get("last_alert_epoch", 0))
     except (TypeError, ValueError):
         last_alert = 0
+
+    state = {
+        "fingerprint": fingerprint,
+        "missing_since_epoch": missing_since,
+        "last_alert_epoch": last_alert,
+    }
+    if missing_seconds < grace_seconds:
+        save_dedup(state)
+        print(
+            "CONTINUITY_GUARD_PENDING: "
+            f"missing_seconds={int(missing_seconds)} grace_seconds={grace_seconds} "
+            f"{violation}"
+        )
+        return
+
     should_alert = (
         dedup.get("fingerprint") != fingerprint
-        or now - last_alert >= ALERT_INTERVAL_SECONDS
+        or last_alert <= 0
+        or now - last_alert >= alert_interval_seconds
     )
     message = f"[SEVERE Agent project continuity] {violation}"
     delivered = alert_ttys(message) if should_alert and not args.no_tty else 0
     email_result = alert_email(message) if should_alert else "not_attempted"
     if should_alert:
-        save_dedup({"fingerprint": fingerprint, "last_alert_epoch": now})
+        state["last_alert_epoch"] = now
+    save_dedup(state)
     print(
         "CONTINUITY_GUARD_ALERT: "
-        f"alerted={should_alert} tty_recipients={delivered} {email_result} {violation}"
+        f"alerted={should_alert} missing_seconds={int(missing_seconds)} "
+        f"tty_recipients={delivered} {email_result} {violation}"
     )
 
 
