@@ -4,14 +4,14 @@
     {
       "id": "P42_fullcohort_repeat_resolve",
       "project_root": "/home/gao/projects_2026Q4/42_Vedita_18_wgs_advanced_analysis",
-      "status": "complete",
-      "current_stage": "All approved P42 analyses completed: 18-sample repeat-aware inventory/coverage, local assembly and all-placement audit, corrected external validation, fixed-candidate raw re-genotyping, 12-figure suite, internal summary, prepared full client delivery, and fail-closed delivery self-audit.",
-      "next_stage": "None. The prepared client package awaits user review; it must not be sent by the agent.",
-      "expected_tmux_session": "",
+      "status": "running",
+      "current_stage": "2026-10-24 preflight passed for the single client-ready full P42 package; launching resumable transfer of 18 BAM/BAI plus Manta/DELLY files, then conversion, package construction, and self-audit.",
+      "next_stage": "In tmux p42_client_package_20261024, build custom_research_report_20261024, convert DELLY BCF to indexed VCF, validate every data file and client-facing path boundary, then visually inspect the final figures and mark the package complete.",
+      "expected_tmux_session": "p42_client_package_20261024",
       "blocked_reason": "",
       "blocking_question": "",
-      "last_verified_at": "2026-10-23T19:32:51-04:00",
-      "completion_definition": "All approved analyses, figures, audit tables, Chinese internal report and prepared client delivery are generated and verified; user review precedes any external sending."
+      "last_verified_at": "2026-10-24T17:41:10-04:00",
+      "completion_definition": "P41 Section 7.3 follow-up is complete only when the in-silico C2/C1/C3/C4 assay audit and a client-question completion supplement (Manta/DELLY concordance, C2 read-end structure, rescue impact, DLD1 criteria and source-file availability) have been self-audited in a new incremental package. Physical PCR, new sequencing, raw-FISH quantification and a provenance-qualified project-wide SNV/indel VCF remain explicitly external or unavailable unless their required inputs exist. User review precedes any external sending."
     }
   ]
 }
