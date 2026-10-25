@@ -17,12 +17,12 @@
       "id": "P44_chr11_junction_read_rescue_S01_S10",
       "project_root": "/home/gao/projects_2026Q4/44_wgs_advanced_analysis_from_P41_by_cc",
       "status": "running",
-      "current_stage": "Stage 0: environment setup (SPAdes install) and script writing",
-      "next_stage": "Stage 1-3: window inventory + genome-wide rescue scan in tmux p44_scan",
-      "expected_tmux_session": "p44_install",
+      "current_stage": "Stage 2 genome-wide rescue scan (18 BAMs, 6 parallel)",
+      "next_stage": "Stage 1 inventory + Stage 3 rescue read collection/realignment",
+      "expected_tmux_session": "p44_scan",
       "blocked_reason": "",
       "blocking_question": "",
-      "last_verified_at": "2026-10-24T23:20:00-04:00",
+      "last_verified_at": "2026-10-24T23:23:00-04:00",
       "completion_definition": "Analysis 1 (S01-S10, S11-S18 background panel) junction table with bp breakpoints, before/after rescue counts, repeat-ambiguity classification, Manta/DELLY concordance, supporting A2 parts 9a-9c and organised Manta/DELLY VCFs; client report + delivery folder custom_research_report_YYYYMMDD generated and self-audited; user review precedes any sending."
     }
   ]
