@@ -5,13 +5,25 @@
       "id": "P42_fullcohort_repeat_resolve",
       "project_root": "/home/gao/projects_2026Q4/42_Vedita_18_wgs_advanced_analysis",
       "status": "running",
-      "current_stage": "2026-10-24 preflight passed for the single client-ready full P42 package; launching resumable transfer of 18 BAM/BAI plus Manta/DELLY files, then conversion, package construction, and self-audit.",
-      "next_stage": "In tmux p42_client_package_20261024, build custom_research_report_20261024, convert DELLY BCF to indexed VCF, validate every data file and client-facing path boundary, then visually inspect the final figures and mark the package complete.",
-      "expected_tmux_session": "p42_client_package_20261024",
+      "current_stage": "2026-10-24 final Figure 12 correction: remove the residual retrospective numeric depth gate from the visual summary, preserve the prior image internally, and revalidate the complete one-folder client package.",
+      "next_stage": "In tmux p42_final_figure_validation_20261024, rerun the complete client-package audit including 18 BAM checks, 90 VCF header checks, 14-figure inventory, Figure 12 PDF-text assertions, and client-boundary scan; then archive obsolete top-level supplementary work records and mark complete.",
+      "expected_tmux_session": "p42_final_figure_validation_20261024",
       "blocked_reason": "",
       "blocking_question": "",
-      "last_verified_at": "2026-10-24T17:41:10-04:00",
+      "last_verified_at": "2026-10-24T22:51:00-04:00",
       "completion_definition": "P41 Section 7.3 follow-up is complete only when the in-silico C2/C1/C3/C4 assay audit and a client-question completion supplement (Manta/DELLY concordance, C2 read-end structure, rescue impact, DLD1 criteria and source-file availability) have been self-audited in a new incremental package. Physical PCR, new sequencing, raw-FISH quantification and a provenance-qualified project-wide SNV/indel VCF remain explicitly external or unavailable unless their required inputs exist. User review precedes any external sending."
+    },
+    {
+      "id": "P44_chr11_junction_read_rescue_S01_S10",
+      "project_root": "/home/gao/projects_2026Q4/44_wgs_advanced_analysis_from_P41_by_cc",
+      "status": "running",
+      "current_stage": "Stage 0: environment setup (SPAdes install) and script writing",
+      "next_stage": "Stage 1-3: window inventory + genome-wide rescue scan in tmux p44_scan",
+      "expected_tmux_session": "p44_install",
+      "blocked_reason": "",
+      "blocking_question": "",
+      "last_verified_at": "2026-10-24T23:20:00-04:00",
+      "completion_definition": "Analysis 1 (S01-S10, S11-S18 background panel) junction table with bp breakpoints, before/after rescue counts, repeat-ambiguity classification, Manta/DELLY concordance, supporting A2 parts 9a-9c and organised Manta/DELLY VCFs; client report + delivery folder custom_research_report_YYYYMMDD generated and self-audited; user review precedes any sending."
     }
   ]
 }
