@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "description": "Claude Code continuation metadata. Active state remains exclusively in active_projects.json; every running project whose SSOT 'agent' is claude_code must be armed here or the controller fails loudly rather than omitting it.",
+  "entries": [
+    {
+      "active_project_id": "P44_chr11_junction_read_rescue_S01_S10",
+      "project_root": "/home/gao/projects_2026Q4/44_wgs_advanced_analysis_from_P41_by_cc",
+      "status": "armed",
+      "usage_limit_retry_offsets_seconds": [
+        10800,
+        14400,
+        18000
+      ],
+      "reset_grace_seconds": 300,
+      "fallback_stale_seconds": 10800,
+      "min_transcript_idle_seconds": 1200,
+      "claude_binary": "/home/gao/.local/bin/claude",
+      "claude_session_id": "5253fed0-e021-4d8b-b988-67860909f347",
+      "session_cwd": "/home/gao/.claude",
+      "session_transcript": "/home/gao/.claude/projects/-home-gao--claude/5253fed0-e021-4d8b-b988-67860909f347.jsonl",
+      "permission_mode": "auto",
+      "continuation_prompt": "Automated continuity resumption for the original active P44 project. Resume only the unfinished P44_chr11_junction_read_rescue_S01_S10 work from this same saved session; do not substitute a new or unrelated task. Read /home/gao/Utilities/AI_and_Agent/Agent_Assets/runtime/active_projects.json and the P44 project plan before acting, inspect the existing tmux/log/output state, then start or monitor the recorded next stage until the active completion definition is met. The user authorized full-workflow automatic completion but has not authorized external sending. Preserve all prior deliveries and source records; never delete or overwrite result directories. Update active-project state only to running, complete, or genuinely blocked with evidence.",
+      "last_agent_heartbeat": "",
+      "last_agent_heartbeat_source": "",
+      "last_usage_limit_at": "",
+      "last_launch_at": "",
+      "last_worker_session": "",
+      "last_worker_log": "",
+      "last_worker_result": "",
+      "last_trigger": "",
+      "missing_tmux_observed_at": "",
+      "usage_episode_started_at": "",
+      "usage_reset_at": "",
+      "usage_last_attempt_at": ""
+    }
+  ]
+}

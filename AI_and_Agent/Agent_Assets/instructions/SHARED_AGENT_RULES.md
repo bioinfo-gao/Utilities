@@ -286,6 +286,10 @@
   - 用户授权“自动／全流程／全过程”后，项目在完成定义达成前必须登记为 **active**；登记的 SSOT 是
     `Agent_Assets/runtime/active_projects.json`。每项 active 记录必须有项目绝对路径、当前阶段、下一可运行阶段、
     期望 tmux session、状态（`running` / `blocked` / `complete`）和最后验证时间。
+  - **每项 active 记录必须写 `agent`（`codex` / `claude_code`），并在本 Agent 的
+    `runtime/<agent>_active_project_autostart.json` 登记会话**（user directive 2026-10-25：不同 Agent 的项目不互相混淆）。
+    改写 SSOT 时保留已有字段。额度用完后的自动续跑：优先在提示给出的重置时间 +5 min 重试，兜底 3/4/5 h 各一次；
+    仍失败则由控制器标 `blocked` 并发邮件，不无限重试。
   - **任何 stage 正常结束不等于项目结束。** 在当前 turn 结束前，Agent 必须完成且验证以下三者之一：
     1) 已在 tmux 启动下一可运行 stage；2) 已将项目标为 `complete`，并且交付定义已经满足；3) 已标为
     `blocked`，明确写出不可由 Agent 解决的阻塞、影响和需要用户作出的唯一决定。没有活跃进程、没有后续
