@@ -318,12 +318,10 @@ process {
 
 1. ⛔ **pysam 不在 `rec.info` 里暴露 `END`**：`info.get("END", pos)` 永远退回 POS ⇒ 所有 DEL/DUP/INV 变成长度 0 的点事件，caller 第二端永远匹配不上。改用 `rec.stop` 也不够——**DELLY genotyped BCF 的 rlen 写为 1，`rec.stop` = POS**。✅ 从 INFO 原文解析 `END=`。影响：P45 修正后 148 行 Manta/DELLY concordance 升级、G2 的 "with Manta" 计数 6→7。复核：`bcftools view -H -i 'ID=="<id>"' X.bcf | cut -f8 | tr ';' '\n' | grep ^END`。
 2. ⛔ **pysam `rec.info.get(k, d)` 对 header 未声明的键抛 `ValueError('Invalid header')`**，不返回默认值。Manta 头里没声明 `CHR2`、DELLY 有 ⇒ 合并多 caller 时只在 Manta 行炸（P41 I-9）。✅ 先判 `k in rec.header.info and k in rec.info`。
-3. ⛔ **mosdepth `regions.bed.gz` 列数取决于 `--by`**：整数窗口 → 4 列；带名字的 BED → 5 列。同一脚本里 `split()[3]` 对一类文件对、另一类错（取到窗口名 `w114604099`）。✅ 一律 `split()[-1]` 或 `*_, v`。**同类缺陷出现第二次必须全局 grep 所有消费者**——P41 I-2 只修了 4a，8b 又炸了一次，两次合计空转 ~20 h。
+3. ⛔ **mosdepth `regions.bed.gz` 列数取决于 `--by`**：整数窗口 → 4 列；带名字的 BED → 5 列。同一脚本里 `split()[3]` 对一类文件对、另一类错（取到窗口名 `w114604099`）。✅ 一律 `split()[-1]` 或 `*_, v`（P41 I-2 / I-9 两个脚本先后因此崩溃；"同类缺陷第二次必须全局 grep"的通用规则见 `project-setup` skill）。
 4. **多模式 `grep -o` 会吞并重叠匹配**（引物特异性计数把 1 处计成 0）：每条 query 单独 grep，再用 `samtools faidx` 核对。
 5. **bash `local c=$1 o="$O/parts/$c"`**：`$c` 在同一条 `local` 赋值前就被展开 ⇒ 所有分片同名、0 产物。同一条 `local` 里不要引用刚声明的变量。
-6. **事件随机访问 BAM 的循环默认并行 + 先去重**：P41 step 7（4,266 事件 × 18 样本 `bam.fetch`）串行 >76 min 未完；(样本 × 200 事件) 块 + `Pool(12)` + 块内 `(chr,pos)` 缓存后 157 s。长循环 `flush=True` / `python -u`，否则"在跑"与"挂住"不可区分。
-7. **会续跑的管线测一次"全部已完成再跑"**：`xargs` 空输入仍执行一次命令 ⇒ 误报 FAILED（一律 `xargs -r`）。
-8. **总控不得静默死亡**：`trap ERR` 写 `MASTER_FAILED`；不要用 `kill -0 PID` 等进程结束（僵尸进程返回成功，P41 I-1 死锁 5 h 53 min）；不要 SIGSTOP 有子进程在跑的父进程；守候脚本要心跳。**消费脚本在第一个样本产物出来时就对它空跑一遍**（P41 的 4a/8b/9 都是全量跑完几十小时后才炸）。总控应由样本表驱动、可追加样本（Dropbox 渐进同步，开跑时 16/18）。
+6. **P41 运行工程事故（I-1…I-9）的通用规则已分别放在**：总控失败告警、`kill -0` 僵尸、心跳、`python -u`、`xargs -r`、日志命名 → `watchdog` skill「自写总控 / 守候脚本的坑」；样本表驱动可追加、冒烟覆盖每个消费者、BAM 随机访问循环默认并行 → `project-setup` skill「Step-script / 总控设计规则」。
 
 ### D6 — 模式 D 交付工程（P42/P44 对比后的固定做法）
 
