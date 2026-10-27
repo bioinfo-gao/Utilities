@@ -404,7 +404,7 @@
   > 全部在 `~/.claude/hooks/`，由 `settings.json` 的 `hooks` 键驱动。
   > 装好 ≠ 在跑：`awk '{print $3}' ~/.claude/hooks/hook_calls.log | sort | uniq -c` 看活体调用。
   > 改了判据必须跑 `python3 ~/.claude/hooks/test_checks.py`、`test_guard_destructive_bash.py`
-  > 与 `test_guard_search_symlink.py`（三套合计 88 条用例）。
+  > `test_guard_search_symlink.py` 与 `test_resolve_current_doc.py`（四套合计 115 条用例，2026-10-27 实测）。
 
   | hook | 时机 | 拦什么 |
   | :--- | :---: | :--- |
@@ -412,6 +412,6 @@
   | `guard_inline_email.py` | PreToolUse/Bash | 命令含 `imaplib`+`APPEND` ⇒ 按客户邮件判据检查内联正文，不过就 deny |
   | `guard_frozen_delivery.py` | PreToolUse/Write\|Edit | 覆盖**已存在的**交付/归档文件 ⇒ ask |
   | `guard_search_symlink.py` | PreToolUse/Bash | `grep -r` / `find`（无 `-L`）而搜索根下有目录符号链接 ⇒ **deny**。这类假阴性不报错、退出码 0，与「确实不存在」无法区分。`/home/gao` 下有 **7 个**这样的链接（含 `projects_2026M7`、`Dropbox`、`Work_bio`），所以 `grep -r /home/gao` 基本等于什么都没搜。故意不跟随 ⇒ 加 `# no-follow-intended` |
-  | `resolve_current_doc.py` | UserPromptSubmit | 检出无 path 指代词 ⇒ 注入解析好的绝对路径；**解析不到时**改注入 IDE lock 的 `workspaceFolders` + 一条现成的 `grep -RF` 兜底命令，而不是直接放行去问用户 |
+  | `resolve_current_doc.py` | UserPromptSubmit | 检出无 path 指代词 ⇒ 注入解析好的绝对路径（用户明确引用了原文而该文件里没有 ⇒ 视为解析过期，在同一项目 `docs/` 根下 grep 原文改指命中文档）；**解析不到时**改注入 IDE lock 的 `workspaceFolders` + 一条现成的 `grep -RF` 兜底命令，而不是直接放行去问用户 |
   | `route_post_write.py` | PostToolUse/Write\|Edit | 按路径路由到 `check_report.py` / `check_client_email.py`，不过就 block 并把原因喂回 |
   | `stop_check_reply.py` | Stop | 状态断言按类别配对回读命令、表格格式、语言 ⇒ **block**（连拦 2 次后降级为警告，防死循环） |

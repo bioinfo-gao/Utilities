@@ -21,7 +21,15 @@
   ⚠ 必须 -R 不是 -r：projects_2026M7 是符号链接,`grep -r` 不跟随、静默跳过整棵树,
      2026-09-11 当天就是这样得出「文件不存在」这个假阴性的(已由
      guard_search_symlink.py 单独硬拦)。
+
+2026-10-27 修订(P45 实测) —— transcript 里最近一条 "opened the file" 可能早已过期：
+  用户后来切到另一份文档却没点进正文,IDE 不再推送,hook 仍指向旧文件。
+  旧版只是把「grep 校验」写成给我的指令,0 命中时让我去问用户 —— 用户不满
+  ("不指定文件时,问题来自当前打开的文件。你怎么还搞不清？")。
+  现在 hook 自己先做校验：用户引用了原文而解析到的文件里没有 ⇒ 在该文件所属项目里
+  (向上找到含 docs/ 或 scripts/ 的目录)grep 这段原文,命中的文档直接作为解析结果注入。
 """
+import subprocess
 import json, os, re, sys, glob
 
 HOOKDIR = os.path.expanduser("~/.claude/hooks")
@@ -48,13 +56,16 @@ def _trace(tag):
 
 def last_opened_file(blob, transcript):
     """先看本轮 payload,再回溯 transcript —— 本轮的最新,transcript 的可能过期。"""
-    m = IDE_TAG.findall(blob or "")
+    # 只认真实存在的绝对路径：transcript 里也有我自己写的代码/文档引用这句话
+    # (2026-10-27 实测：测试代码里的 f"opened the file {stale}" 被当成了 IDE 通知)。
+    real = lambda hs: [h.strip() for h in hs if h.strip().startswith("/") and os.path.isfile(h.strip())]
+    m = real(IDE_TAG.findall(blob or ""))
     if m:
-        return m[-1].strip(), "本轮 prompt"
+        return m[-1], "本轮 prompt"
     if transcript and os.path.exists(transcript):
-        hits = IDE_TAG.findall(open(transcript, errors="replace").read())
+        hits = real(IDE_TAG.findall(open(transcript, errors="replace").read()))
         if hits:
-            return hits[-1].strip(), "transcript 最近一条"
+            return hits[-1], "transcript 最近一条"
     return None, None
 
 
@@ -113,6 +124,66 @@ def quoted_span(prompt):
     return best[:120]
 
 
+def explicit_quote(prompt):
+    """只在用户【明确引用了原文】时返回那段原文,否则返回 ""。
+
+    quoted_span 会把任何 ≥12 字的整句问话都当成候选,用作兜底 grep 无妨;
+    但用来【证伪】解析就会出错 —— 「请解释本文第三节怎么读」本身不在文件里,
+    拿它判定「解析错了」是假阳性。所以这里只认三种明确的引用形式：
+    引号内的文字、短引导语后的冒号尾部、多行粘贴的非首行。
+    """
+    m = re.findall(r"[“「\"]([^”」\"]{8,})[”」\"]", prompt)
+    if m:
+        return max(m, key=len).strip()[:120]
+    first = prompt.strip().splitlines()[0] if prompt.strip() else ""
+    for sep in ("：", ":"):
+        head, _, tail = first.partition(sep)
+        if tail.strip() and len(tail.strip()) >= 12 and len(head) <= 20:
+            return tail.strip()[:120]
+    if len(prompt.strip().splitlines()) > 1:
+        return quoted_span("\n".join(prompt.strip().splitlines()[1:]))
+    return ""
+
+
+def project_root(path):
+    """向上找到第一个含 docs/ 的目录 —— 即项目根;找不到就用文件所在目录。
+
+    先跳出 superseded_for_comparison/：归档版本目录里常有 scripts/ 快照,
+    曾被误认作项目根(2026-10-27 实测),于是只在归档目录里搜、找不到报告。
+    """
+    d = os.path.dirname(os.path.abspath(path))
+    if "/superseded_for_comparison/" in d + "/":
+        d = d[:(d + "/").index("/superseded_for_comparison/")]
+    while d not in ("/", os.path.expanduser("~")):
+        if os.path.isdir(os.path.join(d, "docs")):
+            return d
+        d = os.path.dirname(d)
+    return os.path.dirname(os.path.abspath(path))
+
+
+def relocate(path, span):
+    """解析到的文件里没有用户引用的原文 ⇒ 在同一项目里找含这段原文的文档。
+
+    排序：不在 superseded_for_comparison/ 的在前(那是归档旧版),同组按修改时间新→旧。
+    返回 (状态, 命中列表)：ok = 原解析成立;moved = 换成命中文档;none = 项目内也没有。
+    """
+    try:
+        if span in open(path, encoding="utf-8", errors="replace").read():
+            return "ok", [path]
+    except OSError:
+        pass
+    root = project_root(path)
+    ex = [f"--exclude-dir={d}" for d in EXCLUDES]
+    try:
+        r = subprocess.run(["grep", "-RlF", "--include=*.md", "--include=*.txt", *ex, span, root],
+                           capture_output=True, text=True, timeout=8)
+        hits = [h for h in r.stdout.splitlines() if h]
+    except Exception:
+        hits = []
+    hits.sort(key=lambda h: ("superseded_for_comparison" in h, -os.path.getmtime(h)))
+    return ("moved", hits) if hits else ("none", [])
+
+
 def main():
     _trace("UserPromptSubmit")
     raw = sys.stdin.read()
@@ -130,26 +201,41 @@ def main():
 
     path, src = last_opened_file(raw, transcript)
 
-    if path and path.startswith("/") and os.path.exists(path):
+    span = explicit_quote(prompt)
+    status, hits = ("no_span", [])
+    if path and path.startswith("/") and os.path.exists(path) and span:
+        status, hits = relocate(path, span)
+        if status == "moved":
+            stale, path = path, hits[0]
+            src = (f"{src}的 {stale} 里没有用户引用的原文,已在同一项目内 grep -F 到该原文"
+                   f"(按「非归档优先、修改时间新优先」取第 1 个)")
+
+    if path and path.startswith("/") and os.path.exists(path) and status != "none":
+        others = "".join(f"\n      另有命中：{h}" for h in hits[1:6])
         msg = (
             f"【指代解析 · hook 自动注入】用户这句话里有无 path 指代词,"
             f"按 CLAUDE.md「无 path 提问」第 0 步解析为当前打开的文档：\n"
             f"    {path}\n"
-            f"    (来源：{src})\n\n"
+            f"    (来源：{src}){others}\n\n"
             f"强制动作,无例外：\n"
             f"1. 回复第一句写出「本文 = `{path}`(当前打开)」,然后【直接动手】。\n"
             f"2. 不许全局搜索,也不许用 AskUserQuestion 问是哪一份 ——"
             f"「我觉得这样解析不合逻辑」不构成例外。\n"
-            f"3. ⛔ 唯一的前置校验：如果用户在消息里【引用了一段原文】,"
-            f"动笔【之前】先跑 grep -F \"<那段原文>\" {path} —— "
-            f"0 命中 = 解析被证伪,此时必须向用户要 path,禁令不适用。"
-            f"写进去之后再 grep 是我自造的证据,不算数。")
+            + (f"3. 原文校验 hook 已做完(grep -F 命中),不必再向用户解释定位过程;"
+               f"「另有命中」若与该文件同一行内容相同,直接按解析结果回答。"
+               if status in ("ok", "moved") else
+               f"3. ⛔ 唯一的前置校验：如果用户在消息里【引用了一段原文】,"
+               f"动笔【之前】先跑 grep -F \"<那段原文>\" {path} —— "
+               f"0 命中 = 解析被证伪,此时必须向用户要 path,禁令不适用。"
+               f"写进去之后再 grep 是我自造的证据,不算数。"))
     else:
         roots, ide = workspace_roots()
-        span = quoted_span(prompt)
+        span = span or quoted_span(prompt)
         lines = [
             "【指代解析 · hook 自动注入】用户这句话里有无 path 指代词,"
-            f"但本轮上下文里没有 <ide_opened_file>(解析结果：{path!r})。",
+            + (f"最近一次打开的文件 {path} 及其所在项目里都没有用户引用的原文(可能已过期)。"
+               if status == "none" else
+               f"但本轮上下文里没有 <ide_opened_file>(解析结果：{path!r})。"),
             "",
             "⚠ 这【不代表用户没打开文档】。CLI 只在 IDE 推来 selection 状态时才发那条提醒;"
             "文档早就开着、用户没点进正文,就永远不会发(2026-09-11 实测)。"
