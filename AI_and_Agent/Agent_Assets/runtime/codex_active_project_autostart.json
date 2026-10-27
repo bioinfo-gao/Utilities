@@ -10,15 +10,15 @@
       "codex_binary": "/home/gao/.positron-server/extensions/openai.chatgpt-26.5908.31748-linux-x64/bin/linux-x86_64/codex",
       "codex_session_id": "01a16a5b-d3eb-7eb3-ba0c-fb9c37bca045",
       "continuation_prompt": "Automated continuity resumption for the original active P42 project. Resume only the unfinished P42_fullcohort_repeat_resolve work from the same saved session; do not substitute a new or unrelated task. Read /home/gao/Utilities/AI_and_Agent/Agent_Assets/runtime/active_projects.json and the P42 project plan before acting, inspect the existing tmux/log/package state, then start or monitor the recorded next stage until the active completion definition is met. The user authorized automatic completion but has not authorized external sending. Preserve all prior deliveries and source records. Update active-project state only to running, complete, or genuinely blocked with evidence.",
-      "last_agent_heartbeat": "2026-10-24T21:42:11+00:00",
-      "last_agent_heartbeat_source": "explicit_agent_heartbeat",
+      "last_agent_heartbeat": "2026-10-25T05:30:02+00:00",
+      "last_agent_heartbeat_source": "autostart_worker_finished",
       "last_usage_limit_at": "",
-      "last_launch_at": "",
+      "last_launch_at": "2026-10-25T05:30:01+00:00",
       "last_worker_session": "",
-      "last_worker_log": "",
-      "last_worker_result": "",
-      "last_trigger": "",
-      "missing_tmux_observed_at": "2026-10-25T02:30:01+00:00",
+      "last_worker_log": "/home/gao/Utilities/AI_and_Agent/Agent_Assets/runtime/codex_active_project_autostart_logs/P42_fullcohort_repeat_resolve_20261025T053001Z.jsonl",
+      "last_worker_result": "non_usage_failure",
+      "last_trigger": "stale_active_fallback",
+      "missing_tmux_observed_at": "",
       "usage_limit_retry_offsets_seconds": [
         10800,
         14400,
@@ -28,7 +28,10 @@
       "min_transcript_idle_seconds": 1200,
       "usage_episode_started_at": "",
       "usage_reset_at": "",
-      "usage_last_attempt_at": ""
+      "usage_last_attempt_at": "",
+      "last_worker_started_at": "2026-10-25T05:30:01+00:00",
+      "last_worker_finished_at": "2026-10-25T05:30:02+00:00",
+      "last_worker_exit_code": 1
     }
   ]
 }

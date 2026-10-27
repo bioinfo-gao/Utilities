@@ -11,19 +11,34 @@
       "blocked_reason": "",
       "blocking_question": "",
       "last_verified_at": "2026-10-24T22:51:00-04:00",
-      "completion_definition": "P41 Section 7.3 follow-up is complete only when the in-silico C2/C1/C3/C4 assay audit and a client-question completion supplement (Manta/DELLY concordance, C2 read-end structure, rescue impact, DLD1 criteria and source-file availability) have been self-audited in a new incremental package. Physical PCR, new sequencing, raw-FISH quantification and a provenance-qualified project-wide SNV/indel VCF remain explicitly external or unavailable unless their required inputs exist. User review precedes any external sending."
+      "completion_definition": "P41 Section 7.3 follow-up is complete only when the in-silico C2/C1/C3/C4 assay audit and a client-question completion supplement (Manta/DELLY concordance, C2 read-end structure, rescue impact, DLD1 criteria and source-file availability) have been self-audited in a new incremental package. Physical PCR, new sequencing, raw-FISH quantification and a provenance-qualified project-wide SNV/indel VCF remain explicitly external or unavailable unless their required inputs exist. User review precedes any external sending.",
+      "agent": "codex"
     },
     {
       "id": "P44_chr11_junction_read_rescue_S01_S10",
       "project_root": "/home/gao/projects_2026Q4/44_wgs_advanced_analysis_from_P41_by_cc",
-      "status": "running",
-      "current_stage": "Stage 2 genome-wide rescue scan (18 BAMs, 6 parallel)",
-      "next_stage": "Stage 1 inventory + Stage 3 rescue read collection/realignment",
-      "expected_tmux_session": "p44_scan",
+      "status": "complete",
+      "current_stage": "Round 2 delivery rebuilt (W +/-50 kb, P1-P7); 13_self_audit OK; check_report OK",
+      "next_stage": "User review; no external sending by agent",
+      "expected_tmux_session": "",
       "blocked_reason": "",
       "blocking_question": "",
-      "last_verified_at": "2026-10-24T23:23:00-04:00",
-      "completion_definition": "Analysis 1 (S01-S10, S11-S18 background panel) junction table with bp breakpoints, before/after rescue counts, repeat-ambiguity classification, Manta/DELLY concordance, supporting A2 parts 9a-9c and organised Manta/DELLY VCFs; client report + delivery folder custom_research_report_YYYYMMDD generated and self-audited; user review precedes any sending."
+      "last_verified_at": "2026-10-25T14:25:00-04:00",
+      "completion_definition": "Delivery custom_research_report_supplementary_20261025 rebuilt from RUN 20261025 (W +/-50 kb) with P1-P6 additions, old version archived in superseded_for_comparison, 13_self_audit OK; user review precedes sending.",
+      "agent": "claude_code"
+    },
+    {
+      "id": "P45_chr11_junction_combined_P42_P44",
+      "project_root": "/home/gao/projects_2026Q4/45_Vedita_18_wgs_combined_Advanced",
+      "status": "complete",
+      "current_stage": "Complete: custom_research_report_20261025 (212 files) built; 13_self_audit OK; check_report OK",
+      "next_stage": "User review of the delivery package (not sent)",
+      "expected_tmux_session": "",
+      "blocked_reason": "",
+      "blocking_question": "",
+      "last_verified_at": "2026-10-25T16:42:50-04:00",
+      "completion_definition": "Single complete delivery custom_research_report_YYYYMMDD/ built per P45 plan sections 5/7/9 (incl. G1 genome-wide SNV/indel and G2 genome-wide clone-specific TSV), 13_self_audit and check_report pass, client_request_coverage covers every request line; user review precedes any sending.",
+      "agent": "claude_code"
     }
   ]
 }
