@@ -174,6 +174,12 @@ def main():
     ok.append(expect("仍要拦:句中夹行内代码,断言在代码之外",
                      bool(check_reply.run("任务 `sarek` 正在跑", ["ls -la"]))))
 
+    # ↓ 1027 误报:转述审阅规则「默认就是未发送」被当成邮件状态断言。
+    ok.append(expect("误报:「默认就是未发送」是规则转述 ⇒ 放行",
+                     not check_reply.run("客户报告默认就是未发送,不再问是否已发", ["git log"])))
+    ok.append(expect("仍要拦:「那封邮件未发送」",
+                     bool(check_reply.run("那封邮件未发送", ["git log"]))))
+
     ok.append(expect("commands=None ⇒ 跳过状态断言(单独跑的场景)",
                      not check_reply.run(MAIL, None)))
 
