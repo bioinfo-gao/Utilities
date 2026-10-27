@@ -15,6 +15,16 @@ description: "Use when 要写或修改客户报告、客户邮件、或任何交
 
 ---
 
+## 审阅状态 — 客户报告默认在内部审阅阶段 (MANDATORY — user directive 2026-10-26/27)
+
+> 完整规则在共享规则「对外交付与署名」一节（`instructions/SHARED_AGENT_RULES.md`），本节只是写报告时的提醒，判定词以那里为准。
+
+- 任何客户报告/交付包**默认 = 内部审阅中、未发送**。只有用户说 **「审阅完毕」「已审阅」「审阅完成」** 之一才算通过全面审阅。
+- 审阅中的报告：照常出新版本（新日期目录、旧版归档），不问是否已发客户。
+- 已通过审阅的报告：任何再修改之前先提醒用户"这是已通过审阅、可能即将发出的版本"。
+
+---
+
 - Client/research reports — FORMAT, DELIVERY FOLDER, AND SIGNATURE (MANDATORY):
   - All formal research reports and client deliverables MUST be written in **English**.
   - Every report must be signed: **Zhen Gao, PhD, Principal Bioinformatics Scientist, Athenomics**
