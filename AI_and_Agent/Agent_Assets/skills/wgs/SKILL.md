@@ -8,7 +8,7 @@ disable-model-invocation: true
 > **📍 关联文件组｜项目14「load-152 资源事件」四联档（2026-07-13）** — 以下四份内容互补、共享同一组实测数据，看到任意一份即可定位其余三份（绝对路径，一年后依旧可寻）：
 >
 > 1. **根因深挖**：`/home/gao/projects_2026H2/14_geneedit_lats12_wgs/docs/resource_pressure_incident_0713.md` — CNNScoreVariants 超订致 load 峰值 152 的逐层分析 + 配置修正
-> 2. **项目14全程负载画像**：`/home/gao/projects_2026H2/facilities/Server/nextflow_pipeline/project14_load_profile_0713.md` — Study A+B 全程峰值/空闲/负载分布
+> 2. **项目14全程负载画像**：`/home/gao/Utilities/Server/nextflow_pipeline/project14_load_profile_0713.md` — Study A+B 全程峰值/空闲/负载分布
 > 3. **wgs skill**：`/home/gao/.claude/skills/wgs/SKILL.md` — CNN 是隐藏 CPU 大户的警告，写入资源 config 节
 > 4. **corun skill**：`/home/gao/.claude/skills/corun/SKILL.md` — 哪些阶段可并跑 / 哪些绝对不行 的速判矩阵
 
@@ -17,7 +17,7 @@ disable-model-invocation: true
 - **模式 A — 标准种系 WGS**：nf-core/sarek → 比对/QC/去重 → SNV/indel（HaplotypeCaller/DeepVariant/Strelka）→ SV/CNV（Manta/TIDDIT）→ 报告。用于质量评估、变异检出。参考已验证实现：`4_wgs_human_immu/`。
 - **模式 B — 转基因/定点敲入整合分析（构建体已知）**：混合参考（hybrid ref）→ 比对 → 整合位点/结合部检测（Manta/DELLY + 嵌合读段）→ 拷贝数（mosdepth 深度比值）→ 脱靶筛查 → 断点注释 → 报告。参考已验证实现：`13_Ellen_knockin_wgs/`。
 - **模式 C — 细胞系种系/株系鉴定 + 转基因发现（构建体未知）**：轻量 bwa 比对 → 物种确认（mapping rate）+ 株系鉴定（标志位点拷贝数）+ 转基因**发现**（host-subtraction：未比对读段 de novo 组装 + BLAST）→ 报告。用于表达系统/细胞系身份确认与外源序列盲鉴。参考已验证实现：`3_cho_wgs_species_confirm/`（CHO 细胞系）。
-- **模式 D — 指定位点（常是重复区）的结构变异 / 断裂-重排研究（clone vs population）**：自写 bwa-mem2 比对（BAM，非 sarek）→ 位点可比对性预检 → 三路独立 SV 证据（Manta 放宽 + DELLY 无排除表 + 自写读段级证据）→ 阴性对照窗口本底 → clone-vs-population 减法 → 深度断崖 + BAF/LOH → **第二轮 read rescue**（全基因组扫 mate/SA/XA + unmapped，竞争性再基因分型）→ claim ladder → 报告。用于"某位点在克隆里有没有 DEL/INS/INV/易位"类问题。参考已验证实现：P41 `41_Vedict_18_wgs/`（初报）→ P45 `45_Vedita_18_wgs_combined_Advanced/`（rescue 合并版）。详见下文「模式 D 专用流程」。
+- **模式 D — 指定位点（常是重复区）的结构变异 / 断裂-重排研究（clone vs population）**：自写 bwa-mem2 比对（BAM，非 sarek）→ 位点可比对性预检 → 三路独立 SV 证据（Manta 放宽 + DELLY 无排除表 + 自写读段级证据）→ 阴性对照窗口本底 → clone-vs-population 减法 → 深度断崖 + BAF/LOH → **第二轮 read rescue**（全基因组扫 mate/SA/XA + unmapped，竞争性再基因分型）→ claim ladder → 报告。用于"某位点在克隆里有没有 DEL/INS/INV/易位"类问题。参考已验证实现：P41 `41_Vedict_18_wgs/`（初报）→ P45 `45_Vedita_18_wgs_combined_Advanced/`（rescue 合并版）。详见下文「模式 D 专用流程」摘要与 `references/modeD_locus_sv.md`。
 
 > **关键分叉一：转基因"构建体已知"还是"未知"？**
 >
@@ -188,7 +188,7 @@ process {
 
 总量守住 ≤28 物理核 / 56 线程、RAM 留 buffer（`samtools sort -m` 是 per-thread，总量 = m×(threads+1)，先 `free -h`）。
 
-> ⚠ **germline 变异过滤 `CNNScoreVariants` 是隐藏 CPU 大户**：实测每任务 **≈8.7 核**（%cpu 843–920%，TensorFlow 多线程）但 **RSS 仅 1.8 GB**。靠内存预算自动限流的 config 对它**完全无效**（RSS 太小永不触发），不显式限核会按默认拿满并发席位 → 曾致 **load 峰值 152**（项目14 Study B，2026-07-13，持续 ~2h15m）。**germline 独占整机跑时必须显式声明** `withName:'.*CNNSCOREVARIANTS.*' { cpus=9 }`（56/9≈6 并发=6样本，不叠加）。通用推论：**内存限流对"低RSS高线程"进程无效，凡实测 %cpu 远超声明 cpus 的进程一律显式限核**——用 `execution_trace` 的 `%cpu` 列核算预算，别信 declared。完整实测/根因见 `facilities/Server/nextflow_pipeline/project14_load_profile_0713.md` 与 `14_geneedit_lats12_wgs/docs/resource_pressure_incident_0713.md`。此外 germline 的**去重/gather 期是天然空闲窗口**（load 掉到 3–4，~50 线程闲置约 2h），可排入其它 CPU 轻活。
+> ⚠ **germline 变异过滤 `CNNScoreVariants` 是隐藏 CPU 大户**：实测每任务 **≈8.7 核**（%cpu 843–920%，TensorFlow 多线程）但 **RSS 仅 1.8 GB**。靠内存预算自动限流的 config 对它**完全无效**（RSS 太小永不触发），不显式限核会按默认拿满并发席位 → 曾致 **load 峰值 152**（项目14 Study B，2026-07-13，持续 ~2h15m）。**germline 独占整机跑时必须显式声明** `withName:'.*CNNSCOREVARIANTS.*' { cpus=9 }`（56/9≈6 并发=6样本，不叠加）。通用推论：**内存限流对"低RSS高线程"进程无效，凡实测 %cpu 远超声明 cpus 的进程一律显式限核**——用 `execution_trace` 的 `%cpu` 列核算预算，别信 declared。完整实测/根因见 `/home/gao/Utilities/Server/nextflow_pipeline/project14_load_profile_0713.md` 与 `14_geneedit_lats12_wgs/docs/resource_pressure_incident_0713.md`。此外 germline 的**去重/gather 期是天然空闲窗口**（load 掉到 3–4，~50 线程闲置约 2h），可排入其它 CPU 轻活。
 
 ---
 
@@ -247,95 +247,37 @@ process {
 
 ---
 
-## 模式 D 专用流程 —— 指定位点结构变异 / 断裂-重排研究（P41 → P44 → P45 实测，2026-10）
+## 模式 D 专用流程 —— 指定位点结构变异 / 断裂-重排研究（摘要）
 
-> **来源（绝对路径，均为只读参考）**：
-> - P41 初报 `/home/gao/projects_2026M7/41_Vedict_18_wgs/`：计划 `docs/P41_research_plan_and_review_1003.md`、参数 `docs/P41_key_operations_and_parameters_log_1003.md`、事故 `docs/P41_incidents_and_pitfalls_1006.md`（I-1…I-9）、背景 `docs/P41_background_dox_EBNA1_breakage_1007.md`；客户已收 2026-10-09 报告。
-> - P44 rescue 设计 `/home/gao/projects_2026Q4/44_wgs_advanced_analysis_from_P41_by_cc/`：`docs/P44_research_plan_and_review_1024.md`、`docs/P44-learned-from-P42/P44_learned_from_P42_1025.md`（与 Codex 平行线 P42 的对比）。
-> - P45 合并版 `/home/gao/projects_2026Q4/45_Vedita_18_wgs_combined_Advanced/`：`docs/P45_research_plan_and_review_1025.md`、`docs/P45_key_operations_and_parameters_log_1025.md`；交付 `custom_research_report_20261025/`（未发送）。
->
-> 案例：18 样本 ~15–30× PE150（DLD1 / GM12878 / Mutu I / DG75 的 population + 克隆；DLD1 +dox 克隆经 EBNA1 诱导断裂），靶区 chr11:114,604,000–114,625,500。
+> **完整流程、参数、判据与实测数字见 [references/modeD_locus_sv.md](references/modeD_locus_sv.md)（D0–D7）。动手做模式 D 项目前必须读完该文件**；下面只列决策要点与必做断言。
+> 来源：P41 `41_Vedict_18_wgs/`（初报）→ P44 rescue 设计 → P45 `45_Vedita_18_wgs_combined_Advanced/`（合并版，当前 `custom_research_report_20261027/`，内部审阅中）。
 
-### D0 — 设计（P41，已交付验证）
+| 阶段 | 要点 | 详见 |
+| :--- | :---: | :---: |
+| D0 设计 | 自写 `bwa-mem2 -Y` → BAM（不用 sarek、不 trim）；GATK analysis set 含 chrEBV；样本身份三道断言；位点可比对性预检；"不 mask 重复"逐 caller 落实到参数；**谱系审计（D7.2）** | D0、D7.2 |
+| D1 证据分级 | 三路独立证据、预注册分级、split 按 QNAME 去重、`ref_span ≥ 10` 才判 absent、100 个阴性对照窗口（对所有样本可估计、排除 IG/TCR）、深度是独立证据线；**单 fragment junction 密度 = 每样本本底（D7.5）** | D1、D7.5 |
+| D2 read rescue | 先定义 data universe：record/mate/SA/**XA**/unmapped 五条途径全 BAM 扫描；竞争性再基因分型；event grouping；flank 唯一性；**AS 规则不证明真实来源（D7.6）** | D2、D7.6 |
+| D3 adapter / poly-G | 未 trim 数据必做 adapter read-through 与 chr2:32.9 Mb poly-G 吸附区过滤，计入 filter-impact 表 | D3 |
+| D4 结论层级 | claim ladder；coherence = 断点在断崖 CI 内 **且** 远端 LOH（**① 单用是空检验**）；4-caller concordance ≠ 独立验证；用逐样本检出功效代替"60× gate"；genome-wide DELLY somatic 流程 | D4 |
+| D5 代码坑 | pysam 不暴露 `END`；未声明 INFO 键抛异常；mosdepth 列数随 `--by` 变；`grep -o` 吞重叠；bash `local` 展开顺序 | D5 |
+| D6 交付工程 | header 去本机路径并审计；机读配套表；PCR 引物；客户文字去内部编号；复用产物写 import_manifest | D6 |
+| D7 审阅轮教训 | SV 类型三线复核、谱系审计、单向不一致、同一 homolog 检验、本底、背景细胞系共享错配、测序盲区、图件清单 | D7 |
 
-| 决定 | 做法 | 为什么 |
-| :--- | :---: | :--- |
-| 不用 sarek | 自写 `bwa-mem2 mem -K 100000000 -Y` → `samtools sort`（2-way pipe）→ GATK MarkDuplicates（非 Spark，`OPTICAL_DUPLICATE_PIXEL_DISTANCE=2500`，**只标记不删**） | 要 BAM（Manta 吃 CRAM 病态慢）；`-Y` 让 supplementary 用 soft-clip ⇒ **hard-clip = 0，每条 record 的 SEQ 都是完整 read**，rescue 时不用回 FASTQ |
-| 不 trim | 不跑 fastp | fastp 大文件死锁；但**代价是 adapter read-through 伪 split**（见 D3），下游必须显式识别 adapter |
-| 参考 | GATK analysis set `Homo_sapiens_assembly38.fasta`（含 ALT/decoy/HLA/**chrEBV**） | EBV+ 细胞系的 EBV 读段要有地方放；chrEBV 覆盖顺带当样本身份探针 |
-| 完整性断言 | BAM primary 记录数 == bwa 日志 "Processed N reads" 之和 | 防截断静默通过 |
-| 样本身份三道断言（不过 exit 2） | EBV 状态与细胞系一致；同系性别一致；克隆与自己 population 的 chr22 基因型一致性 > 任何跨系样本 | FASTQ 编号 ↔ 样本编号常是推断，错位则整个减法作废 |
-| 位点可比对性预检（开跑前 1.5 min） | 靶区自相似（minimap2 off-diagonal）、异位同源（asm20）、`seqkit sliding` 150 bp 模拟读段回贴（unique / MAPQ0 / misplaced） | P41 实测：靶区内部重复仅 ~60–86% 一致，模拟读段 **100% 唯一**——"重复区 ⇒ 多重比对淹没"的担心对该区不成立，假阳性主要来自**别处**的比对黑洞。边界：asm20 只抓 ≲5% 分歧的近期拷贝 |
+**模式 D 必做断言（缺一不得交付）**：
 
-**"不 mask 重复"必须逐 caller 落实到参数**（客户明确要求时；不是一句口号）：
-- Manta 靶窗口联合运行：`graphNodeMaxEdgeCount` 10→**1000**、`minScoredVariantSize` 50→20、`--generateEvidenceBam`（默认 10 = 两端节点边数都 >10 的候选边直接跳过 = 自动回避重复区；详见 `software_pitfalls/manta.md`）。全基因组 Manta 保持默认，callRegions = 主染色体 + chrEBV。Manta libexec 要 `python2` ⇒ 脚本内 PATH 垫片指向 manta 环境。
-- DELLY：**不用**官方 `human.hg38.excl.tsv`（屏蔽着丝粒/端粒/重复），`-x` 只排 ALT/decoy/HLA；联合基因型只对"窗口内有断点端的位点并集"做。
-- 自写证据：MAPQ0、dup 只**分列计数**不丢弃；分级只用 nondup。
-
-### D1 — 证据分级与"不存在"的口径（P41）
-
-- **三路互相独立的证据**：Manta（图+局部组装）、DELLY（PE+SR）、自写读段级证据（split / discordant，caller 无关）。**caller 同意是加分项不是必要条件**——caller 在重复区恰恰最不可靠。
-- **分级预先登记、开跑前定**（看结果再改 = p-hacking）：A = (s20≥3 且 pr≥2) 或 (s20≥2 且 caller)；B = snd≥2 或 (pr≥3 且 snd≥1) 或 (snd≥1 且 caller)；C = 任何痕迹，保留并标记。
-- **split 按 fragment（QNAME）去重**，否则 R1/R2 跨同一断点算两次；朝外（RF）判据要求反向读段末端 < 正向读段起点（短于读长的片段仍是正常 FR，冒烟里曾造出 55 个假 DUP 簇）；插入片段阈值取 `median±5×MAD` 与 99.9/0.1% 分位数中**较宽者**（只用 MAD 会把正常右尾当 DEL）。
-- **"克隆里没有" = 有覆盖却无证据**：跨断点参考 fragment `ref_span ≥ 10` 才可判 absent，否则 `underpowered`。按 Poisson（λ = 0.6×深度×AF）给检出功效表：克隆性事件（AF 0.5/1.0）≥25× 基本都抓得到；population 里 AF<0.1 的亚克隆抓不稳 ⇒ 只能写"低于约 10% AF 检出下限"。
-- **阴性对照窗口本底**：100 个与靶区等长、深度 0.8–1.2× 中位数、可比对性相近的常染色体窗口（固定种子），同一套代码跑 ⇒ "无已知生物学的 21.5 kb 里每样本产出多少假 tier A/B"。**窗口数决定最小可达 p = 1/(N+1)**：N=40 永远到不了 0.01，P41 因此增至 100。
-  - ⛔ **窗口必须对所有样本都可估计，并排除 IGH/IGK/IGL/TRA/TRB/TRG/TRD**：P41 只按第一个样本（DLD1）选窗，ctrl36 落在 IGH，13 个 B 细胞系样本因 V(D)J 重排窗口内几乎无正常配对 ⇒ 总控 FATAL 停 4 h 53 min（I-6）。替换单个窗口时**不重跑选窗脚本**（随机种子会让其余 99 个全变），只换那一个并在 Methods 写明。
-- `universal`（四个细胞系都出现且 ≥75% 样本）= 参考差异/常见多态/系统性比对假象，**标记不删**。
-- **深度是独立证据线**：P41 最终主发现来自 chr11q 10 kb 窗口深度（S04/S05 远端 ≈0.50×、近端 1.2–1.5×），而**不是**任何 tier A/B junction。看到图后才追加的分析必须在报告里写明"不在预先登记的 tier 体系内"。
-
-### D2 — 第二轮 read rescue：先定义 data universe（P44 设计，P45 继承）
-
-> 动机：P41 的区域查询只看"落在窗口里的 record"。**BAM 里没有 secondary record（比对没用 `-a`），多重比对只以 `XA` tag 存在**——本属该位点却被放到别处的 read，区域查询永远找不到。
-
-- **抽取窗口 W** = target ±50 kb（第 1 轮 ±5 kb，扩窗改变 data universe ⇒ 开跑前须用户确认，§2A）；目标区 junction = 一端落在 target ±50 bp。
-- **Rescue 集合 R** = 以下任一命中的全部 record（dup、MAPQ0、QC-fail 全保留打标签）：(a) record 在 W；(b) mate 在 W；(c) SA 任一段在 W；(d) **XA 任一 hit 在 W**；(e) 双端 unmapped pair 经 W 序列筛选命中。对 R 中每个 QNAME **取回全部 record**。(b)–(d) 只能**全 BAM 流式扫描**（P44：18 个 BAM，6 并发，每样 ~25–32 min，I/O 限速）。XA 是最大来源（每样本 3,920–7,946 pair）。
-- **Stage 1 断言**：W 内无 secondary、无 hard-clip、无缺 SEQ——这是 §2A「SEQ 可用性 ≠ 完整性」的实测落地。
-- **竞争性再基因分型**（"after rescue"的定义）：每个 junction 建 400+400 bp alt / ref 模板；read-end 跨 junction 每侧 ≥20 bp，且 **AS_alt ≥ AS_genome + 10 且 ≥ AS_ref + 10** 才计 alt（同一 repeat 拷贝能同样解释的 read 不计）；全部样本用同一模板同一规则分型；fragment 为主、read-end 并列。
-- **Secondary 只在 AS ≥ primary AS − 10 时算"竞争 placement"**：rescue 再比对用 `-a` 会产出大量远低于 primary 的局部 hit（S04 W 内 66,300 条），不筛就把噪声当歧义证据。
-- **Event grouping**：共享 ≥50% alt read-end 的 junction 合并为一个 event、计数取并集、列出 alternative placements（partner 在端粒重复等多拷贝序列时，同一批 read 能放到 chrX/4/2/10 多个末端）；有 alternative placement 即 Ambiguous。
-- **Flank 唯一性**：junction 两侧 100 bp `bwa-mem2 mem -a`，数 AS ≥ best − 10 的 placement。
-- **局部组装**只对 ≥2 非 dup fragment 的 cluster：SPAdes `--sc --only-assembler --cov-cutoff off -k 21,33,55`，read 先在 adapter 处截断（≥30 bp）——微小 read 集合下默认 k-mer coverage model 报 exit 64。
-- **分级（P44 预注册）**：Well supported（≥3 fragment、≥2 类证据、两侧 flank 唯一、不确定区间 ≤10 bp）/ Limited（≥2 fragment、flank 唯一，但证据不足 Well）/ Ambiguous (repeat) / Weak（1 fragment）/ Not supported after rescue。
-- **成果**：P44 找到了 caller 输出里**没有**的两个关键事件——S04 chr11:114,605,216 → (TTAGGG)n 端粒 junction（rescue 前 0 → 后 4 fragment，caller = neither）、S05 376 bp fold-back——两者都落在本样本深度断崖 95% CI 内。平行的候选封闭式分析（P42：从 caller 282 个候选收窄到 C1–C4）两个都漏了。**候选封闭式流程即使后续审计再严，也补不回被排除的证据。**
-
-### D3 — 未 trim 数据的 adapter / poly-G artefact（P44 实测，必做）
-
-- insert 中位 ~160 bp < 150 bp read ⇒ 大量 read 读穿 TruSeq adapter + index + poly-G 尾；**poly-G 尾被比对为 supplementary 到 chr2:32,916,3xx（参考上是纯 poly-G）**。P41 目标区 1,181 个事件里 693 个就是这个"chr2:32.9 Mb 吸附区"。
-- 规则：3′ segment 起点 ≥ adapter 起点 − 5 的 split 不计；adapter 在 clip 前 10 bp 内的 3′ clip 不计，更深则只保留 insert 部分（≥20 bp）；segment / clip / discordant mate 的 Shannon entropy < 1.2 bits 判 low-complexity 不计；soft-clip ≥20 bp 才作断点证据。全部计入 filter-impact 表（6 样本试跑删 1,677 条）。
-- 复核：`samtools faidx $REF chr2:32916330-32916480`（纯 G）；`samtools view <BAM> chr2:32916340-32916360` 可见 insert + `AGATCGGAAGAGC` + index + polyG。
-
-### D4 — 结论层级与 caller concordance（P45）
-
-- **claim ladder 是 evidence 分级之上的另一列**（`claim_level`，不替换分级）：mapping_observation → repeat_ambiguous_junction → limited_junction_candidate → **well_supported_junction_candidate** → **structurally_coherent**（① chr11 侧断点区间与本样本深度断崖 95% CI 有交集 **且** ② 断崖远端同样本为 LOH：≥90% baseline-het 位点变纯合）→ confirmed（需独立 assay 原始结果；无输入则预期 0，写进 `external_input_status.tsv`，**不当阴性**）。
-  - ⚠ 预注册时**每个 evidence 级别都要映射到一个 claim 级别**：P45 v1 漏了 Well supported，2 个 GM12878 共有翼侧 junction 被并入 limited，低估证据强度；补级后 v1 归档。
-  - 判据有区分力的实测：S05 chr21 junction 距 S05 断崖 CI ~1 kb ⇒ 不满足 ①；S03 10 bp inversion ⇒ S03 无 LOH，不满足 ②。
-- **深度断崖**：200 bp bin，以本样本 chr11:114.40–114.58 Mb 中位数归一再除以基线克隆均值；two-level step + 1,000 block bootstrap 给 95% CI（只抽完整 block，末端截断会让索引长度差 1）。**BAF/LOH**：chr11 联合 `bcftools mpileup -q20 -Q20 --max-depth 1000 | call -mv`，QUAL≥30；BAF 位点 = 基线全部样本 AF 0.25–0.75 且 DP≥10（S04/S05 远端 LOH 0.978/0.980，同一 homolog 保留 99.78%）。
-- **4-caller concordance**：Manta、DELLY + GRIDSS（18 样本联合）+ SvABA（DLD1）；主口径两端 ±100 bp + 方向一致，另报最近距离与 ≤50 bp 标志；GRIDSS 单断端（ALT `.`）只记 anchor。**caller 一致 = 同一数据的算法一致，不是独立验证**；这句话在报告 Limitations 写一次即可。
-- **P42 的"60× sensitivity gate"不要学**：~15× 数据不可能达到，所有候选"未过 gate"，结论只剩"什么都不能说"。用逐样本检出功效（AF 0.1/0.25/0.5 下 ≥2/≥3 fragment 的 Poisson 概率）替代，让"未检出"读作"在该 AF 以上未检出"。
-- **genome-wide 版 clone-specific（客户 A2 要的是全基因组）**：DELLY germline→somatic 流程——合并基线 + 处理样本 discovery sites（`delly merge -y 0 -a 0.05 -v 5`，不预过滤）→ 逐 BAM re-genotype → `delly filter -f somatic` 只打标签不删；逐样本 present = 非参考 GT 且 DV+RV ≥3，absent = alt 0 且 DR+RR ≥10，alt 1–2 = low_support，其余 underpowered。genome-wide SNV/indel：同 chr11 参数按 5 Mb chunk 并行（S01–S10，632 chunk，20 并发约 3 h），**验收 = chr11 记录数与之前单独 chr11 call 完全相同**。
-
-### D5 — 模式 D 专属代码坑（均已实测）
-
-1. ⛔ **pysam 不在 `rec.info` 里暴露 `END`**：`info.get("END", pos)` 永远退回 POS ⇒ 所有 DEL/DUP/INV 变成长度 0 的点事件，caller 第二端永远匹配不上。改用 `rec.stop` 也不够——**DELLY genotyped BCF 的 rlen 写为 1，`rec.stop` = POS**。✅ 从 INFO 原文解析 `END=`。影响：P45 修正后 148 行 Manta/DELLY concordance 升级、G2 的 "with Manta" 计数 6→7。复核：`bcftools view -H -i 'ID=="<id>"' X.bcf | cut -f8 | tr ';' '\n' | grep ^END`。
-2. ⛔ **pysam `rec.info.get(k, d)` 对 header 未声明的键抛 `ValueError('Invalid header')`**，不返回默认值。Manta 头里没声明 `CHR2`、DELLY 有 ⇒ 合并多 caller 时只在 Manta 行炸（P41 I-9）。✅ 先判 `k in rec.header.info and k in rec.info`。
-3. ⛔ **mosdepth `regions.bed.gz` 列数取决于 `--by`**：整数窗口 → 4 列；带名字的 BED → 5 列。同一脚本里 `split()[3]` 对一类文件对、另一类错（取到窗口名 `w114604099`）。✅ 一律 `split()[-1]` 或 `*_, v`（P41 I-2 / I-9 两个脚本先后因此崩溃；"同类缺陷第二次必须全局 grep"的通用规则见 `project-setup` skill）。
-4. **多模式 `grep -o` 会吞并重叠匹配**（引物特异性计数把 1 处计成 0）：每条 query 单独 grep，再用 `samtools faidx` 核对。
-5. **bash `local c=$1 o="$O/parts/$c"`**：`$c` 在同一条 `local` 赋值前就被展开 ⇒ 所有分片同名、0 产物。同一条 `local` 里不要引用刚声明的变量。
-6. **P41 运行工程事故（I-1…I-9）的通用规则已分别放在**：总控失败告警、`kill -0` 僵尸、心跳、`python -u`、`xargs -r`、日志命名 → `watchdog` skill「自写总控 / 守候脚本的坑」；样本表驱动可追加、冒烟覆盖每个消费者、BAM 随机访问循环默认并行 → `project-setup` skill「Step-script / 总控设计规则」。
-
-### D6 — 模式 D 交付工程（P42/P44 对比后的固定做法）
-
-- **BAM/VCF header 去本机路径并审计**：`@PG CL`、`##commandline` 等含 `/home/` `/mnt/` `/Work_bio` 的行改写（`samtools reheader` / `bcftools reheader`，检查命令用 `--no-PG`/`--no-version` 防止自身再写入路径）；`methods/header_sanitization_audit.tsv` 证明 record 数与 record 流 SHA-256 前后一致。DELLY BCF→VCF 同样出转换审计。
-- **机读配套表**：`client_request_coverage.tsv`（客户每个问句 / 每项 deliverable 一行 → 状态 → 证据文件 → 边界）、`external_input_status.tsv`（PCR/FISH 等未提供项及其对解读的影响）、`data_inventory.tsv`（逐文件 bytes/md5/索引）、`key_junction_read_evidence.tsv`（关键事件每条 read end 的 FLAG/坐标/CIGAR/MAPQ/SA/XA/SEQ、模板 AS vs 基因组 AS、dup、query overlap/gap）、`figure_manifest.json`。self-audit 断言：账本行数 = 图中 read 数；表中每个证据文件存在；header 路径 = 0。
-- **建议 PCR 就随附引物**：Primer3（flank → junction_overlap 两轮）+ 全基因组逐 query 精确命中计数要求唯一；避开重复单元；端粒 junction 附 STELA 类方案；无法唯一就写"无唯一引物"。
-- **客户文字**：不出现内部项目编号（P41/P42…；前一份报告称 "the report dated 2026-10-09"），交付 ID 去内部前缀（`P44J0332` → `J0332`）；限定语只在 §8.3 写全一次；全基因组 BAM 不放进报告包，§9 写明另行传输。
-- **复用上一轮产物**：只读复制（不用硬链接），写 `import_manifest.tsv`（源/目标 md5 + 源脚本 md5，并与源项目 git 最新提交比对）；来源脚本快照放 `scripts/<日期>/from_P<NN>/`，改过的版本放本层，可直接 `diff`。
+1. 写进 Key Findings / §7 表格的每个 SV，其**类型与大小**都经过深度 + 杂合 SNP 等位比例 + 接头独立分子三线复核；未复核的明确标"未逐个复核"（D7.1；P45 chr4 "888 kb DEL" 实为无拷贝丢失的接头）。
+2. 设计阶段已做克隆谱系审计；基线中没有同亚谱系克隆的处理克隆，其 case-specific 事件在 §8.3 写"不能排除早于处理"（D7.2）。
+3. 每个 absent 有 `ref_span ≥ 10`，否则 underpowered；阴性对照窗口本底与单 fragment 本底都已逐样本报告（D1、D7.5）。
+4. 每个 ≥Limited 的 junction 已列出无关背景细胞系中的支持数，并查过跨分子共享错配（D7.6）。
+5. coherence 同时满足 ① 与 ②；`claim_level` 每个 evidence 级别都有映射（D4）。
+6. 深度 ≈0 区段已判别为盲区 / 可比对性 / 缺失之一，比值图对盲区断线并标注（D7.7）。
+7. 关键事件逐 read 账本行数 = 图中 read 数；交付 BAM/VCF header 本机路径计数 = 0；客户文字无内部项目编号（D6）。
 
 ---
 
-## 第六步：analysis_plan_MMDD.md（项目根目录）
+## 第六步：研究计划文档（命名与版本规则见 `project-setup` skill）
 
-含：样本表、模式判断、（模式B）构建体解码表（靶位点+敲入内容+模型解读）、流程步骤、运行命令（按序）、关键参数依据、资源分配、已知局限、待客户确认清单。改版必须重标 MMDD 并更新内部日期、删旧文件（CLAUDE.md 规则）。
+文件名 `docs/P<NN>_research_plan_and_review_MMDD.md`（MMDD = 创建日期，永不改名；不再用 `analysis_plan_MMDD.md`）。WGS 专属内容：样本表、模式判断、（模式B）构建体解码表（靶位点+敲入内容+模型解读）、（模式D）§2A decision table + 比较设计 + 谱系审计计划、流程步骤、运行命令（按序）、关键参数依据、资源分配、已知局限、待客户确认清单。修正旧内容先归档到 `superseded_for_comparison/`，**不删旧文件**。
 
 ---
 
@@ -398,7 +340,7 @@ prioritised tsv + QC + SV/CNV 注释 + HLA + ROH 全给了。
 - **模式B — 拷贝数**：数值是否物理合理（定点单敲入应 ~1 拷贝/等位；异常高值先查是否同源区交叉比对虚高，而非直接写进报告）。
 - **模式B — 阴性对照自洽**：某品系样本在**别的**构建体 contig 上是否确实近零覆盖？若不是，提示样本混淆或参考问题，查清再交付。
 - **模式C**：mapping rate 是否 >85%（物种确认）；DHFR/侧翼比值落在哪个株系区间、与客户声称是否一致；未比对比例是否显著（>0.5%）；BLAST 命中的载体/元件是否自洽（如 dCas9/EASE 等），零命中的长 contig 是否已在报告里列为"疑似专有序列请客户核对"。
-- **模式D**：阴性对照窗口每样本平均 tier A 是否 >0.5（是 ⇒ 阈值偏松，报告如实写）；每个 absent 是否 `ref_span ≥ 10`；关键事件逐 read 账本与图中 read 数相等；交付 BAM/VCF header 本机路径计数为 0；claim_level 每个 evidence 级别都有映射；客户文字无内部项目编号。
+- **模式D**：阴性对照窗口每样本平均 tier A 是否 >0.5（是 ⇒ 阈值偏松，报告如实写）；每个 absent 是否 `ref_span ≥ 10`；关键事件逐 read 账本与图中 read 数相等；交付 BAM/VCF header 本机路径计数为 0；claim_level 每个 evidence 级别都有映射；客户文字无内部项目编号；**另逐条过上文「模式 D 必做断言」1–7**（SV 类型三线复核、谱系审计、背景细胞系共享错配、盲区标注等）。
 - **样本身份**：任何带"品系/分组标签 + 样本名"的图表，交付前程序化核查标签与样本真实对应（不靠肉眼），参照 rnaseq skill 的热图断言习惯。
 - **数字离群即停查**：某样/某位点的指标与同类差异悬殊，是数据问题的信号，不是可直接写进报告的结果。
 
@@ -462,7 +404,7 @@ sed "s/@@REPORT_DATE@@/$DATE/g" "$ROOT/docs/_client_report_source.md" > "$DELIV/
 9. **构建体拷贝数**走 mosdepth 深度比值，不用 sarek CNV 模块。
 10. **无纯 WT 对照时**：自身单拷贝基线 + 品系互为阴性对照；可建议客户补送一只 WT 强化基线。（⛔ **切勿** 用 `--use_gatk_spark markduplicates` 提速——见实测教训,是净倒退陷阱。）
 11. **代码与可见文件同步**（CLAUDE.md）：实际命令一变，脚本/notebook 同一响应内更新。
-12. **裸布尔 CLI flag 变字符串坑 —— sarek 3.8.1 大概率不受影响，但换新模板时注意**：新版 Nextflow 把裸 `--flag` 解析成**字符串 `"true"`**、被现代 nf-core 的严格 nf-schema 拒（`Value is [string] but should be [boolean]`），实测在 **nf-core/mag（现代模板 + Nextflow 26.04.4）** 上全灭（proj17）。**sarek 3.8.1 是旧模板（`check_max`/`--max_cpus` 时代，无严格 nf-schema），此坑基本不咬**——现有 sarek 流程照旧。但若**升级 sarek 到现代模板、或本机换用 mag/taxprofiler 等现代 nf-core 管线**，一律**优先 `-params-file`（YAML 真布尔）传参**。全解见 `facilities/Server/nextflow_pipeline/nextflow_bare_bool_flag_变字符串_坑_0719.md`。
+12. **裸布尔 CLI flag 变字符串坑 —— sarek 3.8.1 大概率不受影响，但换新模板时注意**：新版 Nextflow 把裸 `--flag` 解析成**字符串 `"true"`**、被现代 nf-core 的严格 nf-schema 拒（`Value is [string] but should be [boolean]`），实测在 **nf-core/mag（现代模板 + Nextflow 26.04.4）** 上全灭（proj17）。**sarek 3.8.1 是旧模板（`check_max`/`--max_cpus` 时代，无严格 nf-schema），此坑基本不咬**——现有 sarek 流程照旧。但若**升级 sarek 到现代模板、或本机换用 mag/taxprofiler 等现代 nf-core 管线**，一律**优先 `-params-file`（YAML 真布尔）传参**。全解见 `/home/gao/Utilities/Server/nextflow_pipeline/nextflow_bare_bool_flag_变字符串_坑_0719.md`。
 13. **worked example**：`13_Ellen_knockin_wgs/`（模式B 定点敲入，RAGH=Rag2 人源化细胞因子 / MTTH=人源 HTT）；`4_wgs_human_immu/`（模式A sarek 安装与 test-profile 验证）；`3_cho_wgs_species_confirm/`（模式C CHO 细胞系物种/株系确认 + 转基因盲鉴，含完整判据报告）；`41_Vedict_18_wgs/` → `45_Vedita_18_wgs_combined_Advanced/`（模式D 重复区位点 SV，初报 + read rescue 合并版）。
 
 ## 实测教训（13_Ellen 首跑 2026-07-07，正式跑直接采用；详见该项目 `docs/试跑经验与教训_0707.md`）
@@ -520,7 +462,7 @@ sed "s/@@REPORT_DATE@@/$DATE/g" "$ROOT/docs/_client_report_source.md" > "$DELIV/
   - 调用：run-t1k 的 `-o` 是**文件名前缀（basename）**,`--od` 才是目录;给 `-o` 传全路径 + `--od` 会把目录**拼两遍**。数据是 WGS 用 **`--preset hla-wgs`**（非 `hla`）。
   - 症状对照:空索引 → fastq-extractor 报 **"Need to use -f to specify the reference sequence"**（其实是 `-f` 指向的空文件),别被误导去查 `-f` 语法。
 - **⛔ origin/aneuploidy 从 cnvkit `.call.cns` 读拷贝数必须【按列名】读 `cn`**：`.call.cns` 第 5 列是 `log2`（浮点、几乎不等于 2）,第 6 列才是整数 `cn`。**误读 `$5` 当 CN → `cn!=2` 恒真 → `aneuploidy_frac` 恒为 1.000 → 假结论 "high-aneuploidy cell-line"**。proj16 交付前自查抓到,修正后真值 0.10/0.05（90-95% 二倍体、primary/germline）——**方向 180° 翻转**。用 `.call.cns`（有 cn 列）不用 pre-call `.cns`;awk 按 header 名定位 cn 列。这是"结论级数字离群（1.000 一眼可疑）必须查证"的活教材。
-- **下游编排链要接告警**：sarek 看门狗作用域只到 nextflow run,下游编排器（annotate/HLA/origin）软失败会静默（`ALL_DONE`≠每步成功）。交付前自查必须**实际打开下游产物目录确认非空**。详见 `facilities/Server/monitoring_alerting/看门狗运行情况汇总_喂skill_0717.md`。
+- **下游编排链要接告警**：sarek 看门狗作用域只到 nextflow run,下游编排器（annotate/HLA/origin）软失败会静默（`ALL_DONE`≠每步成功）。交付前自查必须**实际打开下游产物目录确认非空**。详见 `/home/gao/Utilities/Server/monitoring_alerting/看门狗运行情况汇总_喂skill_0717.md`。
 
 
 ---
