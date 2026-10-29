@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# New projects: select_palette(); legacy priority functions below preserve old behaviour.
 """palette_priority.py —— 全局配色优先级的**可执行实现**（Python 版）。
 
 **与 R 版 `../../R/color_figures_with_preconfigured_sets/palette_priority.R` 是同一套规则、
@@ -702,6 +703,48 @@ def check_default_b_palette_unchanged() -> None:
 
 
 check_default_b_palette_unchanged()
+
+
+
+# New-project scheme selection (2026-10-29); legacy pools remain unchanged.
+def select_palette(n: int, relationship: str = "independent", role: str = "fill",
+                   scheme: str = "auto") -> list[str]:
+    """Select a complete scheme. n counts colours; paired requires even n <= 8.
+
+    role: fill = bars/large points; stroke = lines/small points (RGB x 0.75).
+    Labels should use neutral dark text. Continuous colour scales are separate.
+    Fix scheme and category mapping once per project; do not reselect per panel.
+    """
+    import csv
+    if isinstance(n, bool) or not isinstance(n, int) or n < 1:
+        raise ValueError("n must be a positive integer")
+    if relationship not in ("independent", "paired") or role not in ("fill", "stroke"):
+        raise ValueError("relationship: independent/paired; role: fill/stroke")
+    if relationship == "paired" and (n % 2 or n > 8):
+        raise ValueError("paired requires an even colour count <= 8; use facets for more pairs")
+    if scheme == "auto":
+        scheme = "Paired_4" if relationship == "paired" else "Categorical_7" if n <= 7 else "Default_A"
+    if scheme in ("Default_A", "Default_B"):
+        level = "B" if scheme == "Default_B" else None
+        return list(sample_fills(n, force_level=level).colors if role == "fill" else
+                    strokes_by_priority(n, from_levels=("B",) if level else PRIORITY_LEVELS).colors)
+    path = Path(__file__).resolve().parents[2] / "figure/palettes.csv"
+    with path.open() as f:
+        cols = [row["fill"] for row in csv.DictReader(f) if row["scheme"] == scheme]
+    if not cols:
+        raise ValueError(f"Unknown scheme: {scheme}")
+    if scheme == "Paired_4" and relationship == "independent":
+        if n > 4:
+            raise ValueError("Paired_4 independent selection supports <= 4 categories")
+        order = [6, 4, 1, 3]
+    else:
+        order = list(range(8)) if scheme == "Paired_4" else [6, 0, 4, 2, 5, 1, 3]
+    if n > len(order):
+        raise ValueError(f"{scheme} has insufficient colours")
+    cols = [cols[i] for i in order[:n]]
+    if role == "stroke":
+        cols = ["#" + "".join(f"{int(int(h[i:i+2], 16) * 0.75 + 0.5):02X}" for i in (1, 3, 5)) for h in cols]
+    return cols
 
 
 if __name__ == "__main__":

@@ -6,6 +6,21 @@ disable-model-invocation: true
 
 # /scientific-figure-making — 出版级图件 house style + 配色纪律
 
+## 2026-10-29 新项目配色入口（用户已批准，优先于下文旧默认规则）
+
+**箱线图 median 线统一黑色**（用户指示 2026-10-29）：所有配色方案均适用，不继承分组色或绘图库默认橙色。Python 使用 `medianprops={"color":"#000000"}`；R/ggplot2 确保 median 为黑色（若单独映射箱体边框颜色，需显式覆盖 median）。此规则针对 median，不要求所有箱体边框都改黑。
+
+新项目使用现有 R/Python palette_priority 的 `select_palette()`；同项目固定 scheme 与类别映射，不能逐 panel 按类别数重新选择。
+- 有配对关系：`relationship="paired"`，n 为颜色总数，偶数且最多 8，使用 Paired_4。
+- 独立类别：默认 Categorical_7（最多 7）；显式 Paired_4 时最多 4 类，跨色对取色。
+- 超过 7 个独立类别：auto 回退旧 Default_A 级联；不要混入新色池或伪造额外色对。
+- `role="fill"` 用原色；`role="stroke"` 为原色 sRGB 通道乘 0.75 后四舍五入，是候选加深版，并非感知均匀变换。
+- 文字用黑或深灰；连续热图仍单独选择 sequential/diverging 色标。黄色不做文字。
+- 旧项目及旧入口 `sample_fills` 等维持原行为；下文“永远 Default_A”仅适用于旧入口，不覆盖本节。
+- 色值唯一来源：`/home/gao/Utilities/color_and_format/figure/palettes.csv`；说明及验证脚本见同目录 README_palette_integration_20261029.md。
+- 既有语义、撞色、点数、渲染检查继续适用；新色板不能保证任意多 panel 组合均通过。
+
+
 house style 移植自 **[ChenLiu-1996/figures4papers](https://github.com/ChenLiu-1996/figures4papers)**
 （Yale CS，图件用于 Nature Machine Intelligence / ICML / NeurIPS / ECCV）。
 上游只给了 API **规格**、没有实现；本 skill 补上了**可直接跑的 Python 与 R 实现**，

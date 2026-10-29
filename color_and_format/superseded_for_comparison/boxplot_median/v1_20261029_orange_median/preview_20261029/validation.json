@@ -1,0 +1,8 @@
+{
+  "cross_language_cases_passed": 22,
+  "python_invalid_cases_rejected": 7,
+  "legacy_B_guard": "passed",
+  "contrast_checks": 30,
+  "synthetic_points_per_panel": 48,
+  "colour_vision_simulation": "not performed"
+}

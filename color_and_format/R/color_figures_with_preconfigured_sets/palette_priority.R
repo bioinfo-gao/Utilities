@@ -1,4 +1,5 @@
 #!/usr/bin/env Rscript
+## New projects: select_palette(); legacy functions preserve old behaviour.
 ## ===========================================================================
 ## palette_priority.R —— 全局配色优先级的**可执行实现** (user directive 2026-08-05)
 ## ===========================================================================
@@ -645,6 +646,36 @@ palette_report <- function(cols, label = "fills") {
 
 ## source() 时立刻校验已冻结的 Default_B 没有被后续改动悄悄改掉。
 check_default_b_palette_unchanged()
+
+
+# New-project scheme selection; mirrors Python, reads the same canonical CSV.
+select_palette <- function(n, relationship = "independent", role = "fill", scheme = "auto") {
+  if (length(n) != 1L || is.logical(n) || !is.numeric(n) || is.na(n) || !is.finite(n) || n < 1 || n != floor(n))
+    stop("n must be a positive integer")
+  if (!(relationship %in% c("independent", "paired")) || !(role %in% c("fill", "stroke")))
+    stop("relationship: independent/paired; role: fill/stroke")
+  if (relationship == "paired" && (n %% 2 != 0 || n > 8))
+    stop("paired requires an even colour count <= 8; use facets for more pairs")
+  if (scheme == "auto") scheme <- if (relationship == "paired") "Paired_4" else if (n <= 7) "Categorical_7" else "Default_A"
+  if (scheme %in% c("Default_A", "Default_B")) {
+    if (role == "fill") return(unname(as.character(sample_fills(n, force_level = if (scheme == "Default_B") "B" else NULL))))
+    return(unname(as.character(strokes_by_priority(n, from = if (scheme == "Default_B") "B" else PRIORITY_LEVELS))))
+  }
+  tab <- read.csv("/home/gao/Utilities/color_and_format/figure/palettes.csv", stringsAsFactors = FALSE)
+  cols <- tab$fill[tab$scheme == scheme]
+  if (!length(cols)) stop(paste("Unknown scheme:", scheme))
+  if (scheme == "Paired_4" && relationship == "independent") {
+    if (n > 4) stop("Paired_4 independent selection supports <= 4 categories")
+    order <- c(7, 5, 2, 4)
+  } else order <- if (scheme == "Paired_4") 1:8 else c(7, 1, 5, 3, 6, 2, 4)
+  if (n > length(order)) stop(paste(scheme, "has insufficient colours"))
+  cols <- cols[order[seq_len(n)]]
+  if (role == "stroke") {
+    rgb_values <- floor(col2rgb(cols) * 0.75 + 0.5)
+    cols <- rgb(rgb_values[1, ], rgb_values[2, ], rgb_values[3, ], maxColorValue = 255)
+  }
+  unname(cols)
+}
 
 ## 直接 `Rscript palette_priority.R [--swatch]` 时：打印全量清单（并按需另存色卡）。
 ## 只在**本文件被直接执行**时触发 —— 被别的脚本 source 时不会误跑
