@@ -657,6 +657,19 @@ select_palette <- function(n, relationship = "independent", role = "fill", schem
   if (relationship == "paired" && (n %% 2 != 0 || n > 8))
     stop("paired requires an even colour count <= 8; use facets for more pairs")
   if (scheme == "auto") scheme <- if (relationship == "paired") "Paired_4" else if (n <= 7) "Categorical_7" else "Default_A"
+  if (startsWith(scheme, "Nature_")) {
+    if (relationship != "independent") stop("Nature schemes have no verified paired semantics")
+    tab <- read.csv("/home/gao/Utilities/color_and_format/More_colors/palettes.csv", stringsAsFactors = FALSE)
+    rows <- tab[tab$scheme == scheme, ]
+    if (!nrow(rows) || rows$kind[1] != "qualitative" || n > nrow(rows))
+      stop("Unknown or insufficient qualitative scheme; use color_scale for continuous data")
+    cols <- rows$fill[seq_len(n)]
+    if (role == "stroke") {
+      v <- floor(col2rgb(cols) * 0.75 + 0.5)
+      cols <- rgb(v[1, ], v[2, ], v[3, ], maxColorValue = 255)
+    }
+    return(unname(cols))
+  }
   if (scheme %in% c("Default_A", "Default_B")) {
     if (role == "fill") return(unname(as.character(sample_fills(n, force_level = if (scheme == "Default_B") "B" else NULL))))
     return(unname(as.character(strokes_by_priority(n, from = if (scheme == "Default_B") "B" else PRIORITY_LEVELS))))
@@ -675,6 +688,15 @@ select_palette <- function(n, relationship = "independent", role = "fill", schem
     cols <- rgb(rgb_values[1, ], rgb_values[2, ], rgb_values[3, ], maxColorValue = 255)
   }
   unname(cols)
+}
+
+color_scale <- function(scheme, reverse = FALSE) {
+  if (!is.logical(reverse) || length(reverse) != 1L || is.na(reverse)) stop("reverse must be boolean")
+  tab <- read.csv("/home/gao/Utilities/color_and_format/More_colors/palettes.csv", stringsAsFactors = FALSE)
+  rows <- tab[tab$scheme == scheme, ]
+  if (!nrow(rows) || rows$kind[1] == "qualitative")
+    stop("Unknown continuous scheme; use select_palette for categories")
+  if (reverse) rev(rows$fill) else rows$fill
 }
 
 ## 直接 `Rscript palette_priority.R [--swatch]` 时：打印全量清单（并按需另存色卡）。

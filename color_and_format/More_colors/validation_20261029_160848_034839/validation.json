@@ -1,0 +1,9 @@
+{
+  "schemes": 12,
+  "cross_language_cases": 54,
+  "legacy_cases_unchanged": 22,
+  "invalid_calls_rejected_per_language": 7,
+  "sequential_luminance": "strictly decreasing low-to-high",
+  "color_vision_simulation": "not performed",
+  "output": "/home/gao/Utilities/color_and_format/More_colors/validation_20261029_160848_034839"
+}

@@ -6,7 +6,13 @@ disable-model-invocation: true
 
 # /scientific-figure-making — 出版级图件 house style + 配色纪律
 
+## 2026-10-29 外部作图工作流整合
+
+数据图继续由可追溯的 R/Python 脚本生成。机制示意图、实验/分析流程图可选用外部画布或生成工具；需要这类图、修改既有图件或使用异步远程作图服务时，读 [references/external-figure-workflow.md](references/external-figure-workflow.md)。该参考吸收 FigureLabs 的局部编辑、版本关联与原任务恢复方法，列出实际采用前的验收条件；不要求安装 FigureLabs，不改变现有配色及科学验证要求。
+
 ## 2026-10-29 新项目配色入口（用户已批准，优先于下文旧默认规则）
+
+补充图库 `/home/gao/Utilities/color_and_format/More_colors/` 已接入同一 R/Python 入口；需要 Nature 灵感分类色、单色渐变或蓝粉连续色标时，先读该目录 [integration.md](/home/gao/Utilities/color_and_format/More_colors/integration.md)。通过 `select_palette(..., scheme="Nature_9")` 显式选择分类色，`color_scale("Scientific_Purple")` 取连续锚点；连续色标不用于平级类别。新图库不改变 auto 默认，不把未核实的品牌/无障碍宣传当作验证结果。
 
 **箱线图 median 线统一黑色**（用户指示 2026-10-29）：所有配色方案均适用，不继承分组色或绘图库默认橙色。Python 使用 `medianprops={"color":"#000000"}`；R/ggplot2 确保 median 为黑色（若单独映射箱体边框颜色，需显式覆盖 median）。此规则针对 median，不要求所有箱体边框都改黑。
 

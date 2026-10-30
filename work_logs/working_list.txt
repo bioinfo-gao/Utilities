@@ -362,8 +362,53 @@ Total Billable Hours: 10 Hours
 Total Hours Worked: 10 Hours
 Date of Submission: Oct 22, 2026
 ====================================================
+Weekly Work Report
+Period: Oct 23, 2026 – Oct 29, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 17 Hours
+
+1. Repeat-Region Whole-Genome Sequencing (WGS) Analysis and Evidence Integration — Vedita wgs Project (16 Hours)
+   Integrated repeat-aware read-rescue results for the chr11 locus across the DLD1 and GM12878 samples.
+   Reviewed junction-supporting fragments, breakpoint sequences, alternative genomic placements, and repeat-related ambiguity, with traceable read-level evidence.
+
+   Structural Variant Concordance and Clone-Specific Comparative Analysis 
+   Integrated structural variant results from Manta, DELLY, GRIDSS, and SvABA to assess caller concordance and sample-specific support.
+   Compared DLD1 parental, control, and doxycycline-treated clones, incorporating local sequencing depth, allelic patterns, and detection limitations to distinguish shared events from clone-specific candidates.
+
+   Research Report, Quality Review, and Deliverable Preparation 
+   Prepared and refined the consolidated research report, figures, annotated result tables, and supporting data package for submission.
+   Reviewed evidence consistency, clarified conclusions and limitations, and incorporated detailed interpretations of the key DLD1 clone findings.
+
+2. Project Scope Review and Quotation — Park project and Yuan Liu (1 Hour)
+   Reviewed the WGS requirements for Project 46 and the single-cell RNA sequencing analysis requirements for Project 47.
+   Prepared quotation-related scope and technical recommendations for both projects.
+
+Total Hours Worked: 17 Hours
+Date of Submission: Oct 29, 2026
 ====================================================
-====================================================
+Weekly Work Report
+Period: Oct 22, 2026 – Oct 29, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 17 Hours
+
+1. Repeat-Region Whole-Genome Sequencing (WGS) Analysis and Evidence Integration — Vedita wgs Project (16 Hours --  Delivered)
+   Integrated repeat-aware read-rescue results for the chr11 locus across the DLD1 and GM12878 samples.
+   Reviewed junction-supporting fragments, breakpoint sequences, alternative genomic placements, and repeat-related ambiguity, with traceable read-level evidence.
+
+   Structural Variant Concordance and Clone-Specific Comparative Analysis
+   Integrated structural variant results from Manta, DELLY, GRIDSS, and SvABA to assess caller concordance and sample-specific support.
+   Compared DLD1 parental, control, and doxycycline-treated clones, incorporating local sequencing depth, allelic patterns, and detection limitations to distinguish shared events from clone-specific candidates.
+
+   Research Report, Quality Review, and Deliverable Preparation
+   Prepared and refined the consolidated research report, figures, annotated result tables, and supporting data package for submission.
+   Reviewed evidence consistency, clarified conclusions and limitations, and incorporated detailed interpretations of the key DLD1 clone findings.
+
+2. Project Scope Review and Quotation — Park project and Yuan Liu (1 Hour)
+   Reviewed the WGS requirements for Project 46 and the single-cell RNA sequencing analysis requirements for Project 47.
+   Prepared quotation-related scope and technical recommendations for both projects.
+
+Total Hours Worked: 17 Hours
+Date of Submission: Oct 29, 2026
 ====================================================
 ====================================================
 ====================================================

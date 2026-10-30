@@ -724,6 +724,17 @@ def select_palette(n: int, relationship: str = "independent", role: str = "fill"
         raise ValueError("paired requires an even colour count <= 8; use facets for more pairs")
     if scheme == "auto":
         scheme = "Paired_4" if relationship == "paired" else "Categorical_7" if n <= 7 else "Default_A"
+    if scheme.startswith("Nature_"):
+        if relationship != "independent":
+            raise ValueError("Nature schemes have no verified paired semantics")
+        with (Path(__file__).resolve().parents[2] / "More_colors/palettes.csv").open() as f:
+            rows = [r for r in csv.DictReader(f) if r["scheme"] == scheme]
+        if not rows or rows[0]["kind"] != "qualitative" or n > len(rows):
+            raise ValueError("Unknown or insufficient qualitative scheme; use color_scale for continuous data")
+        cols = [r["fill"] for r in rows[:n]]
+        if role == "stroke":
+            cols = ["#" + "".join(f"{int(int(h[i:i+2],16)*0.75+0.5):02X}" for i in (1,3,5)) for h in cols]
+        return cols
     if scheme in ("Default_A", "Default_B"):
         level = "B" if scheme == "Default_B" else None
         return list(sample_fills(n, force_level=level).colors if role == "fill" else
@@ -745,6 +756,23 @@ def select_palette(n: int, relationship: str = "independent", role: str = "fill"
     if role == "stroke":
         cols = ["#" + "".join(f"{int(int(h[i:i+2], 16) * 0.75 + 0.5):02X}" for i in (1, 3, 5)) for h in cols]
     return cols
+
+
+def color_scale(scheme: str, reverse: bool = False) -> list[str]:
+    """Continuous anchors, low to high. Not categorical samples or a centred norm.
+
+    Matplotlib: LinearSegmentedColormap.from_list(name, color_scale(name)).
+    R mirrors this with scale_fill_gradientn(colours=color_scale(name)).
+    """
+    import csv
+    if not isinstance(reverse, bool):
+        raise ValueError("reverse must be boolean")
+    with (Path(__file__).resolve().parents[2] / "More_colors/palettes.csv").open() as f:
+        rows = [r for r in csv.DictReader(f) if r["scheme"] == scheme]
+    if not rows or rows[0]["kind"] == "qualitative":
+        raise ValueError("Unknown continuous scheme; use select_palette for categories")
+    cols = [r["fill"] for r in rows]
+    return cols[::-1] if reverse else cols
 
 
 if __name__ == "__main__":
