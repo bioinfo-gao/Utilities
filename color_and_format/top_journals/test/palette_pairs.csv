@@ -1,0 +1,16 @@
+scheme,name,reference_hex,dark_hex,light_hex
+01_Nature_reference,Blue,#0072B2,#006299,#80c7ef
+01_Nature_reference,Orange,#E69F00,#bd8200,#efcd80
+01_Nature_reference,Bluish green,#009E73,#00996f,#80efd1
+01_Nature_reference,Purple pink,#CC79A7,#aa417b,#d19fba
+01_Nature_reference,Sky blue,#56B4E9,#1b8ed0,#8dc4e2
+01_Nature_reference,Vermilion,#D55E00,#af4d00,#efb180
+01_Nature_reference,Yellow,#F0E442,#d9cc11,#e7e188
+01_Nature_reference,Neutral,#000000,#4c4c4c,#b8b8b8
+03_Cell_reference,Coral,#E76F51,#ce401c,#e29e8d
+03_Cell_reference,Teal,#2A9D8F,#228175,#97d8d0
+03_Cell_reference,Sky blue,#56B4E9,#1b8ed0,#8dc4e2
+03_Cell_reference,Mint,#8FD694,#3fac47,#9ed1a1
+03_Cell_reference,Purple,#987EBD,#6f4f9b,#b4a6ca
+03_Cell_reference,Gold,#E9C46A,#cc9a1e,#e1c98e
+03_Cell_reference,Blue grey,#3D405B,#3d405c,#adafc3
