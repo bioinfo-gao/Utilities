@@ -6,6 +6,16 @@ disable-model-invocation: true
 
 # /scientific-figure-making — 出版级图件 house style + 配色纪律
 
+## 深浅配对折线的线型（用户确认 2026-10-31）
+
+同色系深浅两档用于两种条件的折线对比时，**默认浅色用实线、深色用虚线**。浅色本身在白底上的对比度较低，再用断续线会进一步削弱可见性；不要将浅色与断续线叠加作为默认方案。点形可辅助区分，但不能替代线条可读性。若项目已有明确线型语义，保留其语义并另行提高浅色线的可读性。
+
+同一条件跨 panel 保持线型一致；按最终显示尺寸检查浅色实线是否清楚，仍难辨认时调整浅色明度或线宽。此约定只涉及深浅配对折线，不改动既有配色优先级，也不追溯重绘旧图。
+
+对照样图（同一数据、颜色及版式）：
+- 原版（浅色虚线、深色实线）：`/home/gao/Utilities/color_and_format/top_journals/test/03_Cell_reference_trends.pdf`
+- 用户认可的新版（浅色实线、深色虚线）：`/home/gao/Utilities/color_and_format/top_journals/test/03_Cell_reference_trends_light_solid_dark_dashed_v2.pdf`
+
 ## 2026-10-29 外部作图工作流整合
 
 数据图继续由可追溯的 R/Python 脚本生成。机制示意图、实验/分析流程图可选用外部画布或生成工具；需要这类图、修改既有图件或使用异步远程作图服务时，读 [references/external-figure-workflow.md](references/external-figure-workflow.md)。该参考吸收 FigureLabs 的局部编辑、版本关联与原任务恢复方法，列出实际采用前的验收条件；不要求安装 FigureLabs，不改变现有配色及科学验证要求。
