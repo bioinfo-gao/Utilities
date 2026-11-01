@@ -654,14 +654,14 @@ select_palette <- function(n, relationship = "independent", role = "fill", schem
     stop("n must be a positive integer")
   if (!(relationship %in% c("independent", "paired")) || !(role %in% c("fill", "stroke")))
     stop("relationship: independent/paired; role: fill/stroke")
-  if (scheme == "auto" && n <= if (relationship == "paired") 18 else 9) scheme <- "V12"
-  if (scheme == "V12") {
-    tab <- read.csv("/home/gao/Utilities/color_and_format/top_journals/test/04_selected_three_tones_light_medium_dark_v12.csv", stringsAsFactors = FALSE)
+  if (scheme == "auto" && n <= if (relationship == "paired") 18 else 9) scheme <- "V16"
+  if (scheme %in% c("V16", "V12")) {
+    tab <- read.csv(paste0("/home/gao/Utilities/color_and_format/top_journals/test/04_selected_three_tones_light_medium_dark_", tolower(scheme), ".csv"), stringsAsFactors = FALSE)
     if (relationship == "paired") {
-      if (n %% 2 != 0 || n > 18) stop("V12 paired requires even n <= 18")
+      if (n %% 2 != 0 || n > 18) stop("Palette paired requires even n <= 18")
       return(toupper(as.vector(t(as.matrix(tab[seq_len(n / 2), c("light_hex", "dark_hex")])))))
     }
-    if (n > 9) stop("V12 supports at most 9 independent families")
+    if (n > 9) stop("Palette supports at most 9 independent families")
     key <- if (role == "fill") "medium_hex" else "dark_hex"
     return(toupper(tab[[key]][seq_len(n)]))
   }

@@ -1,6 +1,6 @@
 ---
 name: scientific-figure-making
-description: "制作科研及客户交付图：matplotlib/ggplot2 的柱状图、箱线图、折线图、heatmap、scatter/PCA、多 panel 与 PDF/SVG 导出；统一 V12 配色、颜色语义和数据/渲染验证。"
+description: "制作科研及客户交付图：matplotlib/ggplot2 的柱状图、箱线图、折线图、heatmap、scatter/PCA、多 panel 与 PDF/SVG 导出；统一 V16 配色、颜色语义和数据/渲染验证。"
 disable-model-invocation: true
 ---
 
@@ -8,13 +8,13 @@ disable-model-invocation: true
 
 数据图由可追溯的 R/Python 脚本生成。遵循 [house style](references/house-style.md) 的字号、线宽及导出规范；函数见 [API](references/api.md)，实现为 `assets/pubfig.py`、`assets/pubfig.R`。机制/流程图或外部作图服务另读 [external workflow](references/external-figure-workflow.md)。
 
-## 配色：V12 第一优先
+## 配色：九色系三色调，第一优先（2026-11-01 定稿）
 
-新项目默认 V12；用户指定及已有项目的固定语义映射优先，不自动重绘旧图。
+新项目默认 V16；用户指定及已有项目的固定语义映射优先，不自动重绘旧图。
 
-- **唯一色值来源**：`/home/gao/Utilities/color_and_format/top_journals/test/04_selected_three_tones_light_medium_dark_v12.csv`。
-- [色卡 PDF](/home/gao/Utilities/color_and_format/top_journals/test/04_selected_three_tones_light_medium_dark_v12.pdf)；[九色系样图](/home/gao/Utilities/color_and_format/top_journals/test/v12_examples/00_overview.pdf)。
-- 固定顺序：Coral、Teal（偏 Cyan）、Sky blue、Mint、Purple、Gold、Purple pink、Blue、Neutral。每系浅、中、深三档，不自行重新调色。
+- **唯一色值来源**：`/home/gao/Utilities/color_and_format/top_journals/test/04_selected_three_tones_light_medium_dark_v16.csv`。
+- [色卡 PDF](/home/gao/Utilities/color_and_format/top_journals/test/04_selected_three_tones_light_medium_dark_v16.pdf)；[九色系样图](/home/gao/Utilities/color_and_format/top_journals/test/v16_comparison/01_v16_nine_families_boxplots.pdf)。
+- 固定顺序：Coral、Teal（青绿）、Sky blue、Green（正绿）、Purple、Gold、Purple pink、Blue、Neutral。每系浅、中、深三档，不自行重新调色。
 - 独立类别优先取各色系中间色，最多 9 类；细线可取对应深色，文字默认黑/深灰。
 - **9 个基本色仍不够时**，优先查看 [Nature 2–20 色卡](/home/gao/Utilities/color_and_format/More_colors/Nature_style/Nature原刊2–20 色卡.jpg) 补充颜色；保留已有类别映射，新增颜色须与已用色可区分，并记录实际 HEX 值。此项为查图补色入口，当前 `select_palette()` 不会自动读取这张图片。
 - 同色系两条件取浅、深；三条件取浅、中、深。色相表示类别、色调表示条件，明确图例。27 个色调不等于 27 个独立类别。
@@ -26,7 +26,7 @@ disable-model-invocation: true
 - `/home/gao/Utilities/color_and_format/R/color_figures_with_preconfigured_sets/palette_priority.R`
 - `/home/gao/Utilities/color_and_format/python/color_figures_with_preconfigured_sets/palette_priority.py`
 
-`select_palette(n, scheme="auto")`：独立类别 n≤9 默认 V12（fill 中色、stroke 深色）；`relationship="paired"` 时 n 为总颜色数，偶数且≤18，按每系浅、深输出。可显式 `scheme="V12"`。三档直接读取 canonical CSV。超容量先按上述 Nature 色卡补色；现有自动入口仍按既有回退执行，不能将其误认为已自动采用该图片；同项目不能逐 panel 按类别数重新选色。
+`select_palette(n, scheme="auto")`：独立类别 n≤9 默认 V16（fill 中色、stroke 深色）；`relationship="paired"` 时 n 为总颜色数，偶数且≤18，按每系浅、深输出。可显式 `scheme="V16"`。三档直接读取 canonical CSV。超容量先按上述 Nature 色卡补色；现有自动入口仍按既有回退执行，不能将其误认为已自动采用该图片；同项目不能逐 panel 按类别数重新选色。
 
 旧 `sample_fills` 等入口及显式 Categorical_7、Paired_4、Default_A/B 保持原行为。需要旧项目复现或更多配色时查下方归档；More_colors 见 `/home/gao/Utilities/color_and_format/More_colors/integration.md`。
 
@@ -34,7 +34,7 @@ disable-model-invocation: true
 
 - 同图同义的 panel 必须同色；不同语义的填充色必须互不相交。显式指定颜色，不依赖默认色环。用 `assert_shared_palette()`、`assert_no_palette_collision()`；判据见 [panel discipline](references/panel-color-discipline.md)。
 - 用 `assert_visible_on_white()`、`assert_fill_not_near_black()`、`assert_no_yellow_text()` 检查对应角色；不要通过静默改写定稿色值掩盖失败。
-- 图例固定放绘图区外，禁用 `loc="best"`；箱线图 median 统一黑色。组成默认排序条形图并标数值；非必要不用饼图。
+- 图例固定放绘图区外，禁用 `loc="best"`；箱线图 median 按色系固定：**Neutral panel 内浅、中、深三档全部使用白色 median 线；其余所有色系三档均使用黑色 median 线**。此规则只针对箱体内部 median，不改变须线、边框或坐标轴，也不按对比度阈值自动切换。组成默认排序条形图并标数值；非必要不用饼图。
 - 标题/caption 的选择规则必须与实际数据逐类别相符；明确 top-N、排除及截断，排除数据不进入统计。图、caption、正文的同一数字必须一致。
 - 样本级 PCA/scatter 计数实际绘制点，必须等于应显示样本数；样本 ID 附分组/细胞系信息。零与无法评估分开表达。
 - 不在 log 轴画填充柱；断轴缺口不放阈值线或标注。稀有类别必要时改用合适的点图/对数尺度并标数值。
@@ -55,4 +55,4 @@ disable-model-invocation: true
 - [旧五级优先级色卡](/home/gao/Utilities/color_and_format/R/color_figures_with_preconfigured_sets/palette_levels_swatch.pdf)。
 - [Categorical_7 / Paired_4 色卡](/home/gao/Utilities/color_and_format/figure/preview_20261029/new_scheme_swatches.pdf)。
 - [旧方案对比样图](/home/gao/Utilities/color_and_format/figure/preview_20261029/scheme_comparison.pdf)。
-- V12 接入前 R/Python 入口快照：`/home/gao/Utilities/color_and_format/superseded_for_comparison/palette_priority/v1_20261031_before_v12_priority/`。
+- 本次更新前文档及 R/Python 入口快照：`/home/gao/Utilities/color_and_format/superseded_for_comparison/palette_priority/v2_20261101_before_v16_default`。

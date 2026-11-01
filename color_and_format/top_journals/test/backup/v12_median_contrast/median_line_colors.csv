@@ -1,0 +1,28 @@
+family,tone,fill,median
+Coral,light,#EDBDB1,#000000
+Coral,medium,#E76F51,#000000
+Coral,dark,#ce401c,#FFFFFF
+Teal,light,#83D6DC,#000000
+Teal,medium,#16A8B5,#000000
+Teal,dark,#0D6975,#FFFFFF
+Sky blue,light,#8dc4e2,#000000
+Sky blue,medium,#46ade7,#000000
+Sky blue,dark,#1983c0,#000000
+Mint,light,#9ed1a1,#000000
+Mint,medium,#60c468,#000000
+Mint,dark,#35923d,#000000
+Purple,light,#b4a6ca,#000000
+Purple,medium,#9175B8,#000000
+Purple,dark,#5e4383,#FFFFFF
+Gold,light,#e1c98e,#000000
+Gold,medium,#e5b84a,#000000
+Gold,dark,#ac821a,#000000
+Purple pink,light,#CF8FA2,#000000
+Purple pink,medium,#c25f97,#000000
+Purple pink,dark,#903769,#FFFFFF
+Blue,light,#6688D4,#000000
+Blue,medium,#244FAD,#FFFFFF
+Blue,dark,#19377D,#FFFFFF
+Neutral,light,#b8b8b8,#000000
+Neutral,medium,#4c4c4c,#FFFFFF
+Neutral,dark,#2B2B2B,#FFFFFF

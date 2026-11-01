@@ -721,16 +721,16 @@ def select_palette(n: int, relationship: str = "independent", role: str = "fill"
     if relationship not in ("independent", "paired") or role not in ("fill", "stroke"):
         raise ValueError("relationship: independent/paired; role: fill/stroke")
     if scheme == "auto" and n <= (18 if relationship == "paired" else 9):
-        scheme = "V12"
-    if scheme == "V12":
-        with open("/home/gao/Utilities/color_and_format/top_journals/test/04_selected_three_tones_light_medium_dark_v12.csv") as f:
+        scheme = "V16"
+    if scheme in ("V16", "V12"):
+        with open(f"/home/gao/Utilities/color_and_format/top_journals/test/04_selected_three_tones_light_medium_dark_{scheme.lower()}.csv") as f:
             rows = list(csv.DictReader(f))
         if relationship == "paired":
             if n % 2 or n > 18:
-                raise ValueError("V12 paired requires even n <= 18")
+                raise ValueError("Palette paired requires even n <= 18")
             return [row[key].upper() for row in rows[:n // 2] for key in ("light_hex", "dark_hex")]
         if n > 9:
-            raise ValueError("V12 supports at most 9 independent families")
+            raise ValueError("Palette supports at most 9 independent families")
         key = "medium_hex" if role == "fill" else "dark_hex"
         return [row[key].upper() for row in rows[:n]]
     if relationship == "paired" and (n % 2 or n > 8):
