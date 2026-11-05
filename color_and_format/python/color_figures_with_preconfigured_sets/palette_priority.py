@@ -720,21 +720,29 @@ def select_palette(n: int, relationship: str = "independent", role: str = "fill"
         raise ValueError("n must be a positive integer")
     if relationship not in ("independent", "paired") or role not in ("fill", "stroke"):
         raise ValueError("relationship: independent/paired; role: fill/stroke")
-    if scheme == "auto" and n <= (18 if relationship == "paired" else 9):
-        scheme = "V19"
-    if scheme in ("V19", "V16", "V12"):
+    if scheme == "auto" and n <= (20 if relationship == "paired" else 10):
+        scheme = "V21"
+    if scheme in ("V21", "V19", "V16", "V12"):
         palette_dir = Path("/home/gao/Utilities/color_and_format/top_journals/test")
-        palette_path = {"V16": palette_dir / "backup/04_selected_three_tones_light_medium_dark_v16.csv",
+        palette_path = {"V19": palette_dir / "04_selected_three_tones_light_medium_dark_v19.csv",
+                        "V16": palette_dir / "backup/04_selected_three_tones_light_medium_dark_v16.csv",
                         "V12": palette_dir / "backup/v12_examples/04_selected_three_tones_light_medium_dark_v12.csv"}.get(
-                            scheme, palette_dir / "04_selected_three_tones_light_medium_dark_v19.csv")
+                            scheme, palette_dir / "04_selected_three_tones_light_medium_dark_v21.csv")
         with palette_path.open() as f:
             rows = list(csv.DictReader(f))
+        if scheme == "V21":
+            with (palette_dir.parent / "v21_family_order.csv").open() as f:
+                family_order = [r["family"] for r in csv.DictReader(f)]
+            by_family = {r["family"]: r for r in rows}
+            if len(family_order) != len(rows) or set(family_order) != set(by_family):
+                raise ValueError("V21 family order does not match palette")
+            rows = [by_family[name] for name in family_order]
         if relationship == "paired":
-            if n % 2 or n > 18:
-                raise ValueError("Palette paired requires even n <= 18")
+            if n % 2 or n > 2 * len(rows):
+                raise ValueError(f"Palette paired requires even n <= {2 * len(rows)}")
             return [row[key].upper() for row in rows[:n // 2] for key in ("light_hex", "dark_hex")]
-        if n > 9:
-            raise ValueError("Palette supports at most 9 independent families")
+        if n > len(rows):
+            raise ValueError(f"Palette supports at most {len(rows)} independent families")
         key = "medium_hex" if role == "fill" else "dark_hex"
         return [row[key].upper() for row in rows[:n]]
     if relationship == "paired" and (n % 2 or n > 8):

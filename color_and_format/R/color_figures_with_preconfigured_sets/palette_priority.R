@@ -654,19 +654,26 @@ select_palette <- function(n, relationship = "independent", role = "fill", schem
     stop("n must be a positive integer")
   if (!(relationship %in% c("independent", "paired")) || !(role %in% c("fill", "stroke")))
     stop("relationship: independent/paired; role: fill/stroke")
-  if (scheme == "auto" && n <= if (relationship == "paired") 18 else 9) scheme <- "V19"
-  if (scheme %in% c("V19", "V16", "V12")) {
+  if (scheme == "auto" && n <= if (relationship == "paired") 20 else 10) scheme <- "V21"
+  if (scheme %in% c("V21", "V19", "V16", "V12")) {
     palette_dir <- "/home/gao/Utilities/color_and_format/top_journals/test"
     palette_file <- switch(scheme,
+      V19 = "04_selected_three_tones_light_medium_dark_v19.csv",
       V16 = "backup/04_selected_three_tones_light_medium_dark_v16.csv",
       V12 = "backup/v12_examples/04_selected_three_tones_light_medium_dark_v12.csv",
-      "04_selected_three_tones_light_medium_dark_v19.csv")
+      "04_selected_three_tones_light_medium_dark_v21.csv")
     tab <- read.csv(file.path(palette_dir, palette_file), stringsAsFactors = FALSE)
+    if (scheme == "V21") {
+      family_order <- read.csv(file.path(dirname(palette_dir), "v21_family_order.csv"), stringsAsFactors = FALSE)$family
+      if (length(family_order) != nrow(tab) || anyDuplicated(family_order) || !setequal(family_order, tab$family))
+        stop("V21 family order does not match palette")
+      tab <- tab[match(family_order, tab$family), ]
+    }
     if (relationship == "paired") {
-      if (n %% 2 != 0 || n > 18) stop("Palette paired requires even n <= 18")
+      if (n %% 2 != 0 || n > 2 * nrow(tab)) stop(paste("Palette paired requires even n <=", 2 * nrow(tab)))
       return(toupper(as.vector(t(as.matrix(tab[seq_len(n / 2), c("light_hex", "dark_hex")])))))
     }
-    if (n > 9) stop("Palette supports at most 9 independent families")
+    if (n > nrow(tab)) stop(paste("Palette supports at most", nrow(tab), "independent families"))
     key <- if (role == "fill") "medium_hex" else "dark_hex"
     return(toupper(tab[[key]][seq_len(n)]))
   }
