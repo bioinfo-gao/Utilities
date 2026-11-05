@@ -723,7 +723,11 @@ def select_palette(n: int, relationship: str = "independent", role: str = "fill"
     if scheme == "auto" and n <= (18 if relationship == "paired" else 9):
         scheme = "V19"
     if scheme in ("V19", "V16", "V12"):
-        with open(f"/home/gao/Utilities/color_and_format/top_journals/test/04_selected_three_tones_light_medium_dark_{scheme.lower()}.csv") as f:
+        palette_dir = Path("/home/gao/Utilities/color_and_format/top_journals/test")
+        palette_path = {"V16": palette_dir / "backup/04_selected_three_tones_light_medium_dark_v16.csv",
+                        "V12": palette_dir / "backup/v12_examples/04_selected_three_tones_light_medium_dark_v12.csv"}.get(
+                            scheme, palette_dir / "04_selected_three_tones_light_medium_dark_v19.csv")
+        with palette_path.open() as f:
             rows = list(csv.DictReader(f))
         if relationship == "paired":
             if n % 2 or n > 18:

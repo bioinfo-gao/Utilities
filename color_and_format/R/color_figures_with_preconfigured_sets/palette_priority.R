@@ -656,7 +656,12 @@ select_palette <- function(n, relationship = "independent", role = "fill", schem
     stop("relationship: independent/paired; role: fill/stroke")
   if (scheme == "auto" && n <= if (relationship == "paired") 18 else 9) scheme <- "V19"
   if (scheme %in% c("V19", "V16", "V12")) {
-    tab <- read.csv(paste0("/home/gao/Utilities/color_and_format/top_journals/test/04_selected_three_tones_light_medium_dark_", tolower(scheme), ".csv"), stringsAsFactors = FALSE)
+    palette_dir <- "/home/gao/Utilities/color_and_format/top_journals/test"
+    palette_file <- switch(scheme,
+      V16 = "backup/04_selected_three_tones_light_medium_dark_v16.csv",
+      V12 = "backup/v12_examples/04_selected_three_tones_light_medium_dark_v12.csv",
+      "04_selected_three_tones_light_medium_dark_v19.csv")
+    tab <- read.csv(file.path(palette_dir, palette_file), stringsAsFactors = FALSE)
     if (relationship == "paired") {
       if (n %% 2 != 0 || n > 18) stop("Palette paired requires even n <= 18")
       return(toupper(as.vector(t(as.matrix(tab[seq_len(n / 2), c("light_hex", "dark_hex")])))))
