@@ -721,8 +721,8 @@ def select_palette(n: int, relationship: str = "independent", role: str = "fill"
     if relationship not in ("independent", "paired") or role not in ("fill", "stroke"):
         raise ValueError("relationship: independent/paired; role: fill/stroke")
     if scheme == "auto" and n <= (18 if relationship == "paired" else 9):
-        scheme = "V16"
-    if scheme in ("V16", "V12"):
+        scheme = "V19"
+    if scheme in ("V19", "V16", "V12"):
         with open(f"/home/gao/Utilities/color_and_format/top_journals/test/04_selected_three_tones_light_medium_dark_{scheme.lower()}.csv") as f:
             rows = list(csv.DictReader(f))
         if relationship == "paired":
