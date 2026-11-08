@@ -45,6 +45,7 @@ format: html
 ```{bash}
 # fc-list :lang=zh
 pwd
+```
 
 
 
@@ -108,6 +109,4 @@ ggplot(pca_data, aes(x = PC1, y = PC2, color = group)) +
     )
 
   )
-```
-
 ```
