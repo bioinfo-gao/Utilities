@@ -63,6 +63,37 @@
       "usage_episode_started_at": "",
       "usage_reset_at": "",
       "usage_last_attempt_at": ""
+    },
+    {
+      "active_project_id": "P51_Lijian_Wu_Crtc2_RNAseq",
+      "project_root": "/home/gao/projects_2026Q4/51_Lijian_Wu_RNAseq",
+      "status": "armed",
+      "usage_limit_retry_offsets_seconds": [
+        10800,
+        14400,
+        18000
+      ],
+      "reset_grace_seconds": 300,
+      "fallback_stale_seconds": 10800,
+      "min_transcript_idle_seconds": 1200,
+      "claude_binary": "/home/gao/.local/bin/claude",
+      "claude_session_id": "0027a369-2c6e-42a7-9713-9f19cd453f8a",
+      "session_cwd": "/home/gao",
+      "session_transcript": "/home/gao/.claude/projects/-home-gao/0027a369-2c6e-42a7-9713-9f19cd453f8a.jsonl",
+      "permission_mode": "auto",
+      "continuation_prompt": "Automated continuity resumption for active P51 (Lijian Wu Crtc2 mouse RNA-seq). Resume only P51 from this saved session. Read active_projects.json and /home/gao/projects_2026Q4/51_Lijian_Wu_RNAseq/docs/P51_research_plan_and_review_1107.md, inspect tmux p51_rnaseq/p51_watch and logs/, then continue toward the completion definition. Full-workflow automatic completion is authorized; external sending is not. Never delete or overwrite result directories. Write project files via Bash heredoc (Write/Edit tools prompt for paths under /mnt/ex_8T_SSD).",
+      "last_agent_heartbeat": "",
+      "last_agent_heartbeat_source": "",
+      "last_usage_limit_at": "",
+      "last_launch_at": "",
+      "last_worker_session": "",
+      "last_worker_log": "",
+      "last_worker_result": "",
+      "last_trigger": "",
+      "missing_tmux_observed_at": "",
+      "usage_episode_started_at": "",
+      "usage_reset_at": "",
+      "usage_last_attempt_at": ""
     }
   ]
 }

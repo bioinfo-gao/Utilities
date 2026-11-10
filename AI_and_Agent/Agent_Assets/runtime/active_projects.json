@@ -39,6 +39,34 @@
       "last_verified_at": "2026-10-25T16:42:50-04:00",
       "completion_definition": "Single complete delivery custom_research_report_YYYYMMDD/ built per P45 plan sections 5/7/9 (incl. G1 genome-wide SNV/indel and G2 genome-wide clone-specific TSV), 13_self_audit and check_report pass, client_request_coverage covers every request line; user review precedes any sending.",
       "agent": "claude_code"
+    },
+    {
+      "id": "P51_Lijian_Wu_Crtc2_RNAseq",
+      "project_root": "/home/gao/projects_2026Q4/51_Lijian_Wu_RNAseq",
+      "status": "complete",
+      "current_stage": "delivery folder custom_research_report_20261108 built; audit 149/149; awaiting user review (not sent)",
+      "next_stage": "user review; on review completion re-stamp via scripts/9_build_delivery.sh <date>",
+      "expected_tmux_session": "p51_watch",
+      "blocked_reason": null,
+      "blocking_question": null,
+      "last_verified_at": "2026-11-08T10:57:21-05:00",
+      "completion_definition": "custom_research_report_YYYYMMDD/ built from all 24 samples (8 groups x 3) with the 6 client contrasts from form 3G, counts+TPM matrices, multiqc, PCA, DEG tables, enrichment, report; pre-delivery audit passes; user review precedes any sending.",
+      "agent": "claude_code"
+    },
+    {
+      "id": "P52_Lijian_Wu_RNAseq",
+      "project_root": "/home/gao/projects_2026Q4/52_Lijian_Wu_RNAseq_by_Codex",
+      "agent": "codex",
+      "status": "complete",
+      "current_stage": "24 samples, six contrasts and 90 enrichment analyses complete; English report and 331-file/106-PDF client package built, source audit 306/306 and delivery audit 307/307, figures and browser HTML checked; internal review only, not sent",
+      "next_stage": "User review of custom_research_report_20261109/Crtc2_Line_Treatment_RNAseq_Report_1109.md; no external sending by agent",
+      "expected_tmux_session": "",
+      "last_verified_at": "2026-11-09T22:42:24.031703-05:00",
+      "blocked_reason": "",
+      "blocking_question": "",
+      "completion_definition": "24 samples; six confirmed contrasts; counts and TPM, QC, PCA, DE, GO/KEGG ORA and GSEA, English report, audited custom_research_report_YYYYMMDD; internal review only, no sending",
+      "delivery_directory": "/home/gao/projects_2026Q4/52_Lijian_Wu_RNAseq_by_Codex/custom_research_report_20261109",
+      "completion_evidence": "/home/gao/projects_2026Q4/52_Lijian_Wu_RNAseq_by_Codex/logs/visual_review_complete_20261109.json"
     }
   ]
 }

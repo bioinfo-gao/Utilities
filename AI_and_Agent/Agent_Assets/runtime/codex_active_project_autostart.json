@@ -32,6 +32,37 @@
       "last_worker_started_at": "2026-10-25T05:30:01+00:00",
       "last_worker_finished_at": "2026-10-25T05:30:02+00:00",
       "last_worker_exit_code": 1
+    },
+    {
+      "active_project_id": "P52_Lijian_Wu_RNAseq",
+      "project_root": "/home/gao/projects_2026Q4/52_Lijian_Wu_RNAseq_by_Codex",
+      "status": "armed",
+      "fallback_stale_seconds": 10800,
+      "codex_binary": "/home/gao/.positron-server/extensions/openai.chatgpt-26.5908.31748-linux-x64/bin/linux-x86_64/codex",
+      "codex_session_id": "01a1c0d8-f78a-7071-82ce-6c074e7a25f4",
+      "continuation_prompt": "Continue the user-authorized P52 full RNA-seq workflow in /home/gao/projects_2026Q4/52_Lijian_Wu_RNAseq_by_Codex. Read project plan and active_projects.json. Inspect p52_full tmux, logs/master.log and MASTER_STATUS; resolve failures, continue quantification, DESeq2, enrichment, inspect actual results, prepare English report and audited custom_research_report_YYYYMMDD. The confirmed rule is abs(log2FC)>=0.263; low-expression eligibility >=8/24 OR >=3/6 samples counts>=10, six contrasts from form. No external sending. Do not end at a stage boundary without next running stage or evidence-backed complete/blocked.",
+      "last_agent_heartbeat": "2026-11-09T22:42:24.031703-05:00",
+      "last_agent_heartbeat_source": "P52_delivery_complete",
+      "last_usage_limit_at": "",
+      "last_launch_at": "",
+      "last_worker_session": "",
+      "last_worker_log": "",
+      "last_worker_result": "complete",
+      "last_trigger": "stale_active_fallback",
+      "missing_tmux_observed_at": "",
+      "usage_limit_retry_offsets_seconds": [
+        10800,
+        14400,
+        18000
+      ],
+      "reset_grace_seconds": 300,
+      "min_transcript_idle_seconds": 1200,
+      "usage_episode_started_at": "",
+      "usage_reset_at": "",
+      "usage_last_attempt_at": "",
+      "last_worker_started_at": "",
+      "last_worker_finished_at": "",
+      "last_worker_exit_code": null
     }
   ]
 }
