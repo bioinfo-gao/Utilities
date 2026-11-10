@@ -178,7 +178,28 @@ exit 1
 - Group 因子水平：对照组排第一（DESeq2 参照）
 - `lfcShrink(type = "ashr")`
 - 显著阈值：`padj ≤ 0.05 & |log2FC| ≥ 0.263`（log2(1.2)=0.263，即 ≥1.2× fold change）
-- 低表达过滤：≥10 counts in (n−2) samples
+- 低表达过滤（user directive 2026-11-09 定稿；**一条规则，不按总样本数 N 分段，任何设计都适用**）：
+  - **两层，分清楚**：
+    1. **检验集合（每个对比单独定）**：只看本对比的两组样本——两组中 **≥ `min(n_g1, n_g2)` 个样本 estimated counts ≥10**
+       （DESeq2 vignette 的 "smallest group size" 规则作用于被比较的两组）。
+    2. **拟合矩阵（进 DESeq2 的大矩阵）** = 所有对比检验集合的**并集**，全部样本都保留，一个 `~ Group` 模型估 size factor 与 dispersion；
+       各对比从同一模型取结果。**不要为每个对比单独拿两组样本拟合**（n=3 时 dispersion 只靠 6 个样本，功效显著下降）；
+       除非某些组的离散度明显不同（先看各组 dispersion/PCA 组内距离，若要拆模型须在计划里写明理由并经用户确认）。
+  - 取结果：`results(..., independentFiltering = FALSE)` → 限定到该对比检验集合 → **在集合内重做 BH**（`p.adjust(..., "BH")`）。
+  - **N−2 规则与"全体 ≥30% 样本"规则均已废除，不要再用**：
+    - N−2：门槛随 N 增长，只在部分组表达的基因必被删。2 组×3 时 N−2=4，只在一组表达的 on/off 基因（3 个样本）被删；
+      P51（8 组×3）N−2=22/24 删光 Cxcl2/Cxcl10/Il6 等 TNF 靶基因，DEG 5,327 vs 正确的 5,905。
+    - 全体 30%：只要最小组占 N 的比例 <30%（≥4 组平衡设计）就会删掉只在一组表达的基因；
+      作为检验集合的 OR 分支时，又会把主要在**别的组**表达、本对比两组几乎为零的基因放进检验
+      （P52 实测每个对比 100–318 个，其中 23–198 个在本对比 6 样本里 ≤1 个 ≥10），稀释 BH 且产出最脆弱的 DEG。
+      实测它对大矩阵贡献 0 个基因（P52：30% 规则 11,813 个全部已在并集 12,327 内）。
+  - 必须保存 machine-readable 过滤审计：逐基因 × 逐对比的达标样本数、是否进入检验集合、是否进入拟合矩阵，**含被排除的基因**；log 打印前后数量。
+  - 决策记录：2026-11-08 用户裁定弃用 N−2（「样品数量巨大，不能用 n-2 规则，这相当不合理」，P51）；
+    2026-11-09 比较 P51/P52 后用户确认本条（去掉 30% 分支、用 min 组大小、不分 N）。
+    依据：DESeq2 vignette "Pre-filtering"（smallest group size）；M. Love, support.bioconductor.org/p/109669（per-contrast 显式过滤 + `independentFiltering=FALSE`）。
+    范例实现：`projects_2026Q4/51_Lijian_Wu_RNAseq/scripts/4_run_DE_PCA.R` Step B（注意它仍含 30% 分支，是旧口径；新项目按本条去掉）。
+    对 P51/P52（3+3 平衡、N=24）：本条与当时规则的拟合矩阵相同、检验集合每对比少 100–318 个基因；P51/P52 是否按本条重出结果**由用户决定，未经决定不动**。
+
 
 **PCA 数值汇总（凡是生成了 PCA 图，就必须同步保存这些数据供脚本6写解读，不能只在报告里放一张图不加文字说明）：**
 ```r
@@ -268,7 +289,25 @@ if (dir.exists("../output_results/multiqc"))
       并加硬断言：look-alike 全部留在 `step_a_filter` 里（范例
       `40_NahYoung_Shin_SRSF2_RNAseq_NO_Repeat/scripts/4_run_descriptive_FC.R` 的 Step A）。
       **2026-10-01 之前交付的项目都按旧正则删掉了这些基因；用户决定旧项目不回改。**
-  - **Step B — 低表达过滤**（后做）：`rowSums(counts >= 10) >= (n_samples - 2)`
+  - **Step B — 低表达过滤**（后做；规则见上文「低表达过滤」条）：
+    ```r
+    MIN_CNT <- 10L
+    grp_of  <- as.character(meta$Group[match(colnames(counts_pc), meta$sample_id)])
+    stopifnot(!anyNA(grp_of))
+    # CONTRASTS: named list, each = c(numerator_group, baseline_group)
+    eligible <- sapply(CONTRASTS, function(cc) {
+      n_min <- min(sum(grp_of == cc[1]), sum(grp_of == cc[2]))       # smallest group size of this pair
+      stopifnot(n_min >= 2)
+      rowSums(counts_pc[, grp_of %in% cc, drop = FALSE] >= MIN_CNT) >= n_min
+    })                                                               # genes x contrasts
+    keep <- rowSums(eligible) > 0                                    # fit matrix = union
+    counts_filt <- counts_pc[keep, , drop = FALSE]
+    eligible    <- eligible[keep, , drop = FALSE]
+    # ... DESeq2(~ Group) on counts_filt with ALL samples; per contrast:
+    # res <- results(dds, contrast = c("Group", num, den), independentFiltering = FALSE)
+    # stopifnot(identical(rownames(res), rownames(eligible)))
+    # res <- res[eligible[, cname], ]; res$padj <- p.adjust(res$pvalue, "BH")
+    ```
   - 两步过滤后输出行数到 log，便于 QC 核查
 - 最后 `saveRDS(res_list / vsd / meta / counts_raw)` 供脚本 5 使用；**同时必须保存 `filter_stats.rds`** 供脚本 6 报告用。
   **这些 rds 一律存到 `RDS_DIR <- "rds_cache"`（`scripts/` 下的子目录），绝不能存进 `OUT_DIR`/`DATA_DIR`
@@ -283,7 +322,8 @@ if (dir.exists("../output_results/multiqc"))
     n_final               = nrow(counts_mat_filtered),
     n_samples             = n_samples,
     low_count_min         = 10L,
-    low_count_min_samples = n_samples - 2L
+    filter_rule           = ">=10 counts in >= min(group sizes) of the compared pair's samples; fit matrix = union over contrasts",
+    n_tested_per_contrast = colSums(eligible)
   ), file.path(RDS_DIR, "filter_stats.rds"))
   ```
   脚本 5/6 对应从 `DE_DIR <- "rds_cache"` 读取，而不是 `file.path(DATA_DIR, "DE_PCA_Results")`。
@@ -340,6 +380,7 @@ ENR_DIR <- file.path(DATA_DIR, "Enrichment")
 ```
 
 GSEA rank 统计量：`sign(log2FC) × (−log10(pvalue))`
+  - **⚠ 强效应/多组设计改用 DESeq2 未收缩 Wald `stat`**（user directive 2026-11-08, P51）：−log10 p 尾部过重时（P51 有 871 个基因 |值|>50），GSEA 加权 ES 被少数极端基因主导，Crtc2-PGE2 vs control-PGE2 GO:BP 显著 0 条（min padj 0.063），改 Wald stat 后 479 条且 top 条目相同。判据：ORA 有数百条而 GSEA ≈0 ⇒ 先怀疑排序值。`lfcShrink` 前先存 `res$stat`（ashr 输出不带 stat）。
 
 ### 脚本 5b — `5b_run_custom_pathway.R`（**可选服务，仅当客户指定特定 pathway/marker panel 时才生成**）
 
