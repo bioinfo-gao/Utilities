@@ -300,6 +300,16 @@
   - **不得把某个客户端的 hook 列表或配置文件存在，误报为该客户端已经执行 lifecycle hook。** 若客户端缺少可用的 trust/review 或 Stop-hook 支持，必须明确标为未覆盖。
   - 跨 Agent 的最低强制层是本机 cron 的 `continuity_guard.py`：它独立读取同一 SSOT，每 **10 分钟**检查 `active` 项目的预期 tmux。`active` 但预期 tmux 缺失定义为**严重事件**：首次发现及持续 30 分钟未恢复时，必须同时写本地审计日志、广播 tty，并使用独立 SMTP notifier 发送邮件；正常、`blocked`、`complete` 状态绝不发信。它只报告、不擅自启动/杀死/改变分析；处理异常后仍须由 Agent 将状态更新为 running、blocked 或 complete。
 
+### 其他 Agent 负责的事：只提一次（MANDATORY — user directive 2026-11-09）
+
+  - 项目/任务的归属以中心 SSOT 的 `agent` 字段（或用户的明确说明）为准。**不属于本 Agent 的事，发现问题只向用户提一次**：
+    写清实测事实、证据路径与影响，然后到此为止。
+  - **提过之后不再重复**：后续回复里不再提醒、追问或催促同一问题，不把它列为"待你决定"，也不在每轮汇报里复述；
+    用户已表示交由该 Agent 自己处理时，更不再提。只有出现**新的、性质不同的问题**时，才可以再提一次。
+  - **不接管**：不改动、不重启、不杀死其他 Agent 的文件、tmux、进程或 SSOT 记录，也不替它补做未完成的步骤；
+    用户明确要求时除外。只读检查（读日志、读产物、做对比）不受限制。
+  - 适用于任意 Agent 之间（Claude Code / Codex / Antigravity / 今后新增的 Agent），双向适用。
+
 ## "全流程" 的定义 (MANDATORY — user directive 2026-07-17)
 
   - **"全流程" = 分析流程 + 数据提交流程。** 分析步骤跑完、`output_results/` 有产物
