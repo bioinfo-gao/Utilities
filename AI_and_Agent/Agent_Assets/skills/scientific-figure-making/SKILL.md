@@ -29,7 +29,7 @@ disable-model-invocation: true
 
 `select_palette(n, scheme="auto")`：独立类别 n≤10 默认 V21（fill 中色、stroke 深色）；`relationship="paired"` 时 n 为总颜色数，偶数且≤20，按每系浅、深输出。可显式 `scheme="V21"`。三档直接读取 canonical CSV。超容量先按上述 Nature 色卡补色；现有自动入口仍按既有回退执行，不能将其误认为已自动采用该图片；同项目不能逐 panel 按类别数重新选色。
 
-旧 `sample_fills` 等入口及显式 Categorical_7、Paired_4、Default_A/B 保持原行为。需要旧项目复现或更多配色时查下方归档；More_colors 见 `/home/gao/Utilities/color_and_format/More_colors/integration.md`。
+旧 `sample_fills` 等入口及显式 Categorical_7、Paired_4、Default_A/B 保持原行为（仅供旧项目复现，新图不用）。More_colors 见 `/home/gao/Utilities/color_and_format/More_colors/integration.md`。
 
 ## 图形与数据检查
 
@@ -46,14 +46,3 @@ disable-model-invocation: true
 可用检查：`assert_points_drawn`、`assert_label_ceiling`、`assert_no_filled_bars_on_log_axis`、`assert_nothing_in_axis_break`、`assert_no_text_collisions`、`panel_crops`。R 碰撞检查不覆盖文字压轴线，须人工看图；caption/选取规则/跨文件数字不能声称已由这些断言保证。
 
 更改绘图助手的判据时，运行 `assets/selftest.py` 和 `assets/selftest.R`，验证干净图及故意失败的例子；只更改文档不必重跑整套出图。
-
-## 历史文档与图片位置
-
-精简前全文原样归档：
-[scientific-figure-making_full.md](superseded_for_comparison/skill/v2_20261031_before_concise_v12/scientific-figure-making_full.md)。包含旧五级优先级、历史依据、示例及旧规则细节；与本文冲突时以本文为准。
-
-原图保留，不代表当前优先级：
-- [旧五级优先级色卡](/home/gao/Utilities/color_and_format/R/color_figures_with_preconfigured_sets/palette_levels_swatch.pdf)。
-- [Categorical_7 / Paired_4 色卡](/home/gao/Utilities/color_and_format/figure/preview_20261029/new_scheme_swatches.pdf)。
-- [旧方案对比样图](/home/gao/Utilities/color_and_format/figure/preview_20261029/scheme_comparison.pdf)。
-- 本次更新前文档及 R/Python 入口快照：`/home/gao/Utilities/color_and_format/superseded_for_comparison/palette_priority/v4_20261105_before_v21_default`。

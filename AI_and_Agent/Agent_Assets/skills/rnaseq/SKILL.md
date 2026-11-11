@@ -214,11 +214,7 @@ exit 1
       （P52 实测每个对比 100–318 个，其中 23–198 个在本对比 6 样本里 ≤1 个 ≥10），稀释 BH 且产出最脆弱的 DEG。
       实测它对大矩阵贡献 0 个基因（P52：30% 规则 11,813 个全部已在并集 12,327 内）。
   - 必须保存 machine-readable 过滤审计：逐基因 × 逐对比的达标样本数、是否进入检验集合、是否进入拟合矩阵，**含被排除的基因**；log 打印前后数量。
-  - 决策记录：2026-11-08 用户裁定弃用 N−2（「样品数量巨大，不能用 n-2 规则，这相当不合理」，P51）；
-    2026-11-09 比较 P51/P52 后用户确认本条（去掉 30% 分支、用 min 组大小、不分 N）。
-    依据：DESeq2 vignette "Pre-filtering"（smallest group size）；M. Love, support.bioconductor.org/p/109669（per-contrast 显式过滤 + `independentFiltering=FALSE`）。
-    范例实现：`projects_2026Q4/51_Lijian_Wu_RNAseq/scripts/4_run_DE_PCA.R` Step B（注意它仍含 30% 分支，是旧口径；新项目按本条去掉）。
-    对 P51/P52（3+3 平衡、N=24）：本条与当时规则的拟合矩阵相同、检验集合每对比少 100–318 个基因；P51/P52 是否按本条重出结果**由用户决定，未经决定不动**。
+  - 依据：DESeq2 vignette "Pre-filtering"（smallest group size）；M. Love, support.bioconductor.org/p/109669（per-contrast 显式过滤 + `independentFiltering=FALSE`）。
 
 
 **PCA 数值汇总（凡是生成了 PCA 图，就必须同步保存这些数据供脚本6写解读，不能只在报告里放一张图不加文字说明）：**

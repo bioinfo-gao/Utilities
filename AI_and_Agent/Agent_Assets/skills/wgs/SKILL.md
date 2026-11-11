@@ -356,31 +356,22 @@ prioritised tsv + QC + SV/CNV 注释 + HLA + ROH 全给了。
 - **报告绝不含**：`.rds`/中间对象、内部调试叙事（那些进自用 `analysis_plan`，不进客户报告）。
 - 签名：`Zhen Gao, PhD, Principal Bioinformatics Scientist, Athenomics`
 
-### ⭐ 报告不直接写进交付目录 —— 源文件 + 占位符 + 交付脚本重打日期（2026-08-18 起，新项目一律照此）
+### ⭐ 报告不直接写进交付目录 —— 源文件 + 占位符 + 交付脚本按日期出新版
 
-WGS 报告是大段散文推理，不像 RNAseq 能由 `6_generate_research_report.R` 拼出来，
-所以过去都是**手写 .md 直接落进交付目录**（14/16/26 都是）。这样做交付日期就散在三处、
-只能靠人记得——**proj27 0809 就因此漏改一处、新建出第二个交付目录，用户一直读的是旧的那份**。
-结构如下，让手写报告也能被脚本重打日期：
+WGS 报告是手写散文，不能由脚本拼出，所以用"源文件 + 占位符"，让日期只有一个来源：
 
 ```
 docs/_client_report_source.md          ← 报告唯一真源，手写；日期处写 @@REPORT_DATE@@
-scripts/<N>_build_delivery.sh <DATE>   ← 交付日期是**参数**，一条命令三处同时重打
+scripts/<N>_build_delivery.sh <DATE>   ← 日期是参数，一条命令三处（目录名/文件名/Report Date）同时写
 custom_research_report_<YMD>/<Name>_<MMDD>.md   ← 生成物，绝不手改
 ```
 
-脚本要点（范例：`29_Keqiang_Xie_wgs_5_vectors/scripts/35_build_delivery.sh`）：
+**每一版都建新目录，旧版目录原样不动**（规则全文见 `report` skill）：用户提出修改意见 ⇒ 用当日日期生成新的
+`custom_research_report_<YMD>/`；已有其他日期的目录**不 mv、不改名、不覆盖**。范例：P45 的 1025 / 1026 / 1027
+三目录并存（`45_Vedita_18_wgs_combined_Advanced/scripts/20261025/12_build_delivery.sh`）。
 
-```bash
-DATE="${1:-$(date +%F)}"; YMD="${DATE//-/}"; MMDD="${YMD:4:4}"
-# 已存在交付目录一律 mv 改名，**不新建第二个**（proj27 事故）
-existing=$(find "$ROOT" -maxdepth 1 -type d -name 'custom_research_report_*' | head -1)
-[[ -n "$existing" && "$existing" != "$DELIV" ]] && { mv "$existing" "$DELIV"; mv 旧 .md "$DELIV/$REPORT"; }
-sed "s/@@REPORT_DATE@@/$DATE/g" "$ROOT/docs/_client_report_source.md" > "$DELIV/$REPORT"
-```
-
-硬校验（任一不满足即 `exit 1`）：**交付目录恰好 1 个**；目录里 `*.md` **恰好 1 个**（防旧日期报告残留）；
-`Report Date` 那行**含且仅含**本次日期；**无残留 `@@REPORT_DATE@@`**；交付物无中文、无自绘 PNG。
+硬校验（任一不满足即 `exit 1`）：本次目录里 `*.md` **恰好 1 个**；`Report Date` 那行**含且仅含**本次日期；
+**无残留 `@@REPORT_DATE@@`**；交付物无中文、无自绘 PNG；其他日期的目录未被改动。
 
 ⚠ **不能在源文件里写任何说明性注释** —— 它被逐字拷进交付包（只替换占位符），
 注释会出现在客户报告里（HTML 注释也一样，文本编辑器打开就看得见）。

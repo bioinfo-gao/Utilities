@@ -21,9 +21,7 @@ disable-model-invocation: true
 - **固定端口的风险**：47222 是公共中继 bore.pub 上的一个**空闲端口，不是保留给我们的**。bore 断线重连时若被别人占用，
   会报 `port already in use` 并启动失败，systemd 反复重试，期间隧道不通。出现时换一个空闲端口（现测：
   `timeout 6 /usr/local/bin/bore local 22 --to bore.pub --port N`，`30022`、`52022` 当时已被占用），改 `bore.service`，并**重新告知客户**。
-- **历史（固定之前，EDT）**：`38643`（6/11 起，已作废）→ `8163`（10-06 21:37，用户手动重启）→ `24279`（10-07 09:53，自动）
-  → `21945`（10-08 17:54，自动）→ `51542`（10-08 20:57，自动）→ `47222`（10-08 21:54，固定）。
-  **根因**：bore 进程会无故**干净退出（退出码 0）**，systemd `Restart=always` 立即拉起，bore.pub 随机重新分配端口；
+- **端口曾自动漂移的根因**：bore 进程会无故**干净退出（退出码 0）**，systemd `Restart=always` 立即拉起，bore.pub 随机重新分配端口；
   不止机器重启才换，间隔从约 12 小时缩到约 3 小时。日志标志：
   `bore.service: Deactivated successfully` + `Scheduled restart job, restart counter is at N`。
   **没有固定端口的部署（新机器/重建）会重蹈覆辙 —— 一开始就加 `--port`。**
