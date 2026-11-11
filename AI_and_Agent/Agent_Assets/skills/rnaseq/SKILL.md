@@ -395,8 +395,9 @@ ENR_DIR <- file.path(DATA_DIR, "Enrichment")
 └── GSEA/  gseGO(BP) + gseKEGG + MSigDB Hallmark → CSV + ridgeplot/dotplot
 ```
 
-GSEA rank 统计量：`sign(log2FC) × (−log10(pvalue))`
-  - **⚠ 强效应/多组设计改用 DESeq2 未收缩 Wald `stat`**（user directive 2026-11-08, P51）：−log10 p 尾部过重时（P51 有 871 个基因 |值|>50），GSEA 加权 ES 被少数极端基因主导，Crtc2-PGE2 vs control-PGE2 GO:BP 显著 0 条（min padj 0.063），改 Wald stat 后 479 条且 top 条目相同。判据：ORA 有数百条而 GSEA ≈0 ⇒ 先怀疑排序值。`lfcShrink` 前先存 `res$stat`（ashr 输出不带 stat）。
+GSEA rank 统计量：**DESeq2 未收缩 Wald `stat`**（所有项目默认）。`lfcShrink` 前先存 `res$stat`（ashr 输出不带 stat）；
+  不用 `sign(log2FC) × −log10 p`：它尾部过重（P51 有 871 个基因 |值|>50），GSEA 加权 ES 被少数极端基因主导，
+  出现 ORA 数百条而 GSEA ≈0。判据：ORA 有数百条而 GSEA ≈0 ⇒ 先查排序值分布。
 
 ### 脚本 5b — `5b_run_custom_pathway.R`（**可选服务，仅当客户指定特定 pathway/marker panel 时才生成**）
 
