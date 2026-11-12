@@ -439,3 +439,26 @@ communication
 ====================================================
 ====================================================
 ====================================================
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Weekly Work Report
+Period: Nov 5, 2026 – Nov 12, 2026
+Prepared by: Gao Zhen
+Total Billable Hours: 10 Hours
+
+1. RNA-seq Analysis — Lijian Wu -Big dataset and complex design (6 Hours)
+   Performed end-to-end analysis of 24 mouse cell-line samples (2 cell lines × 4 treatment conditions × 3 biological replicates).
+   Prepared the research report, figures, result tables, and count/TPM matrices for the delivery package.
+
+2. External Client Communication — Park WGS Project (3 Hours)
+   Reviewed the client's experimental plan and analysis requirements for the CRISPR-edited clone WGS study.
+   Engaged in repeated email communication with the client to align on analysis methodology and scope.
+   Clarified key pre-analysis questions (Cas9 delivery format and construct references for integration screening; sample grouping of control, mono-allelic, and bi-allelic clones).
+   Set clear expectations on the level of conclusions the study design can support.
+
+3. Internal Communication & Coordination (1 Hour)
+   Synchronized project data and progress with Dr. Shi and Dr. Hung.
+   Discussed the expected timeline for analysis results.
+   Coordinated a consistent communication message and approach for the external client.
+
+Total Hours Worked: 10 Hours
+Date of Submission: Nov 12, 2026
