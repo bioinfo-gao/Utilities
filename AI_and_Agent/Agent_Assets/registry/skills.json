@@ -7,6 +7,7 @@
     "delivery": {"source": "claude", "scope": "shared"},
     "ftp": {"source": "claude", "scope": "shared"},
     "git": {"source": "claude", "scope": "shared"},
+    "job-application": {"source": "claude", "scope": "shared", "note": "User's own job search: CV master/builder, cover letters, outreach messages. Added 2026-11-17."},
     "notify": {"source": "claude", "scope": "shared"},
     "project-setup": {"source": "claude", "scope": "shared"},
     "report": {"source": "claude", "scope": "shared"},

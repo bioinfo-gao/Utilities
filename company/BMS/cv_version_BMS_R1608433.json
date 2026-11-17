@@ -1,0 +1,28 @@
+{
+ "_readme": "BMS R1608433 (Principal Scientist, Translational AI Foundations) 的版本配置。事实取自 ../CV_master.json；本文件只决定选哪些条目、用什么措辞。由 ../cv_tools/build_cv.js 读取。",
+ "headline": "Computational Biologist  |  Single-Cell & Spatial Omics  |  Translational AI",
+ "summary": [
+  "Computational biologist with 10+ years of translational omics across pharma (Biogen Translational Data Science), a cancer center bioinformatics core and an AI drug-discovery center.",
+  "Deep, hands-on expertise in single-cell and spatial transcriptomics, from QC and cell-type annotation to deconvolution, spatial statistics and decision-ready interpretation.",
+  "Builds LLM-agent analysis workflows that turn expert SOPs into machine-executable specifications with built-in validation.",
+  "Checks agent output against the data, not its form: independent cross-checks, null baselines and determinism tests."
+ ],
+ "core_expertise": [
+  ["Single-cell & spatial omics: ", "scRNA-seq (Scanpy/scverse, Seurat), integration, annotation, pseudobulk DE; spatial transcriptomics (Visium) – tissue-aware QC, spatially variable genes (Moran’s I, nnSVG), deconvolution (Tangram, RCTD), local spatial statistics (LISA); Squidpy, Voyager."],
+  ["Agentic & AI workflows: ", "LLM agents (Claude Code, Codex) driven by assay-level specifications; tool-call hooks that enforce analysis and reporting rules with regression tests; AI/ML prediction of drug properties (BBB permeability, ADME)."],
+  ["Evaluation of analytical output: ", "independent cross-method checks, permutation false-positive baselines, swapped-role negative controls, double-run determinism tests, and executable assertions for known silent-failure modes."],
+  ["Translational science: ", "PK/PD and on/off-target assessment (neurodegeneration), oncology, immunology and IBD patient cohorts, gene therapy (AAV/CRISPR), differential splicing, multi-omics integration."],
+  ["Engineering: ", "Python, R, Nextflow/nf-core, Git, Linux HPC; reproducible, versioned analyses with archived superseded results for side-by-side comparison."]
+ ],
+ "jobs": [
+  {"id": "athenomics", "bullets": ["ath_e2e", "ath_agent", "ath_decision_table", "ath_spatial_pilot", "ath_splicing", "ath_nfcore"]},
+  {"id": "biogen", "page_break_before": true, "bullets": ["bio_ngs", "bio_bulk_sc", "bio_pkpd", "bio_gt_splicing", "bio_scrnasequest"]},
+  {"id": "miami", "bullets": ["mia_multiomics", "mia_partner", "mia_methods"]},
+  {"id": "cwru", "bullets": ["cw_adme", "cw_bbb"]},
+  {"id": "umass", "bullets": ["um_aav"]},
+  {"id": "wustl", "bullets": ["wu_mirna"]},
+  {"id": "nevada", "bullets": ["nv_senescence"]}
+ ],
+ "selected_publications_title": "Selected Publications (most relevant to this role)",
+ "selected_publications": ["scRNASequest_2023", "Moro_NatImmunol_2022", "Stelekati_PNAS_2022", "PathwaySplice_2018", "BBB_Bioinformatics_2017", "coMethDMR_NAR_2019"]
+}
