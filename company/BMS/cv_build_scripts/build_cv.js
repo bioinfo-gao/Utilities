@@ -48,13 +48,12 @@ kids.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100
 
 // ---------- Summary ----------
 kids.push(section('Summary'));
-kids.push(para([r(
-  'Computational biologist with 10+ years of translational omics analysis across pharma (Biogen Translational Data Science), ' +
-  'a comprehensive cancer center bioinformatics core and an AI drug-discovery center. Deep, hands-on expertise in single-cell ' +
-  'and spatial transcriptomics, carried from QC and cell-type annotation through deconvolution, spatial statistics and ' +
-  'decision-ready interpretation. Currently builds LLM-agent analysis workflows in which expert SOPs become machine-executable ' +
-  'specifications with built-in validation, so that an agent’s output is checked against the data, not accepted because it is well-formed.')],
-  { alignment: AlignmentType.JUSTIFIED }));
+[
+  'Computational biologist with 10+ years of translational omics across pharma (Biogen Translational Data Science), a cancer center bioinformatics core and an AI drug-discovery center.',
+  'Deep, hands-on expertise in single-cell and spatial transcriptomics, from QC and cell-type annotation to deconvolution, spatial statistics and decision-ready interpretation.',
+  'Builds LLM-agent analysis workflows that turn expert SOPs into machine-executable specifications with built-in validation.',
+  'Checks agent output against the data, not its form: independent cross-checks, null baselines and determinism tests.',
+].forEach(t => kids.push(bullet([r(t)])));
 
 // ---------- Core expertise ----------
 kids.push(section('Core Expertise'));
