@@ -59,7 +59,7 @@ description: "Use when 用户本人求职——综述/分析某个职位(JD)、�
 | 任何一节都**不写成一大段**：Summary 写 3–5 条要点；长列表（例如审稿期刊）排成两栏 | 2026-11-17「一大段读起来很累」 |
 | 单细胞和 spatial 放在最前面、写得最具体（用户自述水平远高于一般人） | 2026-11-17 |
 | 发表分成 "Selected（与该职位最相关）" 和 "Additional"；**一篇都不能丢**（生成器会自动把未选中的放进 Additional） | BMS 版 |
-| 联系人措辞**按真实汇报关系**：skip-level 用 "in your group" 并点出直接上级，不写 "on your team" | 2026-11-17：Biogen 时 Baohong Zhang 是约 20 人大组的负责人，Dan Huh 带 7 人；用户每周向 Dan 汇报，每两个月也向 Baohong 汇报一次 |
+| 联系人措辞**按真实汇报关系**：对大组负责人（也是用户的老板，只是不是日常直接上级）用 "in your group, working under <直接上级>"，这样最准确 | 2026-11-17：Biogen 时 Baohong Zhang 是约 20 人大组的负责人，Dan Huh 带 7 人；用户每周向 Dan 汇报，每两个月也向 Baohong 汇报一次 |
 | 写给前老板、长辈：**以晚辈身份请求帮助**（"I'm writing to ask for your help"），不主动推销（不写 "I would love to help you build the team"），不列能力清单；把请求放宽到"有合适机会就考虑我，没有的话给些建议或帮忙介绍" | 2026-11-17 |
 | 写给对方的消息先确认对方的**职位**和**入职时间**，再按这个职位的工作范围措辞 | Triveni v1→v2 |
 | LinkedIn 加好友附言 ≤300 字符，交付前用代码数一遍 | — |
