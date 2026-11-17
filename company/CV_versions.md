@@ -8,7 +8,8 @@
 | :--- | :---: | :---: | :---: | :---: |
 | 2026-02-15 | `BMS/CV_Zhen Gao_Bioinformatics-Data Science-AI.pdf` | 通用版（用户自己写的原版） | — | — |
 | 2026-11-17 | `BMS/CV_Zhen_Gao_BMS_R1608433_20261117.{docx,pdf}` | BMS Principal Scientist, Translational AI Foundations (R1608433) | 2026-02-15 原版 | 新增 Summary 和 Core Expertise（单细胞/spatial 优先）；Athenomics 6 条；各段经历补充要点；发表分成 Selected 6 篇 + Additional 20 篇；删掉 1 条重复，改 1 处拼写 |
-| 2026-11-17 | `BMS/CV_Zhen_Gao_BMS_R1608433_20261117_v2.{docx,pdf}` | 同上 | 20261117 版 | Summary 从一大段改成 4 条要点（用户反馈：一大段读起来累）；其余不变。**这是当前有效版** |
+| 2026-11-17 | `BMS/CV_Zhen_Gao_BMS_R1608433_20261117_v2.{docx,pdf}` | 同上 | 20261117 版 | Summary 从一大段改成 4 条要点（用户反馈：一大段读起来累）；其余不变 |
+| 2026-11-17 | `BMS/CV_Zhen_Gao_BMS_R1608433_20261117_v3.{docx,pdf}` | 同上 | v2 | 审稿期刊从一大段改成两栏要点（12 个期刊，按原顺序先排左栏再排右栏，用无边框表格实现）；其余不变。**这是当前有效版** |
 
 ## 新做一版的步骤
 

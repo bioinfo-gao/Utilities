@@ -1,7 +1,7 @@
 // Build tailored CV (BMS R1608433) mirroring original layout: Times New Roman, bold rule-underlined section heads, US Letter.
 const fs = require('fs');
 const { Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle, Footer,
-        LevelFormat, TabStopType } = require('docx');
+        LevelFormat, TabStopType, Table, TableRow, TableCell, WidthType } = require('docx');
 
 const FONT = 'Times New Roman';
 const SZ = 21; // 10.5 pt
@@ -123,7 +123,21 @@ kids.push(section('Additional Publications'));
 P.additional.forEach(p => kids.push(pub(...p)));
 
 kids.push(section('Reviewer for Academic Journals'));
-kids.push(para([r('Bioinformatics; Journal of Biomedical Informatics; Statistical Methods in Medical Research; BMC Medical Informatics & Decision Making; Journal of Experimental Pharmacology; Bioinformatics and Biology Insights; Current Cancer Drug Targets; Nutrition and Metabolic Insights; Research and Reports in Biology; Biomarkers in Cancer; Cancer Growth and Metastasis; PLOS One.')]));
+// two columns, filled column-wise (original order reads down the left column, then the right)
+const journals = ['Bioinformatics', 'Journal of Biomedical Informatics', 'Statistical Methods in Medical Research',
+  'BMC Medical Informatics & Decision Making', 'Journal of Experimental Pharmacology', 'Bioinformatics and Biology Insights',
+  'Current Cancer Drug Targets', 'Nutrition and Metabolic Insights', 'Research and Reports in Biology',
+  'Biomarkers in Cancer', 'Cancer Growth and Metastasis', 'PLOS One'];
+const half = Math.ceil(journals.length / 2), COLW = 5020;
+const NB = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+const noBorders = { top: NB, bottom: NB, left: NB, right: NB };
+const cell = (t) => new TableCell({ width: { size: COLW, type: WidthType.DXA }, borders: noBorders,
+  children: t ? [bullet([r(t)])] : [new Paragraph('')] });
+kids.push(new Table({
+  width: { size: COLW * 2, type: WidthType.DXA }, columnWidths: [COLW, COLW],
+  borders: { ...noBorders, insideHorizontal: NB, insideVertical: NB },
+  rows: Array.from({ length: half }, (_, i) => new TableRow({ children: [cell(journals[i]), cell(journals[i + half])] })),
+}));
 
 const doc = new Document({
   creator: 'Zhen Gao',
