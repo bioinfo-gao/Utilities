@@ -8,7 +8,7 @@ format:
     number-sections: true
     embed-resources: true      # 图、CSS、JS 全部打包进一个 HTML，单文件即可分享
     code-tools: true           # 页面右上角可以查看/下载 .qmd 源码
-jupyter: sc_tut_main           # 用哪个 Jupyter kernel 执行代码块（见 §2）
+jupyter: sc_tut_main           # 用哪个 Jupyter kernel 执行代码块（见「选 kernel」一节）
 execute:
   echo: true                   # 默认显示代码
   warning: false               # 不把库的 FutureWarning 刷进报告
@@ -27,7 +27,7 @@ execute:
 | 可复现性 | **每次渲染都从头重跑**，不可能出现"输出是旧的" | 输出可能来自乱序执行、早已删掉的单元格 |
 | 交互开发 | VS Code / Positron 里可逐块运行 | 原生 |
 
-**本机渲染这个文件的命令**（§7 解释每一部分）：
+**本机渲染这个文件的命令**（@sec-render 解释每一部分）：
 
 ``` bash
 cd /home/gao/Utilities/Bioinfo/single_cell_and_spatial/technical_issue
@@ -61,7 +61,56 @@ import platform
 print(platform.python_version())
 ```
 
+check python version in terminal 
+
+在终端输入以下命令之一：bash
+python --version
+# 或
+python -V
+
 本机已注册的 kernel 有 `sc_tut_main`、`sc_tut_grn`、`sc_tut_spatial`、`sc_tut_traj` 等。做 GRN 的章节要换成 `jupyter: sc_tut_grn`。不同环境不能在同一个 `.qmd` 里混用，一个文件只用一个 kernel。
+
+## 在 `.qmd` 里运行 bash {#sec-bash}
+
+可以运行 bash，但有两个坑。
+
+**坑 1：单独的 `{bash}` 代码块不会执行。** Jupyter 引擎下，一个 `.qmd` 只用一个 kernel（这里是 Python）。下面这种代码块只会原样显示，**没有输出，也不报错**。R 的 knitr 引擎能执行 `{bash}`，所以很容易误以为这里也行：
+
+````markdown
+```{bash}
+python --version
+```
+````
+
+能执行的写法有两种，都是 IPython 的语法，写在 python 代码块里：
+
+| 写法 | 用途 |
+| :--- | :---: |
+| `!命令` | 单行 shell 命令；用 `{变量}` 把 Python 变量代进去 |
+| 代码块第一行写 `%%bash` | 整块按 bash 执行，适合多行脚本 |
+
+**坑 2：shell 里裸写的 `python` 不一定是 kernel 的 python。** shell 按 `PATH` 去找 `python`，而 `PATH` 取决于 Quarto 是怎么启动的。下面这块每次渲染都会实时运行，可以直接看到两者是否一致：
+
+```{python}
+!which python
+!python --version
+!{sys.executable} --version
+```
+
+```{python}
+%%bash
+echo "%%bash 块里的 python:"; python -V
+```
+
+本机实测（2026-11-19，用 @sec-render 里的命令渲染）：`!python --version` 得到 **Python 3.14.7**，路径是 `/mnt/ex_8T_SSD/conda_envs/sc_tut_r/bin/python`。原因是 `mamba run -p sc_tut_r` 把 `sc_tut_r/bin` 放在了 `PATH` 最前面。`!{sys.executable} --version` 得到的 **Python 3.11.16** 才是 kernel（`sc_tut_main`）自己的 python。用 `!python --version` 记录版本，**会记成另一个环境的版本，而且看不出任何异常**。
+
+**规则：** 凡是调用 Python 本身（`python`、`pip`），一律写成 `sys.executable`：
+
+```{python}
+!{sys.executable} -m pip list 2>/dev/null | grep -iE "^(scanpy|anndata) "
+```
+
+其他命令（`samtools`、`ls`、`md5sum`）没有这个问题，前提是它们确实在 `PATH` 里。
 
 ## 代码块与 `#|` 选项 {#sec-chunks}
 
@@ -74,7 +123,7 @@ print(platform.python_version())
 | `#| echo: false`                | 只显示结果，不显示代码                  |
 | `#| output: false`              | 只跑不显示输出                          |
 | `#| eval: false`                | 只显示代码，不运行                      |
-| `#| tags: [parameters]`         | 参数块，可在命令行覆盖（§6）            |
+| `#| tags: [parameters]`         | 参数块，可在命令行覆盖（@sec-render-params）            |
 
 下面开始一个最小但完整的分析示例。先载入包并记录版本：
 
@@ -214,6 +263,7 @@ execute:
 | 检查项 | 做法 |
 |:-----------------------------------|:-----------------------------------|
 | 环境 | YAML 里写死 kernel；报告里打印 `sys.executable` 和关键包版本 |
+| shell 命令 | 用 `!命令` 或 `%%bash`，不用 `{bash}` 块；调用 python/pip 一律写 `{sys.executable}` |
 | 随机性 | 种子集中在参数块；非零；关键步骤同参数跑两遍断言一致 |
 | 数据路径 | 用绝对路径，或 project 里统一 `execute-dir: project` |
 | 正文数字 | 一律用 `` `{{python}} expr` ``，不手抄 |

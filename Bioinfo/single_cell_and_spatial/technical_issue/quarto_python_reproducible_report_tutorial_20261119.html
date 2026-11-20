@@ -2227,20 +2227,21 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
   <li><a href="#sec-summary" id="toc-sec-summary" class="nav-link active" data-scroll-target="#sec-summary"><span class="header-section-number">1</span> 结论：这个文件是什么、怎么用</a></li>
   <li><a href="#sec-yaml" id="toc-sec-yaml" class="nav-link" data-scroll-target="#sec-yaml"><span class="header-section-number">2</span> YAML 头：整份报告的配置</a></li>
   <li><a href="#sec-kernel" id="toc-sec-kernel" class="nav-link" data-scroll-target="#sec-kernel"><span class="header-section-number">3</span> 选 kernel = 选 conda 环境</a></li>
-  <li><a href="#sec-chunks" id="toc-sec-chunks" class="nav-link" data-scroll-target="#sec-chunks"><span class="header-section-number">4</span> 代码块与 <code>#|</code> 选项</a></li>
-  <li><a href="#sec-params" id="toc-sec-params" class="nav-link" data-scroll-target="#sec-params"><span class="header-section-number">5</span> 参数块与随机种子</a></li>
-  <li><a href="#sec-figtab" id="toc-sec-figtab" class="nav-link" data-scroll-target="#sec-figtab"><span class="header-section-number">6</span> 图、表与正文里的动态数字</a>
+  <li><a href="#sec-bash" id="toc-sec-bash" class="nav-link" data-scroll-target="#sec-bash"><span class="header-section-number">4</span> 在 <code>.qmd</code> 里运行 bash</a></li>
+  <li><a href="#sec-chunks" id="toc-sec-chunks" class="nav-link" data-scroll-target="#sec-chunks"><span class="header-section-number">5</span> 代码块与 <code>#|</code> 选项</a></li>
+  <li><a href="#sec-params" id="toc-sec-params" class="nav-link" data-scroll-target="#sec-params"><span class="header-section-number">6</span> 参数块与随机种子</a></li>
+  <li><a href="#sec-figtab" id="toc-sec-figtab" class="nav-link" data-scroll-target="#sec-figtab"><span class="header-section-number">7</span> 图、表与正文里的动态数字</a>
   <ul class="collapse">
-  <li><a href="#表" id="toc-表" class="nav-link" data-scroll-target="#表"><span class="header-section-number">6.1</span> 表</a></li>
-  <li><a href="#图" id="toc-图" class="nav-link" data-scroll-target="#图"><span class="header-section-number">6.2</span> 图</a></li>
-  <li><a href="#正文里的数字不要手抄" id="toc-正文里的数字不要手抄" class="nav-link" data-scroll-target="#正文里的数字不要手抄"><span class="header-section-number">6.3</span> 正文里的数字不要手抄</a></li>
+  <li><a href="#表" id="toc-表" class="nav-link" data-scroll-target="#表"><span class="header-section-number">7.1</span> 表</a></li>
+  <li><a href="#图" id="toc-图" class="nav-link" data-scroll-target="#图"><span class="header-section-number">7.2</span> 图</a></li>
+  <li><a href="#正文里的数字不要手抄" id="toc-正文里的数字不要手抄" class="nav-link" data-scroll-target="#正文里的数字不要手抄"><span class="header-section-number">7.3</span> 正文里的数字不要手抄</a></li>
   </ul></li>
-  <li><a href="#sec-render-params" id="toc-sec-render-params" class="nav-link" data-scroll-target="#sec-render-params"><span class="header-section-number">7</span> 用参数重新渲染</a></li>
-  <li><a href="#sec-render" id="toc-sec-render" class="nav-link" data-scroll-target="#sec-render"><span class="header-section-number">8</span> 渲染命令逐项解释</a></li>
-  <li><a href="#sec-convert" id="toc-sec-convert" class="nav-link" data-scroll-target="#sec-convert"><span class="header-section-number">9</span> 与 <code>.ipynb</code>、Jupytext 互转</a></li>
-  <li><a href="#sec-project" id="toc-sec-project" class="nav-link" data-scroll-target="#sec-project"><span class="header-section-number">10</span> 多章节教程：project 与 freeze</a></li>
-  <li><a href="#sec-checklist" id="toc-sec-checklist" class="nav-link" data-scroll-target="#sec-checklist"><span class="header-section-number">11</span> 可复现报告的检查清单</a></li>
-  <li><a href="#sec-session" id="toc-sec-session" class="nav-link" data-scroll-target="#sec-session"><span class="header-section-number">12</span> Session info</a></li>
+  <li><a href="#sec-render-params" id="toc-sec-render-params" class="nav-link" data-scroll-target="#sec-render-params"><span class="header-section-number">8</span> 用参数重新渲染</a></li>
+  <li><a href="#sec-render" id="toc-sec-render" class="nav-link" data-scroll-target="#sec-render"><span class="header-section-number">9</span> 渲染命令逐项解释</a></li>
+  <li><a href="#sec-convert" id="toc-sec-convert" class="nav-link" data-scroll-target="#sec-convert"><span class="header-section-number">10</span> 与 <code>.ipynb</code>、Jupytext 互转</a></li>
+  <li><a href="#sec-project" id="toc-sec-project" class="nav-link" data-scroll-target="#sec-project"><span class="header-section-number">11</span> 多章节教程：project 与 freeze</a></li>
+  <li><a href="#sec-checklist" id="toc-sec-checklist" class="nav-link" data-scroll-target="#sec-checklist"><span class="header-section-number">12</span> 可复现报告的检查清单</a></li>
+  <li><a href="#sec-session" id="toc-sec-session" class="nav-link" data-scroll-target="#sec-session"><span class="header-section-number">13</span> Session info</a></li>
   </ul>
 </nav>
 </div>
@@ -2312,7 +2313,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 </tr>
 </tbody>
 </table>
-<p><strong>本机渲染这个文件的命令</strong>（§7 解释每一部分）：</p>
+<p><strong>本机渲染这个文件的命令</strong>（<a href="#sec-render" class="quarto-xref">Section 9</a> 解释每一部分）：</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/gao/Utilities/Bioinfo/single_cell_and_spatial/technical_issue</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">QUARTO_PYTHON</span><span class="op">=</span>/mnt/ex_8T_SSD/conda_envs/sc_tut_main/bin/python <span class="dt">\</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">mamba</span> run <span class="at">-p</span> /mnt/ex_8T_SSD/conda_envs/sc_tut_r <span class="dt">\</span></span>
@@ -2366,17 +2367,80 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <section id="sec-kernel" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="sec-kernel"><span class="header-section-number">3</span> 选 kernel = 选 conda 环境</h2>
 <p><code>jupyter: sc_tut_main</code> 指向 <code>~/.local/share/jupyter/kernels/sc_tut_main</code>，它对应 <code>/mnt/ex_8T_SSD/conda_envs/sc_tut_main</code> 这个环境。<strong>写错 kernel 名不一定报错</strong>：Quarto 可能退回默认的 <code>python3</code>，用另一个环境的包版本跑完整份报告。所以报告里应当打印实际使用的解释器路径：</p>
-<div id="50e63187" class="cell" data-execution_count="1">
+<div id="79cf309b" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sys.executable)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sys.executable)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sys.version)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sys.version_info)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> platform</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(platform.python_version())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>/mnt/ex_8T_SSD/conda_envs/sc_tut_main/bin/python</code></pre>
+<pre><code>/mnt/ex_8T_SSD/conda_envs/sc_tut_main/bin/python
+3.11.16 (main, Sep  2 2026, 23:39:52) [GCC 15.3.0]
+sys.version_info(major=3, minor=11, micro=16, releaselevel=&#39;final&#39;, serial=0)
+3.11.16</code></pre>
 </div>
 </div>
 <p>本机已注册的 kernel 有 <code>sc_tut_main</code>、<code>sc_tut_grn</code>、<code>sc_tut_spatial</code>、<code>sc_tut_traj</code> 等。做 GRN 的章节要换成 <code>jupyter: sc_tut_grn</code>。不同环境不能在同一个 <code>.qmd</code> 里混用，一个文件只用一个 kernel。</p>
 </section>
-<section id="sec-chunks" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="sec-chunks"><span class="header-section-number">4</span> 代码块与 <code>#|</code> 选项</h2>
+<section id="sec-bash" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-bash"><span class="header-section-number">4</span> 在 <code>.qmd</code> 里运行 bash</h2>
+<p>可以运行 bash，但有两个坑。</p>
+<p><strong>坑 1：单独的 <code>{bash}</code> 代码块不会执行。</strong> Jupyter 引擎下，一个 <code>.qmd</code> 只用一个 kernel（这里是 Python）。下面这种代码块只会原样显示，<strong>没有输出，也不报错</strong>。R 的 knitr 引擎能执行 <code>{bash}</code>，所以很容易误以为这里也行：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">--version</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>能执行的写法有两种，都是 IPython 的语法，写在 python 代码块里：</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">写法</th>
+<th style="text-align: center;">用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>!命令</code></td>
+<td style="text-align: center;">单行 shell 命令；用 <code>{变量}</code> 把 Python 变量代进去</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">代码块第一行写 <code>%%bash</code></td>
+<td style="text-align: center;">整块按 bash 执行，适合多行脚本</td>
+</tr>
+</tbody>
+</table>
+<p><strong>坑 2：shell 里裸写的 <code>python</code> 不一定是 kernel 的 python。</strong> shell 按 <code>PATH</code> 去找 <code>python</code>，而 <code>PATH</code> 取决于 Quarto 是怎么启动的。下面这块每次渲染都会实时运行，可以直接看到两者是否一致：</p>
+<div id="6816ce99" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>which python</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">--</span>version</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>{sys.executable} <span class="op">--</span>version</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>/mnt/ex_8T_SSD/conda_envs/sc_tut_r/bin/python
+Python 3.14.7
+Python 3.11.16</code></pre>
+</div>
+</div>
+<div id="bddcf75f" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>bash</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>echo <span class="st">&quot;</span><span class="sc">%%</span><span class="st">bash 块里的 python:&quot;</span><span class="op">;</span> python <span class="op">-</span>V</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>%%bash 块里的 python:
+Python 3.14.7</code></pre>
+</div>
+</div>
+<p>本机实测（2026-11-19，用 <a href="#sec-render" class="quarto-xref">Section 9</a> 里的命令渲染）：<code>!python --version</code> 得到 <strong>Python 3.14.7</strong>，路径是 <code>/mnt/ex_8T_SSD/conda_envs/sc_tut_r/bin/python</code>。原因是 <code>mamba run -p sc_tut_r</code> 把 <code>sc_tut_r/bin</code> 放在了 <code>PATH</code> 最前面。<code>!{sys.executable} --version</code> 得到的 <strong>Python 3.11.16</strong> 才是 kernel（<code>sc_tut_main</code>）自己的 python。用 <code>!python --version</code> 记录版本，<strong>会记成另一个环境的版本，而且看不出任何异常</strong>。</p>
+<p><strong>规则：</strong> 凡是调用 Python 本身（<code>python</code>、<code>pip</code>），一律写成 <code>sys.executable</code>：</p>
+<div id="19c7102f" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>{sys.executable} <span class="op">-</span>m pip <span class="bu">list</span> <span class="dv">2</span><span class="op">&gt;/</span>dev<span class="op">/</span>null <span class="op">|</span> grep <span class="op">-</span>iE <span class="st">&quot;^(scanpy|anndata) &quot;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>anndata                   0.12.19
+scanpy                    1.11.5</code></pre>
+</div>
+</div>
+<p>其他命令（<code>samtools</code>、<code>ls</code>、<code>md5sum</code>）没有这个问题，前提是它们确实在 <code>PATH</code> 里。</p>
+</section>
+<section id="sec-chunks" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-chunks"><span class="header-section-number">5</span> 代码块与 <code>#|</code> 选项</h2>
 <p>代码块写成 <code>```{python}</code>。块内开头以 <code>#|</code> 开头的行是<strong>块级选项</strong>，只作用于这一块，会覆盖 YAML 里的全局设置：</p>
 <table class="caption-top table">
 <colgroup>
@@ -2412,23 +2476,23 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 </tr>
 <tr class="even">
 <td style="text-align: left;"><code>#| tags: [parameters]</code></td>
-<td style="text-align: left;">参数块，可在命令行覆盖（§6）</td>
+<td style="text-align: left;">参数块，可在命令行覆盖（<a href="#sec-render-params" class="quarto-xref">Section 8</a>）</td>
 </tr>
 </tbody>
 </table>
 <p>下面开始一个最小但完整的分析示例。先载入包并记录版本：</p>
-<div id="94732aa9" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scanpy <span class="im">as</span> sc</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> importlib.metadata <span class="im">import</span> version</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;version&quot;</span>: [version(p) <span class="cf">for</span> p <span class="kw">in</span> [<span class="st">&quot;scanpy&quot;</span>, <span class="st">&quot;anndata&quot;</span>, <span class="st">&quot;numpy&quot;</span>, <span class="st">&quot;pandas&quot;</span>, <span class="st">&quot;matplotlib&quot;</span>]]},</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">&quot;scanpy&quot;</span>, <span class="st">&quot;anndata&quot;</span>, <span class="st">&quot;numpy&quot;</span>, <span class="st">&quot;pandas&quot;</span>, <span class="st">&quot;matplotlib&quot;</span>],</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div id="e0905fd5" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scanpy <span class="im">as</span> sc</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> importlib.metadata <span class="im">import</span> version</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;version&quot;</span>: [version(p) <span class="cf">for</span> p <span class="kw">in</span> [<span class="st">&quot;scanpy&quot;</span>, <span class="st">&quot;anndata&quot;</span>, <span class="st">&quot;numpy&quot;</span>, <span class="st">&quot;pandas&quot;</span>, <span class="st">&quot;matplotlib&quot;</span>]]},</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">&quot;scanpy&quot;</span>, <span class="st">&quot;anndata&quot;</span>, <span class="st">&quot;numpy&quot;</span>, <span class="st">&quot;pandas&quot;</span>, <span class="st">&quot;matplotlib&quot;</span>],</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
@@ -2467,26 +2531,26 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 </div>
 </div>
 </section>
-<section id="sec-params" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="sec-params"><span class="header-section-number">5</span> 参数块与随机种子</h2>
+<section id="sec-params" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="sec-params"><span class="header-section-number">6</span> 参数块与随机种子</h2>
 <p>把所有”可能要改的数”集中放在一个带 <code>tags: [parameters]</code> 的块里。这样渲染时可以用 <code>-P</code> 从命令行改，正文和代码都不用动：</p>
-<div id="10a1e6b8" class="cell" data-tags="[&quot;parameters&quot;]" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">2026</span>          <span class="co"># 随机种子，非零（0 在某些库里会被当成&quot;没给&quot;，见下文）</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n_subsample <span class="op">=</span> <span class="dv">300</span>    <span class="co"># 下采样细胞数</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="bfbad750" class="cell" data-tags="[&quot;parameters&quot;]" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">2026</span>          <span class="co"># 随机种子，非零（0 在某些库里会被当成&quot;没给&quot;，见下文）</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>n_subsample <span class="op">=</span> <span class="dv">300</span>    <span class="co"># 下采样细胞数</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>随机性必须显式播种，并且要验证”跑两遍结果一样”。</strong> 这里用 <code>numpy</code> 新式的 <code>Generator</code>，种子作为参数传进去，而不是依赖全局状态：</p>
-<div id="ff37b8d7" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>adata <span class="op">=</span> sc.datasets.pbmc68k_reduced()   <span class="co"># scanpy 自带的 700 细胞示例数据，不需要下载</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> subsample(adata, n, seed):</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> rng.choice(adata.n_obs, size<span class="op">=</span>n, replace<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> adata[np.sort(idx)].copy()</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>a1 <span class="op">=</span> subsample(adata, n_subsample, seed)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>a2 <span class="op">=</span> subsample(adata, n_subsample, seed)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> (a1.obs_names <span class="op">==</span> a2.obs_names).<span class="bu">all</span>(), <span class="st">&quot;同种子两次下采样结果不同&quot;</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;同种子两次下采样一致：</span><span class="sc">{</span>a1<span class="sc">.</span>n_obs<span class="sc">}</span><span class="ss"> 个细胞&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="24aeacc3" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>adata <span class="op">=</span> sc.datasets.pbmc68k_reduced()   <span class="co"># scanpy 自带的 700 细胞示例数据，不需要下载</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> subsample(adata, n, seed):</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> rng.choice(adata.n_obs, size<span class="op">=</span>n, replace<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> adata[np.sort(idx)].copy()</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>a1 <span class="op">=</span> subsample(adata, n_subsample, seed)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>a2 <span class="op">=</span> subsample(adata, n_subsample, seed)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> (a1.obs_names <span class="op">==</span> a2.obs_names).<span class="bu">all</span>(), <span class="st">&quot;同种子两次下采样结果不同&quot;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;同种子两次下采样一致：</span><span class="sc">{</span>a1<span class="sc">.</span>n_obs<span class="sc">}</span><span class="ss"> 个细胞&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>同种子两次下采样一致：300 个细胞</code></pre>
 </div>
@@ -2505,21 +2569,21 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 </div>
 </div>
 </section>
-<section id="sec-figtab" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="sec-figtab"><span class="header-section-number">6</span> 图、表与正文里的动态数字</h2>
-<section id="表" class="level3" data-number="6.1">
-<h3 data-number="6.1" class="anchored" data-anchor-id="表"><span class="header-section-number">6.1</span> 表</h3>
-<div class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tab <span class="op">=</span> (a1.obs[<span class="st">&quot;bulk_labels&quot;</span>].value_counts()</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>         .rename_axis(<span class="st">&quot;cell_type&quot;</span>).reset_index(name<span class="op">=</span><span class="st">&quot;n_cells&quot;</span>))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>tab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div id="tbl-celltypes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="5">
+<section id="sec-figtab" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="sec-figtab"><span class="header-section-number">7</span> 图、表与正文里的动态数字</h2>
+<section id="表" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="表"><span class="header-section-number">7.1</span> 表</h3>
+<div class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tab <span class="op">=</span> (a1.obs[<span class="st">&quot;bulk_labels&quot;</span>].value_counts()</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>         .rename_axis(<span class="st">&quot;cell_type&quot;</span>).reset_index(name<span class="op">=</span><span class="st">&quot;n_cells&quot;</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>tab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-celltypes" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="8">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-celltypes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table 1: 下采样后各细胞类型（<code>bulk_labels</code>）的细胞数
 </figcaption>
 <div aria-describedby="tbl-celltypes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
@@ -2592,10 +2656,10 @@ Table 1: 下采样后各细胞类型（<code>bulk_labels</code>）的细胞数
 </div>
 </div>
 </section>
-<section id="图" class="level3" data-number="6.2">
-<h3 data-number="6.2" class="anchored" data-anchor-id="图"><span class="header-section-number">6.2</span> 图</h3>
-<div id="cell-fig-umap" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> sc.pl.umap(a1, color<span class="op">=</span><span class="st">&quot;bulk_labels&quot;</span>, show<span class="op">=</span><span class="va">False</span>, frameon<span class="op">=</span><span class="va">False</span>, title<span class="op">=</span><span class="st">&quot;&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="图" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="图"><span class="header-section-number">7.2</span> 图</h3>
+<div id="cell-fig-umap" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> sc.pl.umap(a1, color<span class="op">=</span><span class="st">&quot;bulk_labels&quot;</span>, show<span class="op">=</span><span class="va">False</span>, frameon<span class="op">=</span><span class="va">False</span>, title<span class="op">=</span><span class="st">&quot;&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-umap" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2610,22 +2674,22 @@ Figure 1: 下采样细胞的 UMAP，按细胞类型着色
 </div>
 </div>
 </section>
-<section id="正文里的数字不要手抄" class="level3" data-number="6.3">
-<h3 data-number="6.3" class="anchored" data-anchor-id="正文里的数字不要手抄"><span class="header-section-number">6.3</span> 正文里的数字不要手抄</h3>
+<section id="正文里的数字不要手抄" class="level3" data-number="7.3">
+<h3 data-number="7.3" class="anchored" data-anchor-id="正文里的数字不要手抄"><span class="header-section-number">7.3</span> 正文里的数字不要手抄</h3>
 <p>下面这句话里的数字全部由代码实时算出（Quarto ≥ 1.4 支持行内 Python 表达式）：下采样后共有 300 个细胞，分属 10 个类型，其中最多的是 Dendritic（105 个）。详见 <a href="#tbl-celltypes" class="quarto-xref">Table 1</a> 和 <a href="#fig-umap" class="quarto-xref">Figure 1</a>。</p>
 <p>源码里这句话写的是 <code>`{python} n_cells`</code>，而不是”300”。<strong>手抄的数字在参数一变时就会和图表脱节</strong>；行内表达式保证正文、表、图三处永远是同一个数。</p>
 </section>
 </section>
-<section id="sec-render-params" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="sec-render-params"><span class="header-section-number">7</span> 用参数重新渲染</h2>
+<section id="sec-render-params" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="sec-render-params"><span class="header-section-number">8</span> 用参数重新渲染</h2>
 <p>参数块里的值可以在渲染时覆盖，不改源文件：</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render quarto_python_reproducible_report_tutorial_20261119.qmd <span class="dt">\</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-P</span> seed:7 <span class="at">-P</span> n_subsample:500 <span class="at">--output</span> report_seed7.html</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render quarto_python_reproducible_report_tutorial_20261119.qmd <span class="dt">\</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-P</span> seed:7 <span class="at">-P</span> n_subsample:500 <span class="at">--output</span> report_seed7.html</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Quarto 会在参数块后面插入一个新块，把 <code>seed</code>、<code>n_subsample</code> 改成新值。用 <code>--output</code> 换个文件名，可以避免覆盖原来的报告；这与”修正前先归档旧版”的规矩一致。</p>
 <p><strong><code>-P</code> 依赖 kernel 环境里装有 <code>papermill</code></strong>，没有就报 <code>The papermill package is required for processing --execute-params</code>。<code>sc_tut_main</code> 已于 2026-11-19 装好 papermill 2.7.0；换别的环境要先确认。本机实测：默认渲染得到 300 个细胞，<code>-P seed:7 -P n_subsample:500</code> 得到 500 个细胞，正文数字随之改变。</p>
 </section>
-<section id="sec-render" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="sec-render"><span class="header-section-number">8</span> 渲染命令逐项解释</h2>
+<section id="sec-render" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="sec-render"><span class="header-section-number">9</span> 渲染命令逐项解释</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
@@ -2673,24 +2737,24 @@ Figure 1: 下采样细胞的 UMAP，按细胞类型着色
 </div>
 </div>
 </section>
-<section id="sec-convert" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="sec-convert"><span class="header-section-number">9</span> 与 <code>.ipynb</code>、Jupytext 互转</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> convert analysis.ipynb      <span class="co"># → analysis.qmd（丢弃已存的输出）</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> convert analysis.qmd        <span class="co"># → analysis.ipynb（未执行）</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="sec-convert" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="sec-convert"><span class="header-section-number">10</span> 与 <code>.ipynb</code>、Jupytext 互转</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> convert analysis.ipynb      <span class="co"># → analysis.qmd（丢弃已存的输出）</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> convert analysis.qmd        <span class="co"># → analysis.ipynb（未执行）</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>已经习惯 Jupyter 的话，也可以用 Jupytext 把 <code>.ipynb</code> 配对成 <code>.py</code>，再用 Quarto 渲染 <code>.ipynb</code> 本身（<code>quarto render x.ipynb --execute</code>）。但 <strong><code>.qmd</code> 作为唯一源文件</strong>是最干净的做法：只有一份文本，没有”哪份是最新”的问题。</p>
 </section>
-<section id="sec-project" class="level2" data-number="10">
-<h2 data-number="10" class="anchored" data-anchor-id="sec-project"><span class="header-section-number">10</span> 多章节教程：project 与 freeze</h2>
+<section id="sec-project" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="sec-project"><span class="header-section-number">11</span> 多章节教程：project 与 freeze</h2>
 <p>单个文件够用到十几个代码块。章节多了，就在目录下放一个 <code>_quarto.yml</code>，变成 Quarto project（本机 R 教程 proj23 就是这么组织的）：</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">project</span><span class="kw">:</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> website</span><span class="co">          # 或 book</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">execute-dir</span><span class="kw">:</span><span class="at"> project</span><span class="co">   # 所有章节的工作目录统一为项目根，相对路径不随文件位置漂移</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">execute</span><span class="kw">:</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">freeze</span><span class="kw">:</span><span class="at"> auto</span><span class="co">           # 源文件没变的章节不重跑，直接用 _freeze/ 里的结果</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">project</span><span class="kw">:</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> website</span><span class="co">          # 或 book</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">execute-dir</span><span class="kw">:</span><span class="at"> project</span><span class="co">   # 所有章节的工作目录统一为项目根，相对路径不随文件位置漂移</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">execute</span><span class="kw">:</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">freeze</span><span class="kw">:</span><span class="at"> auto</span><span class="co">           # 源文件没变的章节不重跑，直接用 _freeze/ 里的结果</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>freeze: auto</code> 只在 project 里生效。它让大型教程不必每次全部重跑；但<strong>改了上游数据、源文件却没变时，结果不会更新</strong>，这种时候要手动 <code>quarto render --cache-refresh</code> 或删掉对应 <code>_freeze/</code> 子目录（删之前按规矩先确认）。</p>
 </section>
-<section id="sec-checklist" class="level2" data-number="11">
-<h2 data-number="11" class="anchored" data-anchor-id="sec-checklist"><span class="header-section-number">11</span> 可复现报告的检查清单</h2>
+<section id="sec-checklist" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="sec-checklist"><span class="header-section-number">12</span> 可复现报告的检查清单</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
@@ -2708,33 +2772,37 @@ Figure 1: 下采样细胞的 UMAP，按细胞类型着色
 <td style="text-align: left;">YAML 里写死 kernel；报告里打印 <code>sys.executable</code> 和关键包版本</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">shell 命令</td>
+<td style="text-align: left;">用 <code>!命令</code> 或 <code>%%bash</code>，不用 <code>{bash}</code> 块；调用 python/pip 一律写 <code>{sys.executable}</code></td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">随机性</td>
 <td style="text-align: left;">种子集中在参数块；非零；关键步骤同参数跑两遍断言一致</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">数据路径</td>
 <td style="text-align: left;">用绝对路径，或 project 里统一 <code>execute-dir: project</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">正文数字</td>
 <td style="text-align: left;">一律用 <code>`{python} expr`</code>，不手抄</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">输出</td>
 <td style="text-align: left;"><code>embed-resources: true</code> 单文件；改参数重渲染用 <code>--output</code> 换名，不覆盖旧版</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">源文件</td>
 <td style="text-align: left;">只提交 <code>.qmd</code>；<code>*.html</code>、<code>_freeze/</code>、<code>.quarto/</code> 是构建产物</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="sec-session" class="level2" data-number="12">
-<h2 data-number="12" class="anchored" data-anchor-id="sec-session"><span class="header-section-number">12</span> Session info</h2>
-<div id="a56f8613" class="cell" data-execution_count="8">
+<section id="sec-session" class="level2" data-number="13">
+<h2 data-number="13" class="anchored" data-anchor-id="sec-session"><span class="header-section-number">13</span> Session info</h2>
+<div id="d9a47b32" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-stdout">
-<pre><code>渲染时间: 2026-11-19 23:11
+<pre><code>渲染时间: 2026-11-19 23:39
 Python  : 3.11.16  (/mnt/ex_8T_SSD/conda_envs/sc_tut_main/bin/python)
 平台    : Linux-6.8.0-124-generic-x86_64-with-glibc2.35</code></pre>
 </div>
@@ -3196,231 +3264,280 @@ Python  : 3.11.16  (/mnt/ex_8T_SSD/conda_envs/sc_tut_main/bin/python)
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> &quot;用 Quarto 写可复现的 Python 分析报告&quot;</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> &quot;一个本身就能渲染的 .qmd 教程（scanpy 内置数据，离线可跑）&quot;</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 2026-11-19</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">    embed-resources: true      # 图、CSS、JS 全部打包进一个 HTML，单文件即可分享</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true           # 页面右上角可以查看/下载 .qmd 源码</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="an">jupyter:</span><span class="co"> sc_tut_main           # 用哪个 Jupyter kernel 执行代码块（见 §2）</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true                   # 默认显示代码</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false               # 不把库的 FutureWarning 刷进报告</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## 结论：这个文件是什么、怎么用 {#sec-summary}</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="in">`.qmd`</span> = **Markdown 正文 + 可执行代码块 + 顶部 YAML 配置**。<span class="in">`quarto render`</span> 会启动一个 Jupyter kernel，把代码块从上到下跑一遍，再把正文、代码、输出、图一起排成 HTML/PDF/Word。</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>和 <span class="in">`.ipynb`</span> 相比，三点最关键：</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 维度 <span class="pp">|</span> <span class="in">`.qmd`</span> <span class="pp">|</span> <span class="in">`.ipynb`</span> <span class="pp">|</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="pp">| :---</span> <span class="pp">| :---:</span> <span class="pp">| :---:</span> <span class="pp">|</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 文件内容 <span class="pp">|</span> 纯文本，只有源码，**不存输出** <span class="pp">|</span> JSON，源码和输出（含 base64 图）存在一起 <span class="pp">|</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> git diff <span class="pp">|</span> 逐行可读 <span class="pp">|</span> 一改就是几百行 JSON 噪声 <span class="pp">|</span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 可复现性 <span class="pp">|</span> **每次渲染都从头重跑**，不可能出现&quot;输出是旧的&quot; <span class="pp">|</span> 输出可能来自乱序执行、早已删掉的单元格 <span class="pp">|</span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 交互开发 <span class="pp">|</span> VS Code / Positron 里可逐块运行 <span class="pp">|</span> 原生 <span class="pp">|</span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>**本机渲染这个文件的命令**（§7 解释每一部分）：</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/gao/Utilities/Bioinfo/single_cell_and_spatial/technical_issue</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="va">QUARTO_PYTHON</span><span class="op">=</span>/mnt/ex_8T_SSD/conda_envs/sc_tut_main/bin/python <span class="dt">\</span></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>  <span class="ex">mamba</span> run <span class="at">-p</span> /mnt/ex_8T_SSD/conda_envs/sc_tut_r <span class="dt">\</span></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  quarto render quarto_python_reproducible_report_tutorial_20261119.qmd</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="fu">## YAML 头：整份报告的配置 {#sec-yaml}</span></span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>文件最上面 <span class="in">`---`</span> 之间的部分。本文件用到的键：</span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 键 <span class="pp">|</span> 作用 <span class="pp">|</span> 常见取值 <span class="pp">|</span></span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="pp">| :---</span> <span class="pp">| :---:</span> <span class="pp">| :---:</span> <span class="pp">|</span></span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`format: html:`</span> <span class="pp">|</span> 输出格式及其选项 <span class="pp">|</span> <span class="in">`html`</span>、<span class="in">`pdf`</span>、<span class="in">`docx`</span>；可以同时写多个 <span class="pp">|</span></span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`embed-resources: true`</span> <span class="pp">|</span> 打包成单个 HTML <span class="pp">|</span> 不开则会多出一个 <span class="in">`*_files/`</span> 目录 <span class="pp">|</span></span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`toc`</span> / <span class="in">`number-sections`</span> <span class="pp">|</span> 目录、章节编号 <span class="pp">|</span> <span class="in">`true`</span> / <span class="in">`false`</span> <span class="pp">|</span></span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`jupyter:`</span> <span class="pp">|</span> **执行代码用的 kernel 名** <span class="pp">|</span> <span class="in">`jupyter kernelspec list`</span> 里列出的名字 <span class="pp">|</span></span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`execute:`</span> <span class="pp">|</span> 全局执行选项 <span class="pp">|</span> <span class="in">`echo`</span>、<span class="in">`warning`</span>、<span class="in">`eval`</span>、<span class="in">`freeze`</span>、<span class="in">`cache`</span> <span class="pp">|</span></span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## 选 kernel = 选 conda 环境 {#sec-kernel}</span></span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="in">`jupyter: sc_tut_main`</span> 指向 <span class="in">`~/.local/share/jupyter/kernels/sc_tut_main`</span>，它对应 <span class="in">`/mnt/ex_8T_SSD/conda_envs/sc_tut_main`</span> 这个环境。**写错 kernel 名不一定报错**：Quarto 可能退回默认的 <span class="in">`python3`</span>，用另一个环境的包版本跑完整份报告。所以报告里应当打印实际使用的解释器路径：</span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sys.executable)</span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>本机已注册的 kernel 有 <span class="in">`sc_tut_main`</span>、<span class="in">`sc_tut_grn`</span>、<span class="in">`sc_tut_spatial`</span>、<span class="in">`sc_tut_traj`</span> 等。做 GRN 的章节要换成 <span class="in">`jupyter: sc_tut_grn`</span>。不同环境不能在同一个 <span class="in">`.qmd`</span> 里混用，一个文件只用一个 kernel。</span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a><span class="fu">## 代码块与 `#|` 选项 {#sec-chunks}</span></span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>代码块写成 `<span class="in">``` ```</span>{python} ```<span class="in">`。块内开头以 `</span>#|` 开头的行是**块级选项**，只作用于这一块，会覆盖 YAML 里的全局设置：</span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 选项 <span class="pp">|</span> 作用 <span class="pp">|</span></span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a><span class="pp">| :---</span> <span class="pp">| :---</span> <span class="pp">|</span></span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| label: fig-xxx`</span> / <span class="in">`tbl-xxx`</span> <span class="pp">|</span> 给图/表编号，正文用 <span class="in">`@fig-xxx`</span> 交叉引用 <span class="pp">|</span></span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| fig-cap:`</span> / <span class="in">`#| tbl-cap:`</span> <span class="pp">|</span> 图注 / 表注 <span class="pp">|</span></span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| echo: false`</span> <span class="pp">|</span> 只显示结果，不显示代码 <span class="pp">|</span></span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| output: false`</span> <span class="pp">|</span> 只跑不显示输出 <span class="pp">|</span></span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| eval: false`</span> <span class="pp">|</span> 只显示代码，不运行 <span class="pp">|</span></span>
-<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| tags: [parameters]`</span> <span class="pp">|</span> 参数块，可在命令行覆盖（§6） <span class="pp">|</span></span>
-<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>下面开始一个最小但完整的分析示例。先载入包并记录版本：</span>
-<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scanpy <span class="im">as</span> sc</span>
-<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib</span>
-<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> importlib.metadata <span class="im">import</span> version</span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(</span>
-<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;version&quot;</span>: [version(p) <span class="cf">for</span> p <span class="kw">in</span> [<span class="st">&quot;scanpy&quot;</span>, <span class="st">&quot;anndata&quot;</span>, <span class="st">&quot;numpy&quot;</span>, <span class="st">&quot;pandas&quot;</span>, <span class="st">&quot;matplotlib&quot;</span>]]},</span>
-<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">&quot;scanpy&quot;</span>, <span class="st">&quot;anndata&quot;</span>, <span class="st">&quot;numpy&quot;</span>, <span class="st">&quot;pandas&quot;</span>, <span class="st">&quot;matplotlib&quot;</span>],</span>
-<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a><span class="fu">## 参数块与随机种子 {#sec-params}</span></span>
-<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a>把所有&quot;可能要改的数&quot;集中放在一个带 <span class="in">`tags: [parameters]`</span> 的块里。这样渲染时可以用 <span class="in">`-P`</span> 从命令行改，正文和代码都不用动：</span>
-<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a><span class="co">#| tags: [parameters]</span></span>
-<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">2026</span>          <span class="co"># 随机种子，非零（0 在某些库里会被当成&quot;没给&quot;，见下文）</span></span>
-<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a>n_subsample <span class="op">=</span> <span class="dv">300</span>    <span class="co"># 下采样细胞数</span></span>
-<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a>**随机性必须显式播种，并且要验证&quot;跑两遍结果一样&quot;。** 这里用 <span class="in">`numpy`</span> 新式的 <span class="in">`Generator`</span>，种子作为参数传进去，而不是依赖全局状态：</span>
-<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a>adata <span class="op">=</span> sc.datasets.pbmc68k_reduced()   <span class="co"># scanpy 自带的 700 细胞示例数据，不需要下载</span></span>
-<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> subsample(adata, n, seed):</span>
-<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
-<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> rng.choice(adata.n_obs, size<span class="op">=</span>n, replace<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> adata[np.sort(idx)].copy()</span>
-<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a>a1 <span class="op">=</span> subsample(adata, n_subsample, seed)</span>
-<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a>a2 <span class="op">=</span> subsample(adata, n_subsample, seed)</span>
-<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> (a1.obs_names <span class="op">==</span> a2.obs_names).<span class="bu">all</span>(), <span class="st">&quot;同种子两次下采样结果不同&quot;</span></span>
-<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;同种子两次下采样一致：</span><span class="sc">{</span>a1<span class="sc">.</span>n_obs<span class="sc">}</span><span class="ss"> 个细胞&quot;</span>)</span>
-<span id="cb14-122"><a href="#cb14-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-123"><a href="#cb14-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-124"><a href="#cb14-124" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning}</span>
-<span id="cb14-125"><a href="#cb14-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## `seed=0` 的坑</span></span>
-<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a>不少库内部写的是 <span class="in">`if seed:`</span> 或 <span class="in">`if self.random_state:`</span>，0 是 falsy，**等于没有播种**，而且不报错。本机已经在 decoupler（GSEA 置换）和 Tangram（去卷积）上各踩过一次。给 0 之前先搜一下源码里的 <span class="in">`if `</span>。</span>
-<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb14-128"><a href="#cb14-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-129"><a href="#cb14-129" aria-hidden="true" tabindex="-1"></a><span class="fu">## 图、表与正文里的动态数字 {#sec-figtab}</span></span>
-<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-131"><a href="#cb14-131" aria-hidden="true" tabindex="-1"></a><span class="fu">### 表</span></span>
-<span id="cb14-132"><a href="#cb14-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-135"><a href="#cb14-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb14-136"><a href="#cb14-136" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-celltypes</span></span>
-<span id="cb14-137"><a href="#cb14-137" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: &quot;下采样后各细胞类型（`bulk_labels`）的细胞数&quot;</span></span>
-<span id="cb14-138"><a href="#cb14-138" aria-hidden="true" tabindex="-1"></a>tab <span class="op">=</span> (a1.obs[<span class="st">&quot;bulk_labels&quot;</span>].value_counts()</span>
-<span id="cb14-139"><a href="#cb14-139" aria-hidden="true" tabindex="-1"></a>         .rename_axis(<span class="st">&quot;cell_type&quot;</span>).reset_index(name<span class="op">=</span><span class="st">&quot;n_cells&quot;</span>))</span>
-<span id="cb14-140"><a href="#cb14-140" aria-hidden="true" tabindex="-1"></a>tab</span>
-<span id="cb14-141"><a href="#cb14-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-142"><a href="#cb14-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-143"><a href="#cb14-143" aria-hidden="true" tabindex="-1"></a><span class="fu">### 图</span></span>
-<span id="cb14-144"><a href="#cb14-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-147"><a href="#cb14-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb14-148"><a href="#cb14-148" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-umap</span></span>
-<span id="cb14-149"><a href="#cb14-149" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: &quot;下采样细胞的 UMAP，按细胞类型着色&quot;</span></span>
-<span id="cb14-150"><a href="#cb14-150" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> sc.pl.umap(a1, color<span class="op">=</span><span class="st">&quot;bulk_labels&quot;</span>, show<span class="op">=</span><span class="va">False</span>, frameon<span class="op">=</span><span class="va">False</span>, title<span class="op">=</span><span class="st">&quot;&quot;</span>)</span>
-<span id="cb14-151"><a href="#cb14-151" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-152"><a href="#cb14-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-153"><a href="#cb14-153" aria-hidden="true" tabindex="-1"></a><span class="fu">### 正文里的数字不要手抄</span></span>
-<span id="cb14-154"><a href="#cb14-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-157"><a href="#cb14-157" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb14-158"><a href="#cb14-158" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb14-159"><a href="#cb14-159" aria-hidden="true" tabindex="-1"></a>n_cells <span class="op">=</span> a1.n_obs</span>
-<span id="cb14-160"><a href="#cb14-160" aria-hidden="true" tabindex="-1"></a>n_types <span class="op">=</span> a1.obs[<span class="st">&quot;bulk_labels&quot;</span>].nunique()</span>
-<span id="cb14-161"><a href="#cb14-161" aria-hidden="true" tabindex="-1"></a>top_type <span class="op">=</span> tab.iloc[<span class="dv">0</span>][<span class="st">&quot;cell_type&quot;</span>]</span>
-<span id="cb14-162"><a href="#cb14-162" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> <span class="bu">int</span>(tab.iloc[<span class="dv">0</span>][<span class="st">&quot;n_cells&quot;</span>])</span>
-<span id="cb14-163"><a href="#cb14-163" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-164"><a href="#cb14-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-165"><a href="#cb14-165" aria-hidden="true" tabindex="-1"></a>下面这句话里的数字全部由代码实时算出（Quarto ≥ 1.4 支持行内 Python 表达式）：下采样后共有 <span class="in">`{python} n_cells`</span> 个细胞，分属 <span class="in">`{python} n_types`</span> 个类型，其中最多的是 <span class="in">`{python} top_type`</span>（<span class="in">`{python} top_n`</span> 个）。详见 @tbl-celltypes 和 @fig-umap。</span>
-<span id="cb14-166"><a href="#cb14-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-167"><a href="#cb14-167" aria-hidden="true" tabindex="-1"></a>源码里这句话写的是 `<span class="in">` `</span>{python} n_cells` ``，而不是&quot;300&quot;。**手抄的数字在参数一变时就会和图表脱节**；行内表达式保证正文、表、图三处永远是同一个数。</span>
-<span id="cb14-168"><a href="#cb14-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-169"><a href="#cb14-169" aria-hidden="true" tabindex="-1"></a><span class="fu">## 用参数重新渲染 {#sec-render-params}</span></span>
-<span id="cb14-170"><a href="#cb14-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-171"><a href="#cb14-171" aria-hidden="true" tabindex="-1"></a>参数块里的值可以在渲染时覆盖，不改源文件：</span>
-<span id="cb14-172"><a href="#cb14-172" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-173"><a href="#cb14-173" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
-<span id="cb14-174"><a href="#cb14-174" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render quarto_python_reproducible_report_tutorial_20261119.qmd <span class="dt">\</span></span>
-<span id="cb14-175"><a href="#cb14-175" aria-hidden="true" tabindex="-1"></a>  <span class="at">-P</span> seed:7 <span class="at">-P</span> n_subsample:500 <span class="at">--output</span> report_seed7.html</span>
-<span id="cb14-176"><a href="#cb14-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-177"><a href="#cb14-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-178"><a href="#cb14-178" aria-hidden="true" tabindex="-1"></a>Quarto 会在参数块后面插入一个新块，把 <span class="in">`seed`</span>、<span class="in">`n_subsample`</span> 改成新值。用 <span class="in">`--output`</span> 换个文件名，可以避免覆盖原来的报告；这与&quot;修正前先归档旧版&quot;的规矩一致。</span>
-<span id="cb14-179"><a href="#cb14-179" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-180"><a href="#cb14-180" aria-hidden="true" tabindex="-1"></a>**`-P` 依赖 kernel 环境里装有 `papermill`**，没有就报 <span class="in">`The papermill package is required for processing --execute-params`</span>。<span class="in">`sc_tut_main`</span> 已于 2026-11-19 装好 papermill 2.7.0；换别的环境要先确认。本机实测：默认渲染得到 300 个细胞，<span class="in">`-P seed:7 -P n_subsample:500`</span> 得到 500 个细胞，正文数字随之改变。</span>
-<span id="cb14-181"><a href="#cb14-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-182"><a href="#cb14-182" aria-hidden="true" tabindex="-1"></a><span class="fu">## 渲染命令逐项解释 {#sec-render}</span></span>
-<span id="cb14-183"><a href="#cb14-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-184"><a href="#cb14-184" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 部分 <span class="pp">|</span> 作用 <span class="pp">|</span></span>
-<span id="cb14-185"><a href="#cb14-185" aria-hidden="true" tabindex="-1"></a><span class="pp">| :---</span> <span class="pp">| :---</span> <span class="pp">|</span></span>
-<span id="cb14-186"><a href="#cb14-186" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`QUARTO_PYTHON=.../sc_tut_main/bin/python`</span> <span class="pp">|</span> 告诉 Quarto 用哪个 Python 去找 Jupyter 和 kernel <span class="pp">|</span></span>
-<span id="cb14-187"><a href="#cb14-187" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`mamba run -p /mnt/ex_8T_SSD/conda_envs/sc_tut_r`</span> <span class="pp">|</span> 本机 Quarto（1.9.38）装在 <span class="in">`sc_tut_r`</span> 环境里，必须在激活该环境后才能运行（激活脚本会设好 <span class="in">`QUARTO_DENO`</span>、<span class="in">`QUARTO_PANDOC`</span> 等变量） <span class="pp">|</span></span>
-<span id="cb14-188"><a href="#cb14-188" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`quarto render x.qmd`</span> <span class="pp">|</span> 跑全部代码块，生成 <span class="in">`x.html`</span> <span class="pp">|</span></span>
-<span id="cb14-189"><a href="#cb14-189" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`quarto preview x.qmd`</span> <span class="pp">|</span> 边改边看，保存即自动重渲染 <span class="pp">|</span></span>
-<span id="cb14-190"><a href="#cb14-190" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-191"><a href="#cb14-191" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
-<span id="cb14-192"><a href="#cb14-192" aria-hidden="true" tabindex="-1"></a><span class="fu">## 本机已知的两个坑</span></span>
-<span id="cb14-193"><a href="#cb14-193" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**直接执行 `/mnt/ex_8T_SSD/conda_envs/sc_tut_r/bin/quarto` 会报找不到 `deno`**：没有激活环境，缺少 <span class="in">`QUARTO_DENO`</span> 这些变量。必须通过 <span class="in">`mamba run -p`</span> 或先 <span class="in">`mamba activate`</span>。</span>
-<span id="cb14-194"><a href="#cb14-194" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**`conda run -n sc_tut_r` 会报环境不存在**：这个环境没有登记在默认的 envs 目录下，要用 <span class="in">`-p`</span> 加完整路径。</span>
-<span id="cb14-195"><a href="#cb14-195" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb14-196"><a href="#cb14-196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-197"><a href="#cb14-197" aria-hidden="true" tabindex="-1"></a><span class="fu">## 与 `.ipynb`、Jupytext 互转 {#sec-convert}</span></span>
-<span id="cb14-198"><a href="#cb14-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-199"><a href="#cb14-199" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
-<span id="cb14-200"><a href="#cb14-200" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> convert analysis.ipynb      <span class="co"># → analysis.qmd（丢弃已存的输出）</span></span>
-<span id="cb14-201"><a href="#cb14-201" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> convert analysis.qmd        <span class="co"># → analysis.ipynb（未执行）</span></span>
-<span id="cb14-202"><a href="#cb14-202" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-203"><a href="#cb14-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-204"><a href="#cb14-204" aria-hidden="true" tabindex="-1"></a>已经习惯 Jupyter 的话，也可以用 Jupytext 把 <span class="in">`.ipynb`</span> 配对成 <span class="in">`.py`</span>，再用 Quarto 渲染 <span class="in">`.ipynb`</span> 本身（<span class="in">`quarto render x.ipynb --execute`</span>）。但 **`.qmd` 作为唯一源文件**是最干净的做法：只有一份文本，没有&quot;哪份是最新&quot;的问题。</span>
-<span id="cb14-205"><a href="#cb14-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-206"><a href="#cb14-206" aria-hidden="true" tabindex="-1"></a><span class="fu">## 多章节教程：project 与 freeze {#sec-project}</span></span>
-<span id="cb14-207"><a href="#cb14-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-208"><a href="#cb14-208" aria-hidden="true" tabindex="-1"></a>单个文件够用到十几个代码块。章节多了，就在目录下放一个 <span class="in">`_quarto.yml`</span>，变成 Quarto project（本机 R 教程 proj23 就是这么组织的）：</span>
-<span id="cb14-209"><a href="#cb14-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-210"><a href="#cb14-210" aria-hidden="true" tabindex="-1"></a><span class="in">```yaml</span></span>
-<span id="cb14-211"><a href="#cb14-211" aria-hidden="true" tabindex="-1"></a><span class="fu">project</span><span class="kw">:</span></span>
-<span id="cb14-212"><a href="#cb14-212" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> website</span><span class="co">          # 或 book</span></span>
-<span id="cb14-213"><a href="#cb14-213" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">execute-dir</span><span class="kw">:</span><span class="at"> project</span><span class="co">   # 所有章节的工作目录统一为项目根，相对路径不随文件位置漂移</span></span>
-<span id="cb14-214"><a href="#cb14-214" aria-hidden="true" tabindex="-1"></a><span class="fu">execute</span><span class="kw">:</span></span>
-<span id="cb14-215"><a href="#cb14-215" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">freeze</span><span class="kw">:</span><span class="at"> auto</span><span class="co">           # 源文件没变的章节不重跑，直接用 _freeze/ 里的结果</span></span>
-<span id="cb14-216"><a href="#cb14-216" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-217"><a href="#cb14-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-218"><a href="#cb14-218" aria-hidden="true" tabindex="-1"></a><span class="in">`freeze: auto`</span> 只在 project 里生效。它让大型教程不必每次全部重跑；但**改了上游数据、源文件却没变时，结果不会更新**，这种时候要手动 <span class="in">`quarto render --cache-refresh`</span> 或删掉对应 <span class="in">`_freeze/`</span> 子目录（删之前按规矩先确认）。</span>
-<span id="cb14-219"><a href="#cb14-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-220"><a href="#cb14-220" aria-hidden="true" tabindex="-1"></a><span class="fu">## 可复现报告的检查清单 {#sec-checklist}</span></span>
-<span id="cb14-221"><a href="#cb14-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-222"><a href="#cb14-222" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 检查项 <span class="pp">|</span> 做法 <span class="pp">|</span></span>
-<span id="cb14-223"><a href="#cb14-223" aria-hidden="true" tabindex="-1"></a><span class="pp">| :---</span> <span class="pp">| :---</span> <span class="pp">|</span></span>
-<span id="cb14-224"><a href="#cb14-224" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 环境 <span class="pp">|</span> YAML 里写死 kernel；报告里打印 <span class="in">`sys.executable`</span> 和关键包版本 <span class="pp">|</span></span>
-<span id="cb14-225"><a href="#cb14-225" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 随机性 <span class="pp">|</span> 种子集中在参数块；非零；关键步骤同参数跑两遍断言一致 <span class="pp">|</span></span>
-<span id="cb14-226"><a href="#cb14-226" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 数据路径 <span class="pp">|</span> 用绝对路径，或 project 里统一 <span class="in">`execute-dir: project`</span> <span class="pp">|</span></span>
-<span id="cb14-227"><a href="#cb14-227" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 正文数字 <span class="pp">|</span> 一律用 `<span class="in">` `</span>{python} expr` ``，不手抄 <span class="pp">|</span></span>
-<span id="cb14-228"><a href="#cb14-228" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 输出 <span class="pp">|</span> <span class="in">`embed-resources: true`</span> 单文件；改参数重渲染用 <span class="in">`--output`</span> 换名，不覆盖旧版 <span class="pp">|</span></span>
-<span id="cb14-229"><a href="#cb14-229" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 源文件 <span class="pp">|</span> 只提交 <span class="in">`.qmd`</span>；<span class="in">`*.html`</span>、<span class="in">`_freeze/`</span>、<span class="in">`.quarto/`</span> 是构建产物 <span class="pp">|</span></span>
-<span id="cb14-230"><a href="#cb14-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-231"><a href="#cb14-231" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session info {#sec-session}</span></span>
-<span id="cb14-232"><a href="#cb14-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-235"><a href="#cb14-235" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb14-236"><a href="#cb14-236" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb14-237"><a href="#cb14-237" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> platform, datetime</span>
-<span id="cb14-238"><a href="#cb14-238" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;渲染时间: </span><span class="sc">{</span>datetime<span class="sc">.</span>datetime<span class="sc">.</span>now()<span class="sc">:</span><span class="op">%</span>Y<span class="op">-%</span>m<span class="op">-%</span>d <span class="op">%</span>H<span class="sc">:</span><span class="op">%</span>M<span class="sc">}</span><span class="ss">&quot;</span>)</span>
-<span id="cb14-239"><a href="#cb14-239" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Python  : </span><span class="sc">{</span>platform<span class="sc">.</span>python_version()<span class="sc">}</span><span class="ss">  (</span><span class="sc">{</span>sys<span class="sc">.</span>executable<span class="sc">}</span><span class="ss">)&quot;</span>)</span>
-<span id="cb14-240"><a href="#cb14-240" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;平台    : </span><span class="sc">{</span>platform<span class="sc">.</span>platform()<span class="sc">}</span><span class="ss">&quot;</span>)</span>
-<span id="cb14-241"><a href="#cb14-241" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> &quot;用 Quarto 写可复现的 Python 分析报告&quot;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> &quot;一个本身就能渲染的 .qmd 教程（scanpy 内置数据，离线可跑）&quot;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 2026-11-19</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">    embed-resources: true      # 图、CSS、JS 全部打包进一个 HTML，单文件即可分享</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true           # 页面右上角可以查看/下载 .qmd 源码</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="an">jupyter:</span><span class="co"> sc_tut_main           # 用哪个 Jupyter kernel 执行代码块（见「选 kernel」一节）</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true                   # 默认显示代码</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false               # 不把库的 FutureWarning 刷进报告</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## 结论：这个文件是什么、怎么用 {#sec-summary}</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="in">`.qmd`</span> = **Markdown 正文 + 可执行代码块 + 顶部 YAML 配置**。<span class="in">`quarto render`</span> 会启动一个 Jupyter kernel，把代码块从上到下跑一遍，再把正文、代码、输出、图一起排成 HTML/PDF/Word。</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>和 <span class="in">`.ipynb`</span> 相比，三点最关键：</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 维度 <span class="pp">|</span> <span class="in">`.qmd`</span> <span class="pp">|</span> <span class="in">`.ipynb`</span> <span class="pp">|</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a><span class="pp">|:--------------------|:------------------------:|:------------------------:|</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 文件内容 <span class="pp">|</span> 纯文本，只有源码，**不存输出** <span class="pp">|</span> JSON，源码和输出（含 base64 图）存在一起 <span class="pp">|</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> git diff <span class="pp">|</span> 逐行可读 <span class="pp">|</span> 一改就是几百行 JSON 噪声 <span class="pp">|</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 可复现性 <span class="pp">|</span> **每次渲染都从头重跑**，不可能出现&quot;输出是旧的&quot; <span class="pp">|</span> 输出可能来自乱序执行、早已删掉的单元格 <span class="pp">|</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 交互开发 <span class="pp">|</span> VS Code / Positron 里可逐块运行 <span class="pp">|</span> 原生 <span class="pp">|</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>**本机渲染这个文件的命令**（@sec-render 解释每一部分）：</span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a><span class="in">``` bash</span></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/gao/Utilities/Bioinfo/single_cell_and_spatial/technical_issue</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a><span class="va">QUARTO_PYTHON</span><span class="op">=</span>/mnt/ex_8T_SSD/conda_envs/sc_tut_main/bin/python <span class="dt">\</span></span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>  <span class="ex">mamba</span> run <span class="at">-p</span> /mnt/ex_8T_SSD/conda_envs/sc_tut_r <span class="dt">\</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>  quarto render quarto_python_reproducible_report_tutorial_20261119.qmd</span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a><span class="fu">## YAML 头：整份报告的配置 {#sec-yaml}</span></span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>文件最上面 <span class="in">`---`</span> 之间的部分。本文件用到的键：</span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 键 <span class="pp">|</span> 作用 <span class="pp">|</span> 常见取值 <span class="pp">|</span></span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a><span class="pp">|:--------------------|:------------------------:|:------------------------:|</span></span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`format: html:`</span> <span class="pp">|</span> 输出格式及其选项 <span class="pp">|</span> <span class="in">`html`</span>、<span class="in">`pdf`</span>、<span class="in">`docx`</span>；可以同时写多个 <span class="pp">|</span></span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`embed-resources: true`</span> <span class="pp">|</span> 打包成单个 HTML <span class="pp">|</span> 不开则会多出一个 <span class="in">`*_files/`</span> 目录 <span class="pp">|</span></span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`toc`</span> / <span class="in">`number-sections`</span> <span class="pp">|</span> 目录、章节编号 <span class="pp">|</span> <span class="in">`true`</span> / <span class="in">`false`</span> <span class="pp">|</span></span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`jupyter:`</span> <span class="pp">|</span> **执行代码用的 kernel 名** <span class="pp">|</span> <span class="in">`jupyter kernelspec list`</span> 里列出的名字 <span class="pp">|</span></span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`execute:`</span> <span class="pp">|</span> 全局执行选项 <span class="pp">|</span> <span class="in">`echo`</span>、<span class="in">`warning`</span>、<span class="in">`eval`</span>、<span class="in">`freeze`</span>、<span class="in">`cache`</span> <span class="pp">|</span></span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## 选 kernel = 选 conda 环境 {#sec-kernel}</span></span>
+<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a><span class="in">`jupyter: sc_tut_main`</span> 指向 <span class="in">`~/.local/share/jupyter/kernels/sc_tut_main`</span>，它对应 <span class="in">`/mnt/ex_8T_SSD/conda_envs/sc_tut_main`</span> 这个环境。**写错 kernel 名不一定报错**：Quarto 可能退回默认的 <span class="in">`python3`</span>，用另一个环境的包版本跑完整份报告。所以报告里应当打印实际使用的解释器路径：</span>
+<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sys.executable)</span>
+<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sys.version)</span>
+<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sys.version_info)</span>
+<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> platform</span>
+<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(platform.python_version())</span>
+<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a>本机已注册的 kernel 有 <span class="in">`sc_tut_main`</span>、<span class="in">`sc_tut_grn`</span>、<span class="in">`sc_tut_spatial`</span>、<span class="in">`sc_tut_traj`</span> 等。做 GRN 的章节要换成 <span class="in">`jupyter: sc_tut_grn`</span>。不同环境不能在同一个 <span class="in">`.qmd`</span> 里混用，一个文件只用一个 kernel。</span>
+<span id="cb21-67"><a href="#cb21-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-68"><a href="#cb21-68" aria-hidden="true" tabindex="-1"></a><span class="fu">## 在 `.qmd` 里运行 bash {#sec-bash}</span></span>
+<span id="cb21-69"><a href="#cb21-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-70"><a href="#cb21-70" aria-hidden="true" tabindex="-1"></a>可以运行 bash，但有两个坑。</span>
+<span id="cb21-71"><a href="#cb21-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-72"><a href="#cb21-72" aria-hidden="true" tabindex="-1"></a>**坑 1：单独的 `{bash}` 代码块不会执行。** Jupyter 引擎下，一个 `.qmd` 只用一个 kernel（这里是 Python）。下面这种代码块只会原样显示，**没有输出，也不报错**。R 的 knitr 引擎能执行 <span class="in">`{bash}`</span>，所以很容易误以为这里也行：</span>
+<span id="cb21-73"><a href="#cb21-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-74"><a href="#cb21-74" aria-hidden="true" tabindex="-1"></a><span class="in">````markdown</span></span>
+<span id="cb21-77"><a href="#cb21-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{bash}</span></span>
+<span id="cb21-78"><a href="#cb21-78" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">--version</span></span>
+<span id="cb21-79"><a href="#cb21-79" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-80"><a href="#cb21-80" aria-hidden="true" tabindex="-1"></a><span class="in">````</span></span>
+<span id="cb21-81"><a href="#cb21-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-82"><a href="#cb21-82" aria-hidden="true" tabindex="-1"></a>能执行的写法有两种，都是 IPython 的语法，写在 python 代码块里：</span>
+<span id="cb21-83"><a href="#cb21-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-84"><a href="#cb21-84" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 写法 <span class="pp">|</span> 用途 <span class="pp">|</span></span>
+<span id="cb21-85"><a href="#cb21-85" aria-hidden="true" tabindex="-1"></a><span class="pp">| :---</span> <span class="pp">| :---:</span> <span class="pp">|</span></span>
+<span id="cb21-86"><a href="#cb21-86" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`!命令`</span> <span class="pp">|</span> 单行 shell 命令；用 <span class="in">`{变量}`</span> 把 Python 变量代进去 <span class="pp">|</span></span>
+<span id="cb21-87"><a href="#cb21-87" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 代码块第一行写 <span class="in">`%%bash`</span> <span class="pp">|</span> 整块按 bash 执行，适合多行脚本 <span class="pp">|</span></span>
+<span id="cb21-88"><a href="#cb21-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-89"><a href="#cb21-89" aria-hidden="true" tabindex="-1"></a>**坑 2：shell 里裸写的 `python` 不一定是 kernel 的 python。** shell 按 <span class="in">`PATH`</span> 去找 <span class="in">`python`</span>，而 <span class="in">`PATH`</span> 取决于 Quarto 是怎么启动的。下面这块每次渲染都会实时运行，可以直接看到两者是否一致：</span>
+<span id="cb21-90"><a href="#cb21-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-93"><a href="#cb21-93" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-94"><a href="#cb21-94" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>which python</span>
+<span id="cb21-95"><a href="#cb21-95" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">--</span>version</span>
+<span id="cb21-96"><a href="#cb21-96" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>{sys.executable} <span class="op">--</span>version</span>
+<span id="cb21-97"><a href="#cb21-97" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-98"><a href="#cb21-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-101"><a href="#cb21-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-102"><a href="#cb21-102" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>bash</span>
+<span id="cb21-103"><a href="#cb21-103" aria-hidden="true" tabindex="-1"></a>echo <span class="st">&quot;</span><span class="sc">%%</span><span class="st">bash 块里的 python:&quot;</span><span class="op">;</span> python <span class="op">-</span>V</span>
+<span id="cb21-104"><a href="#cb21-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-105"><a href="#cb21-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-106"><a href="#cb21-106" aria-hidden="true" tabindex="-1"></a>本机实测（2026-11-19，用 @sec-render 里的命令渲染）：<span class="in">`!python --version`</span> 得到 **Python 3.14.7**，路径是 `/mnt/ex_8T_SSD/conda_envs/sc_tut_r/bin/python`。原因是 `mamba run -p sc_tut_r` 把 `sc_tut_r/bin` 放在了 `PATH` 最前面。`!{sys.executable} --version` 得到的 **Python 3.11.16** 才是 kernel（`sc_tut_main`）自己的 python。用 `!python --version` 记录版本，**会记成另一个环境的版本，而且看不出任何异常**。</span>
+<span id="cb21-107"><a href="#cb21-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-108"><a href="#cb21-108" aria-hidden="true" tabindex="-1"></a>**规则：** 凡是调用 Python 本身（<span class="in">`python`</span>、<span class="in">`pip`</span>），一律写成 <span class="in">`sys.executable`</span>：</span>
+<span id="cb21-109"><a href="#cb21-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-112"><a href="#cb21-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-113"><a href="#cb21-113" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>{sys.executable} <span class="op">-</span>m pip <span class="bu">list</span> <span class="dv">2</span><span class="op">&gt;/</span>dev<span class="op">/</span>null <span class="op">|</span> grep <span class="op">-</span>iE <span class="st">&quot;^(scanpy|anndata) &quot;</span></span>
+<span id="cb21-114"><a href="#cb21-114" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-115"><a href="#cb21-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-116"><a href="#cb21-116" aria-hidden="true" tabindex="-1"></a>其他命令（<span class="in">`samtools`</span>、<span class="in">`ls`</span>、<span class="in">`md5sum`</span>）没有这个问题，前提是它们确实在 <span class="in">`PATH`</span> 里。</span>
+<span id="cb21-117"><a href="#cb21-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-118"><a href="#cb21-118" aria-hidden="true" tabindex="-1"></a><span class="fu">## 代码块与 `#|` 选项 {#sec-chunks}</span></span>
+<span id="cb21-119"><a href="#cb21-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-120"><a href="#cb21-120" aria-hidden="true" tabindex="-1"></a>代码块写成 `<span class="in">``` ```</span>{python} ```<span class="in">`。块内开头以 `</span>#|` 开头的行是**块级选项**，只作用于这一块，会覆盖 YAML 里的全局设置：</span>
+<span id="cb21-121"><a href="#cb21-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-122"><a href="#cb21-122" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 选项                            <span class="pp">|</span> 作用                                    <span class="pp">|</span></span>
+<span id="cb21-123"><a href="#cb21-123" aria-hidden="true" tabindex="-1"></a><span class="pp">|:-----------------------------------|:-----------------------------------|</span></span>
+<span id="cb21-124"><a href="#cb21-124" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| label: fig-xxx`</span> / <span class="in">`tbl-xxx`</span> <span class="pp">|</span> 给图/表编号，正文用 <span class="in">`@fig-xxx`</span> 交叉引用 <span class="pp">|</span></span>
+<span id="cb21-125"><a href="#cb21-125" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| fig-cap:`</span> / <span class="in">`#| tbl-cap:`</span>   <span class="pp">|</span> 图注 / 表注                             <span class="pp">|</span></span>
+<span id="cb21-126"><a href="#cb21-126" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| echo: false`</span>                <span class="pp">|</span> 只显示结果，不显示代码                  <span class="pp">|</span></span>
+<span id="cb21-127"><a href="#cb21-127" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| output: false`</span>              <span class="pp">|</span> 只跑不显示输出                          <span class="pp">|</span></span>
+<span id="cb21-128"><a href="#cb21-128" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| eval: false`</span>                <span class="pp">|</span> 只显示代码，不运行                      <span class="pp">|</span></span>
+<span id="cb21-129"><a href="#cb21-129" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`#| tags: [parameters]`</span>         <span class="pp">|</span> 参数块，可在命令行覆盖（@sec-render-params）            <span class="pp">|</span></span>
+<span id="cb21-130"><a href="#cb21-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-131"><a href="#cb21-131" aria-hidden="true" tabindex="-1"></a>下面开始一个最小但完整的分析示例。先载入包并记录版本：</span>
+<span id="cb21-132"><a href="#cb21-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-135"><a href="#cb21-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-136"><a href="#cb21-136" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb21-137"><a href="#cb21-137" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb21-138"><a href="#cb21-138" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scanpy <span class="im">as</span> sc</span>
+<span id="cb21-139"><a href="#cb21-139" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib</span>
+<span id="cb21-140"><a href="#cb21-140" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> importlib.metadata <span class="im">import</span> version</span>
+<span id="cb21-141"><a href="#cb21-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-142"><a href="#cb21-142" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(</span>
+<span id="cb21-143"><a href="#cb21-143" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;version&quot;</span>: [version(p) <span class="cf">for</span> p <span class="kw">in</span> [<span class="st">&quot;scanpy&quot;</span>, <span class="st">&quot;anndata&quot;</span>, <span class="st">&quot;numpy&quot;</span>, <span class="st">&quot;pandas&quot;</span>, <span class="st">&quot;matplotlib&quot;</span>]]},</span>
+<span id="cb21-144"><a href="#cb21-144" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">&quot;scanpy&quot;</span>, <span class="st">&quot;anndata&quot;</span>, <span class="st">&quot;numpy&quot;</span>, <span class="st">&quot;pandas&quot;</span>, <span class="st">&quot;matplotlib&quot;</span>],</span>
+<span id="cb21-145"><a href="#cb21-145" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-146"><a href="#cb21-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-147"><a href="#cb21-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-148"><a href="#cb21-148" aria-hidden="true" tabindex="-1"></a><span class="fu">## 参数块与随机种子 {#sec-params}</span></span>
+<span id="cb21-149"><a href="#cb21-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-150"><a href="#cb21-150" aria-hidden="true" tabindex="-1"></a>把所有&quot;可能要改的数&quot;集中放在一个带 <span class="in">`tags: [parameters]`</span> 的块里。这样渲染时可以用 <span class="in">`-P`</span> 从命令行改，正文和代码都不用动：</span>
+<span id="cb21-151"><a href="#cb21-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-154"><a href="#cb21-154" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-155"><a href="#cb21-155" aria-hidden="true" tabindex="-1"></a><span class="co">#| tags: [parameters]</span></span>
+<span id="cb21-156"><a href="#cb21-156" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">2026</span>          <span class="co"># 随机种子，非零（0 在某些库里会被当成&quot;没给&quot;，见下文）</span></span>
+<span id="cb21-157"><a href="#cb21-157" aria-hidden="true" tabindex="-1"></a>n_subsample <span class="op">=</span> <span class="dv">300</span>    <span class="co"># 下采样细胞数</span></span>
+<span id="cb21-158"><a href="#cb21-158" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-159"><a href="#cb21-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-160"><a href="#cb21-160" aria-hidden="true" tabindex="-1"></a>**随机性必须显式播种，并且要验证&quot;跑两遍结果一样&quot;。** 这里用 <span class="in">`numpy`</span> 新式的 <span class="in">`Generator`</span>，种子作为参数传进去，而不是依赖全局状态：</span>
+<span id="cb21-161"><a href="#cb21-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-164"><a href="#cb21-164" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-165"><a href="#cb21-165" aria-hidden="true" tabindex="-1"></a>adata <span class="op">=</span> sc.datasets.pbmc68k_reduced()   <span class="co"># scanpy 自带的 700 细胞示例数据，不需要下载</span></span>
+<span id="cb21-166"><a href="#cb21-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-167"><a href="#cb21-167" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> subsample(adata, n, seed):</span>
+<span id="cb21-168"><a href="#cb21-168" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
+<span id="cb21-169"><a href="#cb21-169" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> rng.choice(adata.n_obs, size<span class="op">=</span>n, replace<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb21-170"><a href="#cb21-170" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> adata[np.sort(idx)].copy()</span>
+<span id="cb21-171"><a href="#cb21-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-172"><a href="#cb21-172" aria-hidden="true" tabindex="-1"></a>a1 <span class="op">=</span> subsample(adata, n_subsample, seed)</span>
+<span id="cb21-173"><a href="#cb21-173" aria-hidden="true" tabindex="-1"></a>a2 <span class="op">=</span> subsample(adata, n_subsample, seed)</span>
+<span id="cb21-174"><a href="#cb21-174" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> (a1.obs_names <span class="op">==</span> a2.obs_names).<span class="bu">all</span>(), <span class="st">&quot;同种子两次下采样结果不同&quot;</span></span>
+<span id="cb21-175"><a href="#cb21-175" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;同种子两次下采样一致：</span><span class="sc">{</span>a1<span class="sc">.</span>n_obs<span class="sc">}</span><span class="ss"> 个细胞&quot;</span>)</span>
+<span id="cb21-176"><a href="#cb21-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-177"><a href="#cb21-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-178"><a href="#cb21-178" aria-hidden="true" tabindex="-1"></a>::: callout-warning</span>
+<span id="cb21-179"><a href="#cb21-179" aria-hidden="true" tabindex="-1"></a><span class="fu">## `seed=0` 的坑</span></span>
+<span id="cb21-180"><a href="#cb21-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-181"><a href="#cb21-181" aria-hidden="true" tabindex="-1"></a>不少库内部写的是 <span class="in">`if seed:`</span> 或 <span class="in">`if self.random_state:`</span>，0 是 falsy，**等于没有播种**，而且不报错。本机已经在 decoupler（GSEA 置换）和 Tangram（去卷积）上各踩过一次。给 0 之前先搜一下源码里的 <span class="in">`if`</span>。</span>
+<span id="cb21-182"><a href="#cb21-182" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb21-183"><a href="#cb21-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-184"><a href="#cb21-184" aria-hidden="true" tabindex="-1"></a><span class="fu">## 图、表与正文里的动态数字 {#sec-figtab}</span></span>
+<span id="cb21-185"><a href="#cb21-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-186"><a href="#cb21-186" aria-hidden="true" tabindex="-1"></a><span class="fu">### 表</span></span>
+<span id="cb21-187"><a href="#cb21-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-190"><a href="#cb21-190" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-191"><a href="#cb21-191" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-celltypes</span></span>
+<span id="cb21-192"><a href="#cb21-192" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: &quot;下采样后各细胞类型（`bulk_labels`）的细胞数&quot;</span></span>
+<span id="cb21-193"><a href="#cb21-193" aria-hidden="true" tabindex="-1"></a>tab <span class="op">=</span> (a1.obs[<span class="st">&quot;bulk_labels&quot;</span>].value_counts()</span>
+<span id="cb21-194"><a href="#cb21-194" aria-hidden="true" tabindex="-1"></a>         .rename_axis(<span class="st">&quot;cell_type&quot;</span>).reset_index(name<span class="op">=</span><span class="st">&quot;n_cells&quot;</span>))</span>
+<span id="cb21-195"><a href="#cb21-195" aria-hidden="true" tabindex="-1"></a>tab</span>
+<span id="cb21-196"><a href="#cb21-196" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-197"><a href="#cb21-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-198"><a href="#cb21-198" aria-hidden="true" tabindex="-1"></a><span class="fu">### 图</span></span>
+<span id="cb21-199"><a href="#cb21-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-202"><a href="#cb21-202" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-203"><a href="#cb21-203" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-umap</span></span>
+<span id="cb21-204"><a href="#cb21-204" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: &quot;下采样细胞的 UMAP，按细胞类型着色&quot;</span></span>
+<span id="cb21-205"><a href="#cb21-205" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> sc.pl.umap(a1, color<span class="op">=</span><span class="st">&quot;bulk_labels&quot;</span>, show<span class="op">=</span><span class="va">False</span>, frameon<span class="op">=</span><span class="va">False</span>, title<span class="op">=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb21-206"><a href="#cb21-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-207"><a href="#cb21-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-208"><a href="#cb21-208" aria-hidden="true" tabindex="-1"></a><span class="fu">### 正文里的数字不要手抄</span></span>
+<span id="cb21-209"><a href="#cb21-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-212"><a href="#cb21-212" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-213"><a href="#cb21-213" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb21-214"><a href="#cb21-214" aria-hidden="true" tabindex="-1"></a>n_cells <span class="op">=</span> a1.n_obs</span>
+<span id="cb21-215"><a href="#cb21-215" aria-hidden="true" tabindex="-1"></a>n_types <span class="op">=</span> a1.obs[<span class="st">&quot;bulk_labels&quot;</span>].nunique()</span>
+<span id="cb21-216"><a href="#cb21-216" aria-hidden="true" tabindex="-1"></a>top_type <span class="op">=</span> tab.iloc[<span class="dv">0</span>][<span class="st">&quot;cell_type&quot;</span>]</span>
+<span id="cb21-217"><a href="#cb21-217" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> <span class="bu">int</span>(tab.iloc[<span class="dv">0</span>][<span class="st">&quot;n_cells&quot;</span>])</span>
+<span id="cb21-218"><a href="#cb21-218" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-219"><a href="#cb21-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-220"><a href="#cb21-220" aria-hidden="true" tabindex="-1"></a>下面这句话里的数字全部由代码实时算出（Quarto ≥ 1.4 支持行内 Python 表达式）：下采样后共有 <span class="in">`{python} n_cells`</span> 个细胞，分属 <span class="in">`{python} n_types`</span> 个类型，其中最多的是 <span class="in">`{python} top_type`</span>（<span class="in">`{python} top_n`</span> 个）。详见 @tbl-celltypes 和 @fig-umap。</span>
+<span id="cb21-221"><a href="#cb21-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-222"><a href="#cb21-222" aria-hidden="true" tabindex="-1"></a>源码里这句话写的是 `<span class="in">` `</span>{python} n_cells` ``，而不是&quot;300&quot;。**手抄的数字在参数一变时就会和图表脱节**；行内表达式保证正文、表、图三处永远是同一个数。</span>
+<span id="cb21-223"><a href="#cb21-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-224"><a href="#cb21-224" aria-hidden="true" tabindex="-1"></a><span class="fu">## 用参数重新渲染 {#sec-render-params}</span></span>
+<span id="cb21-225"><a href="#cb21-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-226"><a href="#cb21-226" aria-hidden="true" tabindex="-1"></a>参数块里的值可以在渲染时覆盖，不改源文件：</span>
+<span id="cb21-227"><a href="#cb21-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-228"><a href="#cb21-228" aria-hidden="true" tabindex="-1"></a><span class="in">``` bash</span></span>
+<span id="cb21-229"><a href="#cb21-229" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render quarto_python_reproducible_report_tutorial_20261119.qmd <span class="dt">\</span></span>
+<span id="cb21-230"><a href="#cb21-230" aria-hidden="true" tabindex="-1"></a>  <span class="at">-P</span> seed:7 <span class="at">-P</span> n_subsample:500 <span class="at">--output</span> report_seed7.html</span>
+<span id="cb21-231"><a href="#cb21-231" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-232"><a href="#cb21-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-233"><a href="#cb21-233" aria-hidden="true" tabindex="-1"></a>Quarto 会在参数块后面插入一个新块，把 <span class="in">`seed`</span>、<span class="in">`n_subsample`</span> 改成新值。用 <span class="in">`--output`</span> 换个文件名，可以避免覆盖原来的报告；这与&quot;修正前先归档旧版&quot;的规矩一致。</span>
+<span id="cb21-234"><a href="#cb21-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-235"><a href="#cb21-235" aria-hidden="true" tabindex="-1"></a>**`-P` 依赖 kernel 环境里装有 `papermill`**，没有就报 <span class="in">`The papermill package is required for processing --execute-params`</span>。<span class="in">`sc_tut_main`</span> 已于 2026-11-19 装好 papermill 2.7.0；换别的环境要先确认。本机实测：默认渲染得到 300 个细胞，<span class="in">`-P seed:7 -P n_subsample:500`</span> 得到 500 个细胞，正文数字随之改变。</span>
+<span id="cb21-236"><a href="#cb21-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-237"><a href="#cb21-237" aria-hidden="true" tabindex="-1"></a><span class="fu">## 渲染命令逐项解释 {#sec-render}</span></span>
+<span id="cb21-238"><a href="#cb21-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-239"><a href="#cb21-239" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 部分 <span class="pp">|</span> 作用 <span class="pp">|</span></span>
+<span id="cb21-240"><a href="#cb21-240" aria-hidden="true" tabindex="-1"></a><span class="pp">|:-----------------------------------|:-----------------------------------|</span></span>
+<span id="cb21-241"><a href="#cb21-241" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`QUARTO_PYTHON=.../sc_tut_main/bin/python`</span> <span class="pp">|</span> 告诉 Quarto 用哪个 Python 去找 Jupyter 和 kernel <span class="pp">|</span></span>
+<span id="cb21-242"><a href="#cb21-242" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`mamba run -p /mnt/ex_8T_SSD/conda_envs/sc_tut_r`</span> <span class="pp">|</span> 本机 Quarto（1.9.38）装在 <span class="in">`sc_tut_r`</span> 环境里，必须在激活该环境后才能运行（激活脚本会设好 <span class="in">`QUARTO_DENO`</span>、<span class="in">`QUARTO_PANDOC`</span> 等变量） <span class="pp">|</span></span>
+<span id="cb21-243"><a href="#cb21-243" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`quarto render x.qmd`</span> <span class="pp">|</span> 跑全部代码块，生成 <span class="in">`x.html`</span> <span class="pp">|</span></span>
+<span id="cb21-244"><a href="#cb21-244" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`quarto preview x.qmd`</span> <span class="pp">|</span> 边改边看，保存即自动重渲染 <span class="pp">|</span></span>
+<span id="cb21-245"><a href="#cb21-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-246"><a href="#cb21-246" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
+<span id="cb21-247"><a href="#cb21-247" aria-hidden="true" tabindex="-1"></a><span class="fu">## 本机已知的两个坑</span></span>
+<span id="cb21-248"><a href="#cb21-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-249"><a href="#cb21-249" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**直接执行 `/mnt/ex_8T_SSD/conda_envs/sc_tut_r/bin/quarto` 会报找不到 `deno`**：没有激活环境，缺少 <span class="in">`QUARTO_DENO`</span> 这些变量。必须通过 <span class="in">`mamba run -p`</span> 或先 <span class="in">`mamba activate`</span>。</span>
+<span id="cb21-250"><a href="#cb21-250" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**`conda run -n sc_tut_r` 会报环境不存在**：这个环境没有登记在默认的 envs 目录下，要用 <span class="in">`-p`</span> 加完整路径。</span>
+<span id="cb21-251"><a href="#cb21-251" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb21-252"><a href="#cb21-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-253"><a href="#cb21-253" aria-hidden="true" tabindex="-1"></a><span class="fu">## 与 `.ipynb`、Jupytext 互转 {#sec-convert}</span></span>
+<span id="cb21-254"><a href="#cb21-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-255"><a href="#cb21-255" aria-hidden="true" tabindex="-1"></a><span class="in">``` bash</span></span>
+<span id="cb21-256"><a href="#cb21-256" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> convert analysis.ipynb      <span class="co"># → analysis.qmd（丢弃已存的输出）</span></span>
+<span id="cb21-257"><a href="#cb21-257" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> convert analysis.qmd        <span class="co"># → analysis.ipynb（未执行）</span></span>
+<span id="cb21-258"><a href="#cb21-258" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-259"><a href="#cb21-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-260"><a href="#cb21-260" aria-hidden="true" tabindex="-1"></a>已经习惯 Jupyter 的话，也可以用 Jupytext 把 <span class="in">`.ipynb`</span> 配对成 <span class="in">`.py`</span>，再用 Quarto 渲染 <span class="in">`.ipynb`</span> 本身（<span class="in">`quarto render x.ipynb --execute`</span>）。但 **`.qmd` 作为唯一源文件**是最干净的做法：只有一份文本，没有&quot;哪份是最新&quot;的问题。</span>
+<span id="cb21-261"><a href="#cb21-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-262"><a href="#cb21-262" aria-hidden="true" tabindex="-1"></a><span class="fu">## 多章节教程：project 与 freeze {#sec-project}</span></span>
+<span id="cb21-263"><a href="#cb21-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-264"><a href="#cb21-264" aria-hidden="true" tabindex="-1"></a>单个文件够用到十几个代码块。章节多了，就在目录下放一个 <span class="in">`_quarto.yml`</span>，变成 Quarto project（本机 R 教程 proj23 就是这么组织的）：</span>
+<span id="cb21-265"><a href="#cb21-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-266"><a href="#cb21-266" aria-hidden="true" tabindex="-1"></a><span class="in">``` yaml</span></span>
+<span id="cb21-267"><a href="#cb21-267" aria-hidden="true" tabindex="-1"></a><span class="fu">project</span><span class="kw">:</span></span>
+<span id="cb21-268"><a href="#cb21-268" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> website</span><span class="co">          # 或 book</span></span>
+<span id="cb21-269"><a href="#cb21-269" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">execute-dir</span><span class="kw">:</span><span class="at"> project</span><span class="co">   # 所有章节的工作目录统一为项目根，相对路径不随文件位置漂移</span></span>
+<span id="cb21-270"><a href="#cb21-270" aria-hidden="true" tabindex="-1"></a><span class="fu">execute</span><span class="kw">:</span></span>
+<span id="cb21-271"><a href="#cb21-271" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">freeze</span><span class="kw">:</span><span class="at"> auto</span><span class="co">           # 源文件没变的章节不重跑，直接用 _freeze/ 里的结果</span></span>
+<span id="cb21-272"><a href="#cb21-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-273"><a href="#cb21-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-274"><a href="#cb21-274" aria-hidden="true" tabindex="-1"></a><span class="in">`freeze: auto`</span> 只在 project 里生效。它让大型教程不必每次全部重跑；但**改了上游数据、源文件却没变时，结果不会更新**，这种时候要手动 <span class="in">`quarto render --cache-refresh`</span> 或删掉对应 <span class="in">`_freeze/`</span> 子目录（删之前按规矩先确认）。</span>
+<span id="cb21-275"><a href="#cb21-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-276"><a href="#cb21-276" aria-hidden="true" tabindex="-1"></a><span class="fu">## 可复现报告的检查清单 {#sec-checklist}</span></span>
+<span id="cb21-277"><a href="#cb21-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-278"><a href="#cb21-278" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 检查项 <span class="pp">|</span> 做法 <span class="pp">|</span></span>
+<span id="cb21-279"><a href="#cb21-279" aria-hidden="true" tabindex="-1"></a><span class="pp">|:-----------------------------------|:-----------------------------------|</span></span>
+<span id="cb21-280"><a href="#cb21-280" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 环境 <span class="pp">|</span> YAML 里写死 kernel；报告里打印 <span class="in">`sys.executable`</span> 和关键包版本 <span class="pp">|</span></span>
+<span id="cb21-281"><a href="#cb21-281" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> shell 命令 <span class="pp">|</span> 用 <span class="in">`!命令`</span> 或 <span class="in">`%%bash`</span>，不用 <span class="in">`{bash}`</span> 块；调用 python/pip 一律写 <span class="in">`{sys.executable}`</span> <span class="pp">|</span></span>
+<span id="cb21-282"><a href="#cb21-282" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 随机性 <span class="pp">|</span> 种子集中在参数块；非零；关键步骤同参数跑两遍断言一致 <span class="pp">|</span></span>
+<span id="cb21-283"><a href="#cb21-283" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 数据路径 <span class="pp">|</span> 用绝对路径，或 project 里统一 <span class="in">`execute-dir: project`</span> <span class="pp">|</span></span>
+<span id="cb21-284"><a href="#cb21-284" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 正文数字 <span class="pp">|</span> 一律用 `<span class="in">` `</span>{python} expr` ``，不手抄 <span class="pp">|</span></span>
+<span id="cb21-285"><a href="#cb21-285" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 输出 <span class="pp">|</span> <span class="in">`embed-resources: true`</span> 单文件；改参数重渲染用 <span class="in">`--output`</span> 换名，不覆盖旧版 <span class="pp">|</span></span>
+<span id="cb21-286"><a href="#cb21-286" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 源文件 <span class="pp">|</span> 只提交 <span class="in">`.qmd`</span>；<span class="in">`*.html`</span>、<span class="in">`_freeze/`</span>、<span class="in">`.quarto/`</span> 是构建产物 <span class="pp">|</span></span>
+<span id="cb21-287"><a href="#cb21-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-288"><a href="#cb21-288" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session info {#sec-session}</span></span>
+<span id="cb21-289"><a href="#cb21-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-292"><a href="#cb21-292" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb21-293"><a href="#cb21-293" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb21-294"><a href="#cb21-294" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> platform, datetime</span>
+<span id="cb21-295"><a href="#cb21-295" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;渲染时间: </span><span class="sc">{</span>datetime<span class="sc">.</span>datetime<span class="sc">.</span>now()<span class="sc">:</span><span class="op">%</span>Y<span class="op">-%</span>m<span class="op">-%</span>d <span class="op">%</span>H<span class="sc">:</span><span class="op">%</span>M<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb21-296"><a href="#cb21-296" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Python  : </span><span class="sc">{</span>platform<span class="sc">.</span>python_version()<span class="sc">}</span><span class="ss">  (</span><span class="sc">{</span>sys<span class="sc">.</span>executable<span class="sc">}</span><span class="ss">)&quot;</span>)</span>
+<span id="cb21-297"><a href="#cb21-297" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;平台    : </span><span class="sc">{</span>platform<span class="sc">.</span>platform()<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb21-298"><a href="#cb21-298" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
