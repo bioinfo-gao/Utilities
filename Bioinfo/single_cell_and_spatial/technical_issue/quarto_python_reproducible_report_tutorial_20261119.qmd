@@ -1,0 +1,227 @@
+---
+title: "用 Quarto 写可复现的 Python 分析报告"
+subtitle: "一个本身就能渲染的 .qmd 教程（scanpy 内置数据，离线可跑）"
+date: 2026-11-19
+format:
+  html:
+    toc: true
+    number-sections: true
+    embed-resources: true      # 图、CSS、JS 全部打包进一个 HTML，单文件即可分享
+    code-tools: true           # 页面右上角可以查看/下载 .qmd 源码
+jupyter: sc_tut_main           # 用哪个 Jupyter kernel 执行代码块（见 §2）
+execute:
+  echo: true                   # 默认显示代码
+  warning: false               # 不把库的 FutureWarning 刷进报告
+---
+
+## 结论：这个文件是什么、怎么用 {#sec-summary}
+
+`.qmd` = **Markdown 正文 + 可执行代码块 + 顶部 YAML 配置**。`quarto render` 会启动一个 Jupyter kernel，把代码块从上到下跑一遍，再把正文、代码、输出、图一起排成 HTML/PDF/Word。
+
+和 `.ipynb` 相比，三点最关键：
+
+| 维度 | `.qmd` | `.ipynb` |
+|:--------------------|:------------------------:|:------------------------:|
+| 文件内容 | 纯文本，只有源码，**不存输出** | JSON，源码和输出（含 base64 图）存在一起 |
+| git diff | 逐行可读 | 一改就是几百行 JSON 噪声 |
+| 可复现性 | **每次渲染都从头重跑**，不可能出现"输出是旧的" | 输出可能来自乱序执行、早已删掉的单元格 |
+| 交互开发 | VS Code / Positron 里可逐块运行 | 原生 |
+
+**本机渲染这个文件的命令**（§7 解释每一部分）：
+
+``` bash
+cd /home/gao/Utilities/Bioinfo/single_cell_and_spatial/technical_issue
+QUARTO_PYTHON=/mnt/ex_8T_SSD/conda_envs/sc_tut_main/bin/python \
+  mamba run -p /mnt/ex_8T_SSD/conda_envs/sc_tut_r \
+  quarto render quarto_python_reproducible_report_tutorial_20261119.qmd
+```
+
+## YAML 头：整份报告的配置 {#sec-yaml}
+
+文件最上面 `---` 之间的部分。本文件用到的键：
+
+| 键 | 作用 | 常见取值 |
+|:--------------------|:------------------------:|:------------------------:|
+| `format: html:` | 输出格式及其选项 | `html`、`pdf`、`docx`；可以同时写多个 |
+| `embed-resources: true` | 打包成单个 HTML | 不开则会多出一个 `*_files/` 目录 |
+| `toc` / `number-sections` | 目录、章节编号 | `true` / `false` |
+| `jupyter:` | **执行代码用的 kernel 名** | `jupyter kernelspec list` 里列出的名字 |
+| `execute:` | 全局执行选项 | `echo`、`warning`、`eval`、`freeze`、`cache` |
+
+## 选 kernel = 选 conda 环境 {#sec-kernel}
+
+`jupyter: sc_tut_main` 指向 `~/.local/share/jupyter/kernels/sc_tut_main`，它对应 `/mnt/ex_8T_SSD/conda_envs/sc_tut_main` 这个环境。**写错 kernel 名不一定报错**：Quarto 可能退回默认的 `python3`，用另一个环境的包版本跑完整份报告。所以报告里应当打印实际使用的解释器路径：
+
+```{python}
+import sys
+print(sys.executable)
+```
+
+本机已注册的 kernel 有 `sc_tut_main`、`sc_tut_grn`、`sc_tut_spatial`、`sc_tut_traj` 等。做 GRN 的章节要换成 `jupyter: sc_tut_grn`。不同环境不能在同一个 `.qmd` 里混用，一个文件只用一个 kernel。
+
+## 代码块与 `#|` 选项 {#sec-chunks}
+
+代码块写成 ```` ```{python} ````。块内开头以 `#|` 开头的行是**块级选项**，只作用于这一块，会覆盖 YAML 里的全局设置：
+
+| 选项                            | 作用                                    |
+|:-----------------------------------|:-----------------------------------|
+| `#| label: fig-xxx` / `tbl-xxx` | 给图/表编号，正文用 `@fig-xxx` 交叉引用 |
+| `#| fig-cap:` / `#| tbl-cap:`   | 图注 / 表注                             |
+| `#| echo: false`                | 只显示结果，不显示代码                  |
+| `#| output: false`              | 只跑不显示输出                          |
+| `#| eval: false`                | 只显示代码，不运行                      |
+| `#| tags: [parameters]`         | 参数块，可在命令行覆盖（§6）            |
+
+下面开始一个最小但完整的分析示例。先载入包并记录版本：
+
+```{python}
+import numpy as np
+import pandas as pd
+import scanpy as sc
+import matplotlib
+from importlib.metadata import version
+
+pd.DataFrame(
+    {"version": [version(p) for p in ["scanpy", "anndata", "numpy", "pandas", "matplotlib"]]},
+    index=["scanpy", "anndata", "numpy", "pandas", "matplotlib"],
+)
+```
+
+## 参数块与随机种子 {#sec-params}
+
+把所有"可能要改的数"集中放在一个带 `tags: [parameters]` 的块里。这样渲染时可以用 `-P` 从命令行改，正文和代码都不用动：
+
+```{python}
+#| tags: [parameters]
+seed = 2026          # 随机种子，非零（0 在某些库里会被当成"没给"，见下文）
+n_subsample = 300    # 下采样细胞数
+```
+
+**随机性必须显式播种，并且要验证"跑两遍结果一样"。** 这里用 `numpy` 新式的 `Generator`，种子作为参数传进去，而不是依赖全局状态：
+
+```{python}
+adata = sc.datasets.pbmc68k_reduced()   # scanpy 自带的 700 细胞示例数据，不需要下载
+
+def subsample(adata, n, seed):
+    rng = np.random.default_rng(seed)
+    idx = rng.choice(adata.n_obs, size=n, replace=False)
+    return adata[np.sort(idx)].copy()
+
+a1 = subsample(adata, n_subsample, seed)
+a2 = subsample(adata, n_subsample, seed)
+assert (a1.obs_names == a2.obs_names).all(), "同种子两次下采样结果不同"
+print(f"同种子两次下采样一致：{a1.n_obs} 个细胞")
+```
+
+::: callout-warning
+## `seed=0` 的坑
+
+不少库内部写的是 `if seed:` 或 `if self.random_state:`，0 是 falsy，**等于没有播种**，而且不报错。本机已经在 decoupler（GSEA 置换）和 Tangram（去卷积）上各踩过一次。给 0 之前先搜一下源码里的 `if`。
+:::
+
+## 图、表与正文里的动态数字 {#sec-figtab}
+
+### 表
+
+```{python}
+#| label: tbl-celltypes
+#| tbl-cap: "下采样后各细胞类型（`bulk_labels`）的细胞数"
+tab = (a1.obs["bulk_labels"].value_counts()
+         .rename_axis("cell_type").reset_index(name="n_cells"))
+tab
+```
+
+### 图
+
+```{python}
+#| label: fig-umap
+#| fig-cap: "下采样细胞的 UMAP，按细胞类型着色"
+ax = sc.pl.umap(a1, color="bulk_labels", show=False, frameon=False, title="")
+```
+
+### 正文里的数字不要手抄
+
+```{python}
+#| echo: false
+n_cells = a1.n_obs
+n_types = a1.obs["bulk_labels"].nunique()
+top_type = tab.iloc[0]["cell_type"]
+top_n = int(tab.iloc[0]["n_cells"])
+```
+
+下面这句话里的数字全部由代码实时算出（Quarto ≥ 1.4 支持行内 Python 表达式）：下采样后共有 `{python} n_cells` 个细胞，分属 `{python} n_types` 个类型，其中最多的是 `{python} top_type`（`{python} top_n` 个）。详见 @tbl-celltypes 和 @fig-umap。
+
+源码里这句话写的是 `` `{{python}} n_cells` ``，而不是"300"。**手抄的数字在参数一变时就会和图表脱节**；行内表达式保证正文、表、图三处永远是同一个数。
+
+## 用参数重新渲染 {#sec-render-params}
+
+参数块里的值可以在渲染时覆盖，不改源文件：
+
+``` bash
+quarto render quarto_python_reproducible_report_tutorial_20261119.qmd \
+  -P seed:7 -P n_subsample:500 --output report_seed7.html
+```
+
+Quarto 会在参数块后面插入一个新块，把 `seed`、`n_subsample` 改成新值。用 `--output` 换个文件名，可以避免覆盖原来的报告；这与"修正前先归档旧版"的规矩一致。
+
+**`-P` 依赖 kernel 环境里装有 `papermill`**，没有就报 `The papermill package is required for processing --execute-params`。`sc_tut_main` 已于 2026-11-19 装好 papermill 2.7.0；换别的环境要先确认。本机实测：默认渲染得到 300 个细胞，`-P seed:7 -P n_subsample:500` 得到 500 个细胞，正文数字随之改变。
+
+## 渲染命令逐项解释 {#sec-render}
+
+| 部分 | 作用 |
+|:-----------------------------------|:-----------------------------------|
+| `QUARTO_PYTHON=.../sc_tut_main/bin/python` | 告诉 Quarto 用哪个 Python 去找 Jupyter 和 kernel |
+| `mamba run -p /mnt/ex_8T_SSD/conda_envs/sc_tut_r` | 本机 Quarto（1.9.38）装在 `sc_tut_r` 环境里，必须在激活该环境后才能运行（激活脚本会设好 `QUARTO_DENO`、`QUARTO_PANDOC` 等变量） |
+| `quarto render x.qmd` | 跑全部代码块，生成 `x.html` |
+| `quarto preview x.qmd` | 边改边看，保存即自动重渲染 |
+
+::: callout-note
+## 本机已知的两个坑
+
+1.  **直接执行 `/mnt/ex_8T_SSD/conda_envs/sc_tut_r/bin/quarto` 会报找不到 `deno`**：没有激活环境，缺少 `QUARTO_DENO` 这些变量。必须通过 `mamba run -p` 或先 `mamba activate`。
+2.  **`conda run -n sc_tut_r` 会报环境不存在**：这个环境没有登记在默认的 envs 目录下，要用 `-p` 加完整路径。
+:::
+
+## 与 `.ipynb`、Jupytext 互转 {#sec-convert}
+
+``` bash
+quarto convert analysis.ipynb      # → analysis.qmd（丢弃已存的输出）
+quarto convert analysis.qmd        # → analysis.ipynb（未执行）
+```
+
+已经习惯 Jupyter 的话，也可以用 Jupytext 把 `.ipynb` 配对成 `.py`，再用 Quarto 渲染 `.ipynb` 本身（`quarto render x.ipynb --execute`）。但 **`.qmd` 作为唯一源文件**是最干净的做法：只有一份文本，没有"哪份是最新"的问题。
+
+## 多章节教程：project 与 freeze {#sec-project}
+
+单个文件够用到十几个代码块。章节多了，就在目录下放一个 `_quarto.yml`，变成 Quarto project（本机 R 教程 proj23 就是这么组织的）：
+
+``` yaml
+project:
+  type: website          # 或 book
+  execute-dir: project   # 所有章节的工作目录统一为项目根，相对路径不随文件位置漂移
+execute:
+  freeze: auto           # 源文件没变的章节不重跑，直接用 _freeze/ 里的结果
+```
+
+`freeze: auto` 只在 project 里生效。它让大型教程不必每次全部重跑；但**改了上游数据、源文件却没变时，结果不会更新**，这种时候要手动 `quarto render --cache-refresh` 或删掉对应 `_freeze/` 子目录（删之前按规矩先确认）。
+
+## 可复现报告的检查清单 {#sec-checklist}
+
+| 检查项 | 做法 |
+|:-----------------------------------|:-----------------------------------|
+| 环境 | YAML 里写死 kernel；报告里打印 `sys.executable` 和关键包版本 |
+| 随机性 | 种子集中在参数块；非零；关键步骤同参数跑两遍断言一致 |
+| 数据路径 | 用绝对路径，或 project 里统一 `execute-dir: project` |
+| 正文数字 | 一律用 `` `{{python}} expr` ``，不手抄 |
+| 输出 | `embed-resources: true` 单文件；改参数重渲染用 `--output` 换名，不覆盖旧版 |
+| 源文件 | 只提交 `.qmd`；`*.html`、`_freeze/`、`.quarto/` 是构建产物 |
+
+## Session info {#sec-session}
+
+```{python}
+#| echo: false
+import platform, datetime
+print(f"渲染时间: {datetime.datetime.now():%Y-%m-%d %H:%M}")
+print(f"Python  : {platform.python_version()}  ({sys.executable})")
+print(f"平台    : {platform.platform()}")
+```
