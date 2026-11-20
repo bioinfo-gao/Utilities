@@ -55,6 +55,10 @@ QUARTO_PYTHON=/mnt/ex_8T_SSD/conda_envs/sc_tut_main/bin/python \
 ```{python}
 import sys
 print(sys.executable)
+print(sys.version)
+print(sys.version_info)
+import platform
+print(platform.python_version())
 ```
 
 本机已注册的 kernel 有 `sc_tut_main`、`sc_tut_grn`、`sc_tut_spatial`、`sc_tut_traj` 等。做 GRN 的章节要换成 `jupyter: sc_tut_grn`。不同环境不能在同一个 `.qmd` 里混用，一个文件只用一个 kernel。
