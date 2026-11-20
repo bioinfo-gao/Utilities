@@ -79,6 +79,11 @@ ax.set_title(f"{title}\n[n={adata.n_obs} {OBS_UNIT}]", fontsize=9)
 
 **单一条件下不存在"差异"这个问题**，不要用切片之间的差别冒充组间差异——
 **那是个体差异 + 批次，不是处理效应。**
+`condition` 为常数时处理效应在设计矩阵里不可估计（每条件仅 1 张切片时，条件与个体/批次完全混杂，同理），
+而以 spot 为单位检验切片间差别是伪重复（pseudoreplication），p 值必然极小、毫无意义。
+单一条件下合法的只有切片内比较（domain / 细胞类型 / 区域，判据是每张切片上方向一致），
+切片间差别只用来估计本底方差与可重复性，不作为发现报告。
+（完整讲解：[spatial_technical/single_condition_no_differential_20261120.md](spatial_technical/single_condition_no_differential_20261120.md)）
 
 ---
 
