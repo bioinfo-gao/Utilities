@@ -37,10 +37,10 @@ cut -f1 "$MAN" | xargs -I{} dirname {} | sort -u | while read -r d; do
     | "$GC" storage cp -n -I "$DEST/$d/" "${BP[@]}"
 done
 
-# 3) 落盘后独立复核 size + crc32c（4 个并行）
+# 3) 落盘后独立复核 size + crc32c。默认串行（VERIFY_JOBS=1）：机械盘上 4 路并行实测只有 27 MB/s（磁头来回寻道）
 VER="$DEST/_verify_${TS}.tsv"; echo -e "file\tremote_size\tlocal_size\tremote_crc32c\tlocal_crc32c\tstatus" > "$VER"
 export GC DEST
-awk -F'\t' '{print $1"\t"$2"\t"$3}' "$MAN" | xargs -P 4 -d '\n' -I{} bash -c '
+awk -F'\t' '{print $1"\t"$2"\t"$3}' "$MAN" | xargs -P "${VERIFY_JOBS:-1}" -d '\n' -I{} bash -c '
   IFS=$'"'"'\t'"'"' read -r rel size crc <<< "$1"; f="$DEST/$rel"
   ls_=$(stat -c %s "$f" 2>/dev/null || echo NA)
   lc=$("$GC" storage hash --skip-md5 --format="value(crc32c_hash)" "$f" 2>/dev/null || echo NA)
