@@ -138,4 +138,4 @@ r1=$(awk '/enp5s0/{print $2}' /proc/net/dev); sleep 10; r2=$(awk '/enp5s0/{print
 
 | 日期 | 项目 | WALKUP | DEST | 结果 |
 | :--- | :---: | :---: | :--- | :---: |
-| 2026-11-20 | P46 Yeji Park WGS | 21683 | `/srv/external_data/gao_projects/46_park_wgs_raw/WALKUP-21683/` | 20 FASTQ / 816.0 GB：12 个 bucket 下载（499.4 GB）+ 8 个 Dropbox 校验后拷贝；进行中 |
+| 2026-11-20 | P46 Yeji Park WGS | 21683 | `/srv/external_data/gao_projects/46_park_wgs_raw/WALKUP-21683/` | ✅ 20 FASTQ / 816.0 GB：12 个 bucket 下载（499.4 GB，11-20 23:48 → 11-21 ~10:05，含 gcloud 自校验）+ 8 个 Dropbox 校验后拷贝；11-21 12:44 全量复核 40/40 OK（`_verify_20261121_1131.tsv`）；12:44–13:49 本地补齐 12 个到 Dropbox 交付目录（`46_park_wgs/scripts/2_copy_fastq_to_dropbox_1121.sh`，20/20 大小一致）；Dropbox 云端上传实测 ≈ 8.4 MiB/s ⇒ 约 16 h |

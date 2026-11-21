@@ -158,3 +158,5 @@ mkdir -p <项目>/raw_data && ln -s $DEST/fastq/*.fastq.gz <项目>/raw_data/
 | SRC | `gs://fc-ab3a58ee-f93b-4445-9cfb-3093775a3bdf/WALKUP-21683/261112_SL-EXF_0833_B25FGWWLT4/16496_1794694072` |
 | DEST | `/srv/external_data/gao_projects/46_park_wgs_raw/WALKUP-21683/` |
 | 我们的文件 | 20 个 FASTQ，816.0 GB（整个交付 1081 GB，其余是别家样本 + Undetermined + InterOp） |
+| 实际耗时 | 11-20 23:48 开始下载 → 11-21 ~10:05 下完 → 12:44 全量复核 40/40 OK |
+| 客户分享 | 20 个 FASTQ 补齐到 `~/Dropbox/Athenomics_Delivery/WALKUP-21683/Yeji_WGS/`（只放 FASTQ，不放 Reports/SampleSheet） |
