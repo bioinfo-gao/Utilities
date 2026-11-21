@@ -18,7 +18,7 @@
 # =============================================================================
 set -uo pipefail
 
-FTP_DIR="/home/gao/projects_2026H2/facilities/FTP"
+FTP_DIR="/home/gao/Utilities/Server/FTP"
 CRED_FILE="${FTP_DIR}/client_credentials.env"
 HOST="bore.pub"
 USER_SFTP="client_sftp"
