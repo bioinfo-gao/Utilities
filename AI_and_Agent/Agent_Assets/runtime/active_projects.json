@@ -67,6 +67,19 @@
       "completion_definition": "24 samples; six confirmed contrasts; counts and TPM, QC, PCA, DE, GO/KEGG ORA and GSEA, English report, audited custom_research_report_YYYYMMDD; internal review only, no sending",
       "delivery_directory": "/home/gao/projects_2026Q4/52_Lijian_Wu_RNAseq_by_Codex/custom_research_report_20261109",
       "completion_evidence": "/home/gao/projects_2026Q4/52_Lijian_Wu_RNAseq_by_Codex/logs/visual_review_complete_20261109.json"
+    },
+    {
+      "id": "P46_Yeji_Park_10sample_CRISPR_dual_cut_wgs",
+      "project_root": "/home/gao/projects_2026Q4/46_park_wgs",
+      "agent": "claude_code",
+      "status": "running",
+      "current_stage": "Stage 0 running: align (bwa-mem2 -t 36) + 2 GATK MarkDuplicates workers over 10 samples, ~760 GiB FASTQ, in tmux p46_stage0_align / p46_stage0_markdup0 / p46_stage0_markdup1",
+      "next_stage": "Phase-1 early-failure check, then fill raw_read_pairs/raw_depth_x in scripts/0_sample_table.csv from flagstat+mosdepth, 10x10 identity matrix, MultiQC; then Stage 1 target-site dissection (PPP1R2 Delta202) per plan section 8.1",
+      "expected_tmux_session": "p46_stage0_align",
+      "blocked_reason": "",
+      "blocking_question": "",
+      "last_verified_at": "2026-11-21T15:06:11-05:00",
+      "completion_definition": "Complete only when custom_research_report_YYYYMMDD/ exists for all 10 samples and covers: (1) PPP1R2 target-site deletion status per clone with base-pair breakpoints and allele state (3 controls WT, Sample 1-4 single-allele, Sample 5-7 bi-allelic, cross-checked against the client's gel/Sanger expectation as the external calibration point); (2) genome-wide off-target evidence at the enumerated gRNA1/gRNA2 candidate sites, 7 treated vs 3 controls; (3) vector screen against both P31 maps (Cas9 was RNP this round, so vector sequence can only be carried over); (4) private-variant burden comparison treated vs controls with filter-impact audits; plus counts/QC, per-sample VCFs, PDF figures, report sections 1-9, and the pre-delivery self-audit. User review precedes any sending; the agent never sends."
     }
   ]
 }

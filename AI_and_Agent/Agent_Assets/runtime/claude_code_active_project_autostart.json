@@ -94,6 +94,37 @@
       "usage_episode_started_at": "",
       "usage_reset_at": "",
       "usage_last_attempt_at": ""
+    },
+    {
+      "active_project_id": "P46_Yeji_Park_10sample_CRISPR_dual_cut_wgs",
+      "project_root": "/home/gao/projects_2026Q4/46_park_wgs",
+      "status": "armed",
+      "usage_limit_retry_offsets_seconds": [
+        10800,
+        14400,
+        18000
+      ],
+      "reset_grace_seconds": 300,
+      "fallback_stale_seconds": 10800,
+      "min_transcript_idle_seconds": 1200,
+      "claude_binary": "/home/gao/.local/bin/claude",
+      "claude_session_id": "28f7fbf1-a55a-48f3-a128-c5570f180ea3",
+      "session_cwd": "/home/gao",
+      "session_transcript": "/home/gao/.claude/projects/-home-gao/28f7fbf1-a55a-48f3-a128-c5570f180ea3.jsonl",
+      "permission_mode": "auto",
+      "continuation_prompt": "Automated continuity resumption for active P46 (Yeji Park, 10-sample RPE-1 CRISPR dual-cut WGS at ~45-65x raw). Resume only P46 from this saved session. Read /home/gao/Utilities/AI_and_Agent/Agent_Assets/runtime/active_projects.json and /home/gao/projects_2026Q4/46_park_wgs/docs/P46_research_plan_and_review_1028.md (sections 8.0-8.5 are the stage plan), then inspect tmux p46_* sessions and /home/gao/projects_2026Q4/46_park_wgs/logs/, and continue the recorded next stage until the completion definition is met. Full-workflow automatic completion is authorized; external sending is NOT. Never delete or overwrite result directories; BAMs live under /srv/external_data/gao_projects/46_park_wgs_bam/. Update active-project state only to running, complete, or genuinely blocked with evidence.",
+      "last_agent_heartbeat": "",
+      "last_agent_heartbeat_source": "",
+      "last_usage_limit_at": "",
+      "last_launch_at": "",
+      "last_worker_session": "",
+      "last_worker_log": "",
+      "last_worker_result": "",
+      "last_trigger": "",
+      "missing_tmux_observed_at": "",
+      "usage_episode_started_at": "",
+      "usage_reset_at": "",
+      "usage_last_attempt_at": ""
     }
   ]
 }
