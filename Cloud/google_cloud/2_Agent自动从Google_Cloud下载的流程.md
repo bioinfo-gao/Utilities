@@ -116,7 +116,7 @@ r1=$(awk '/enp5s0/{print $2}' /proc/net/dev); sleep 10; r2=$(awk '/enp5s0/{print
 **瓶颈在 WAN，不要调并发**：`CLOUDSDK_STORAGE_PROCESS_COUNT` 8×4 与 16×8 实测速率相同，
 期间 CPU 98 % 空闲。再加并发只会增加小文件的连接开销。
 
-**对照 Dropbox**（同一批数据，反方向）：上传 ≈ 11-15 MiB/s，与 GCS 下载同量级
+**对照 Dropbox**（同一批数据，反方向）：上传实测 14.72 ± 0.27 MiB/s，与 GCS 下载的 12.9 MiB/s 同量级
 ⇒ 两者都像是被 WAN 上限限住，而不是各自的服务端。详见
 `/home/gao/Utilities/Cloud/Dropbox/upload_download_speed_measured.md`。
 
@@ -164,4 +164,4 @@ r1=$(awk '/enp5s0/{print $2}' /proc/net/dev); sleep 10; r2=$(awk '/enp5s0/{print
 
 | 日期 | 项目 | WALKUP | DEST | 结果 |
 | :--- | :---: | :---: | :--- | :---: |
-| 2026-11-20 | P46 Yeji Park WGS | 21683 | `/srv/external_data/gao_projects/46_park_wgs_raw/WALKUP-21683/` | ✅ 20 FASTQ / 816.0 GB：12 个 bucket 下载（499.4 GB，11-20 23:48 → 11-21 ~10:05，含 gcloud 自校验）+ 8 个 Dropbox 校验后拷贝；11-21 12:44 全量复核 40/40 OK（`_verify_20261121_1131.tsv`）；12:44–13:49 本地补齐 12 个到 Dropbox 交付目录（`46_park_wgs/scripts/2_copy_fastq_to_dropbox_1121.sh`，20/20 大小一致）；Dropbox 云端上传当时粗测 ≈ 8.4 MiB/s ⇒ 约 16 h（**11-21 21:15 正式复测 11-15 MiB/s**，8.4 那个数取样过短，以复测为准）；**bucket 下载实测 12.9 MiB/s / 45.3 GiB/h**（两来源互证，见第 7 步） |
+| 2026-11-20 | P46 Yeji Park WGS | 21683 | `/srv/external_data/gao_projects/46_park_wgs_raw/WALKUP-21683/` | ✅ 20 FASTQ / 816.0 GB：12 个 bucket 下载（499.4 GB，11-20 23:48 → 11-21 ~10:05，含 gcloud 自校验）+ 8 个 Dropbox 校验后拷贝；11-21 12:44 全量复核 40/40 OK（`_verify_20261121_1131.tsv`）；12:44–13:49 本地补齐 12 个到 Dropbox 交付目录（`46_park_wgs/scripts/2_copy_fastq_to_dropbox_1121.sh`，20/20 大小一致）；Dropbox 云端上传当时粗测 ≈ 8.4 MiB/s ⇒ 约 16 h（**11-21 21:15 正式复测 14.72 ± 0.27 MiB/s**，8.4 那个数取样过短，以复测为准）；**bucket 下载实测 12.9 MiB/s / 45.3 GiB/h**（两来源互证，见第 7 步） |
