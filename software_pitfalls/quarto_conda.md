@@ -84,3 +84,9 @@ env QUARTO_DENO=$ENV/bin/deno QUARTO_DENO_DOM=$ENV/lib/deno_dom.so \
 
 - [conda_env_duplicate_names.md](conda_env_duplicate_names.md) — 为什么脚本会刻意不用 `conda activate`
 - [conda_r_env_build.md](conda_r_env_build.md) — 同一批 env 的其它坑
+
+## `~/.cache` 是软链 ⇒ Quarto 1.11.9 打不开 Sass 缓存（2026-11-21，p53）
+
+- **症状**：R 代码全部跑完后在 Sass 阶段失败：`ERROR: unable to open database file: /home/gao/.cache/quarto/sass/v8-15.0/sass.kv`；每章都这样。
+- **根因**：本机 `~/.cache` → `/Work_bio/gao/configs/.cache`（软链）。Deno KV（SQLite）经软链路径打不开同一个文件；走真实路径正常（同一 `sass.kv` 实测两种路径一败一成）。与磁盘、权限、文件系统类型（ext4）无关。
+- **修复**：在 env 里设 `XDG_CACHE_HOME=/Work_bio/gao/configs/.cache`（软链的真实路径 = 同一目录，缓存不搬家）：`conda env config vars set -p <env> XDG_CACHE_HOME=$(readlink -f ~/.cache)`（mamba 2.x 无 `env config vars`）。
