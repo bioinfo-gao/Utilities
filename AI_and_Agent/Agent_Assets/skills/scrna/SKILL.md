@@ -93,6 +93,7 @@ description: "Use when 要做单细胞转录组分析（scRNA-seq / CellRanger �
 | R 4.5 上 Bioc 版本拼装 | scDblFinder 1.26.9（Bioc 3.23 依赖）与 celda（R 4.5 只有 Bioc 3.22 build）**装不进同一个 env** | 先 `mamba create --dry-run` 再写安装脚本 |
 
 **功能冒烟（2026-11-21，玩具数据）已过**：SoupX `adjustCounts`、decontX（盲估中位污染 0.093，模拟真值 0.10）、cellsnp-lite 合成 BAM 阳性对照（alt barcode AD=DP=30，ref barcode AD=0/DP=30）。
+**亚群校准（2026-11-22）**：ClusterDE 0.99.4 + countsplit 4.0.0 已装进 `p47_r`，同质群阴性对照 naive 64 个假阳性 → 两者均 0。**4 个静默坑**（`constructNull` 只收 Seurat 对象、`callDE` 无 `$DEgenes` 取了得 0、countsplit 要 cell×gene、不给 `overdisps` 退化为 Poisson 拆分致 DE 虚高）的权威表在 `47_Liu_Yuan_scRNA/docs/P47_readiness_gaps_1122.md` §3，脚本 `…/P47_scRNAseq_best_practices_evidence_1104/check5_*.R`。
 **两个用法坑**：SoupX 估 soup 谱只用总 UMI 落在 `soupRange=c(0,100)` 的液滴，没有这样的液滴 ⇒ `alloc()` 报 "missing value where TRUE/FALSE needed"；cellsnp-lite `-R` 只收 **VCF**，给 TSV 报 "Input is not detected as bcf or vcf format" 但仍写出空矩阵。
 
 **⚠ `sc_tut_r` 的三个实测坑（2026-09-17 首次跑 20 章时全部踩到，都不在 yaml 里）**：
