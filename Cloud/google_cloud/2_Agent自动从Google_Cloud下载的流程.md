@@ -92,7 +92,33 @@ tmux new-session -d -s gcs_walkup<号> "CLOUDSDK_STORAGE_PROCESS_COUNT=16 CLOUDS
 ```bash
 r1=$(awk '/enp5s0/{print $2}' /proc/net/dev); sleep 10; r2=$(awk '/enp5s0/{print $2}' /proc/net/dev); echo "$(( (r2-r1)/10/1048576 )) MiB/s"
 ```
-本机实测 ≈ **13 MiB/s** 上限；8×4 与 16×8 并发相同，CPU 98% 空闲 ⇒ 瓶颈在 WAN，**不要再调并发**。
+### 实测速率（2026-11-21 定稿，P46 / WALKUP-21683，`gs://fc-ab3a58ee-…`）
+
+| 场景 | 实测 | 换算 |
+| :--- | :---: | :---: |
+| **大文件批（12 个 FASTQ，465.1 GiB）** | **12.9 MiB/s** | **45.3 GiB/h** |
+| 小文件批（`Reports/` 12 个，4.5 MB） | 3.8 MiB/s | 单文件开销主导 |
+| 极小文件（`Logs/` 4 个，16 KB） | 5.3 kiB/s | 速率无意义，只看是否完成 |
+
+**规划公式：一批 N GiB 从 bucket 下载约需 `N / 45` 小时。**
+- 465 GiB（12 个 FASTQ）⇒ 实测 **10.3 h**
+- 760 GiB（10 样本 WGS 全量，~55×）⇒ 约 **17 h**
+- 之后还要加 **约 1 h** 的 gcloud 自带 crc32c 校验（见第 9 步）
+
+**两个独立来源互证**（这是本数可信的理由）：
+1. gcloud 自报：日志里 `Average throughput: 12.9MiB/s`（`_download_20261120_2348.log:76`）。
+2. 按完成时刻反推：465.1 GiB，23:48:34 开始 → 10:05 最后一个文件改名完成 = 10.28 h ⇒ **12.9 MiB/s**。
+
+两者小数位一致。⚠ 反推用的是 `fastq/*.fastq.gz` 的 mtime，**gcloud 是并行切片下载，12 个文件在
+08:50–10:05 这 75 min 内几乎同时完成** ⇒ 不要误读成"每个文件 6 分钟"，也不能用单个文件的 mtime
+间隔去算速率。
+
+**瓶颈在 WAN，不要调并发**：`CLOUDSDK_STORAGE_PROCESS_COUNT` 8×4 与 16×8 实测速率相同，
+期间 CPU 98 % 空闲。再加并发只会增加小文件的连接开销。
+
+**对照 Dropbox**（同一批数据，反方向）：上传 ≈ 11-15 MiB/s，与 GCS 下载同量级
+⇒ 两者都像是被 WAN 上限限住，而不是各自的服务端。详见
+`/home/gao/Utilities/Cloud/Dropbox/upload_download_speed_measured.md`。
 
 ## 第 8 步：复用 Dropbox 已同步的文件（省几个小时）
 
@@ -138,4 +164,4 @@ r1=$(awk '/enp5s0/{print $2}' /proc/net/dev); sleep 10; r2=$(awk '/enp5s0/{print
 
 | 日期 | 项目 | WALKUP | DEST | 结果 |
 | :--- | :---: | :---: | :--- | :---: |
-| 2026-11-20 | P46 Yeji Park WGS | 21683 | `/srv/external_data/gao_projects/46_park_wgs_raw/WALKUP-21683/` | ✅ 20 FASTQ / 816.0 GB：12 个 bucket 下载（499.4 GB，11-20 23:48 → 11-21 ~10:05，含 gcloud 自校验）+ 8 个 Dropbox 校验后拷贝；11-21 12:44 全量复核 40/40 OK（`_verify_20261121_1131.tsv`）；12:44–13:49 本地补齐 12 个到 Dropbox 交付目录（`46_park_wgs/scripts/2_copy_fastq_to_dropbox_1121.sh`，20/20 大小一致）；Dropbox 云端上传实测 ≈ 8.4 MiB/s ⇒ 约 16 h |
+| 2026-11-20 | P46 Yeji Park WGS | 21683 | `/srv/external_data/gao_projects/46_park_wgs_raw/WALKUP-21683/` | ✅ 20 FASTQ / 816.0 GB：12 个 bucket 下载（499.4 GB，11-20 23:48 → 11-21 ~10:05，含 gcloud 自校验）+ 8 个 Dropbox 校验后拷贝；11-21 12:44 全量复核 40/40 OK（`_verify_20261121_1131.tsv`）；12:44–13:49 本地补齐 12 个到 Dropbox 交付目录（`46_park_wgs/scripts/2_copy_fastq_to_dropbox_1121.sh`，20/20 大小一致）；Dropbox 云端上传当时粗测 ≈ 8.4 MiB/s ⇒ 约 16 h（**11-21 21:15 正式复测 11-15 MiB/s**，8.4 那个数取样过短，以复测为准）；**bucket 下载实测 12.9 MiB/s / 45.3 GiB/h**（两来源互证，见第 7 步） |
