@@ -81,6 +81,20 @@ description: "Use when 要做单细胞转录组分析（scRNA-seq / CellRanger �
 ⇒ 需要 edgeR 或 SCE 桥接时**先向用户说明并取得批准再装**（全局 §4：未经确认不安装依赖）。**不要临时换环境顶上。**
 ⇒ **要 edgeR/limma/SCE 的活直接用 `sc_tut_r`**（它全都有，Seurat 5.5.1 / SingleR 2.12 / DESeq2 1.50 / edgeR 4.8 / limma 3.66 / CellChat 2.2），不必再为 `DE_R45` 装东西。
 
+**⚠ 2026-11-21 实测补充（P47 备环境时查出）——教程 env 不是项目 env：**
+
+| 缺口 / 资产 | 实测 | 处置 |
+| :--- | :--- | :---: |
+| ambient RNA 工具 | `sc_tut_r` **没有 SoupX、celda（DecontX）** —— 本节把它们列为默认工具，但 R 全栈里装不上手 | 用项目专用 env；P47 的 `/mnt/ex_8T_SSD/conda_envs/p47_r`（建法：`47_Liu_Yuan_scRNA/scripts/1_setup_envs.sh`） |
+| allele 计数 | 全机无 cellsnp-lite / maegatk | P47 的 `/mnt/ex_8T_SSD/conda_envs/p47_allele`（cellsnp-lite 1.2.3 / maegatk 0.2.0 / samtools 1.24 / pysam） |
+| 上游定量 | **全机没有 Cell Ranger**；`/Work_bio/references` 顶层没有 10x refdata；`/usr/bin/STAR` 2.7.10a 可做 STARsolo | 从 FASTQ 起步时先定方案，别默认有 Cell Ranger |
+| Python doublet / 整合评估 | `sc_tut_main` 无独立 scrublet，但 scanpy 1.11.5 内置 `sc.pp.scrublet` 可用；**scib-metrics 未装** | 要量化整合时再装 |
+| scDblFinder × xgboost | 同一阳性对照脚本：xgboost 3.4.2.1 异质群 recall 0.93/0.78、AUPRC 0.98/0.95；**3.3.1.1 降到 0.80/0.72、0.93/0.91**；同质群两者都只有 ≈0.4–0.46 | 版本会改 doublet 判定 ⇒ 版本写进 Methods；钉版本前先跑阳性对照对比，**别凭"上游修过 bug"就降级** |
+| R 4.5 上 Bioc 版本拼装 | scDblFinder 1.26.9（Bioc 3.23 依赖）与 celda（R 4.5 只有 Bioc 3.22 build）**装不进同一个 env** | 先 `mamba create --dry-run` 再写安装脚本 |
+
+**功能冒烟（2026-11-21，玩具数据）已过**：SoupX `adjustCounts`、decontX（盲估中位污染 0.093，模拟真值 0.10）、cellsnp-lite 合成 BAM 阳性对照（alt barcode AD=DP=30，ref barcode AD=0/DP=30）。
+**两个用法坑**：SoupX 估 soup 谱只用总 UMI 落在 `soupRange=c(0,100)` 的液滴，没有这样的液滴 ⇒ `alloc()` 报 "missing value where TRUE/FALSE needed"；cellsnp-lite `-R` 只收 **VCF**，给 TSV 报 "Input is not detected as bcf or vcf format" 但仍写出空矩阵。
+
 **⚠ `sc_tut_r` 的三个实测坑（2026-09-17 首次跑 20 章时全部踩到，都不在 yaml 里）**：
 
 | 现象 | 真因 | 处置 |
@@ -88,6 +102,7 @@ description: "Use when 要做单细胞转录组分析（scRNA-seq / CellRanger �
 | `FindConservedMarkers` 报 "Please install the metap package" | conda 配方不装 `Suggests` | 已补装 `metap` / `multtest` / `mutoss` 并写回 `1_setup_env.sh` |
 | `SingleR()` 报 "there is no package called 'scrapper'" | SingleR 2.12 换了打分后端，配方没跟 | 已补装 `scrapper 1.4.0`，同上写回 |
 | `quarto render` 报 `bin/tools/x86_64/deno: No such file` | 不走 `conda activate` 时激活钩子没跑 | 渲染前显式 export 9 个 `QUARTO_*` 变量，见 `~/Utilities/software_pitfalls/quarto_conda.md` |
+| （2026-11-21，Quarto 1.11.9）R 代码全跑完后报 `unable to open database file: /home/gao/.cache/quarto/sass/v8-15.0/sass.kv` | `~/.cache` 是软链 → `/Work_bio/gao/configs/.cache`；Deno KV 经软链路径打不开，同一文件走真实路径正常 | env 里设 `XDG_CACHE_HOME=/Work_bio/gao/configs/.cache`（同一目录，不经软链） |
 
 **通用教训**：`library(X)` 加载成功**不代表** X 的每个函数都能调用；逐包 `library()` 的验证清单会全绿，
 然后在第 10 章、第 12 章炸掉，把前面的算力全部作废。**验证清单要覆盖"会被调用的函数"。**
