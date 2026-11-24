@@ -113,18 +113,21 @@
       "session_transcript": "/home/gao/.claude/projects/-home-gao/28f7fbf1-a55a-48f3-a128-c5570f180ea3.jsonl",
       "permission_mode": "auto",
       "continuation_prompt": "Automated continuity resumption for active P46 (Yeji Park, 10-sample RPE-1 CRISPR dual-cut WGS at ~45-65x raw). Resume only P46 from this saved session. Read /home/gao/Utilities/AI_and_Agent/Agent_Assets/runtime/active_projects.json and /home/gao/projects_2026Q4/46_park_wgs/docs/P46_research_plan_and_review_1028.md (sections 8.0-8.5 are the stage plan), then inspect tmux p46_* sessions and /home/gao/projects_2026Q4/46_park_wgs/logs/, and continue the recorded next stage until the completion definition is met. Full-workflow automatic completion is authorized; external sending is NOT. Never delete or overwrite result directories; BAMs live under /srv/external_data/gao_projects/46_park_wgs_bam/. Update active-project state only to running, complete, or genuinely blocked with evidence.",
-      "last_agent_heartbeat": "",
-      "last_agent_heartbeat_source": "",
+      "last_agent_heartbeat": "2026-11-24T01:42:05+00:00",
+      "last_agent_heartbeat_source": "autostart_worker_finished",
       "last_usage_limit_at": "",
-      "last_launch_at": "",
+      "last_launch_at": "2026-11-24T01:30:01+00:00",
       "last_worker_session": "",
-      "last_worker_log": "",
-      "last_worker_result": "",
-      "last_trigger": "",
+      "last_worker_log": "/home/gao/Utilities/AI_and_Agent/Agent_Assets/runtime/claude_code_active_project_autostart_logs/P46_Yeji_Park_10sample_CRISPR_dual_cut_wgs_20261124T013001Z.jsonl",
+      "last_worker_result": "completed_or_stopped",
+      "last_trigger": "stale_active_fallback",
       "missing_tmux_observed_at": "",
       "usage_episode_started_at": "",
       "usage_reset_at": "",
-      "usage_last_attempt_at": ""
+      "usage_last_attempt_at": "",
+      "last_worker_started_at": "2026-11-24T01:30:01+00:00",
+      "last_worker_finished_at": "2026-11-24T01:42:05+00:00",
+      "last_worker_exit_code": 0
     }
   ]
 }
