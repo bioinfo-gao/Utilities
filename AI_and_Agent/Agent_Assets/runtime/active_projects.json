@@ -73,12 +73,12 @@
    "project_root": "/home/gao/projects_2026Q4/46_park_wgs",
    "agent": "claude_code",
    "status": "running",
-   "current_stage": "2026-11-24 15:45 自检：发现 I/O 过订阅（读队列 24.97、延迟 85ms、iowait 39%）⇒ 15:43 暂停 DELLY（零产物损失），iowait 降至 5.9%。4a HC 402/480（预计 18:30–19:30）；Stage 3 v2 冒烟仍在 p46_s3v2_smoke（I/O 争用致变慢，预计 ~16:30）。",
-   "next_stage": "v2 冒烟验阳性对照 → v2 全量（NPAR 视 I/O 调低）→ HC 完成后以 NPAR=4 重跑 DELLY → 4d 私有变异负荷 7v3 → treated_only 脱靶复核 → Stage 5 交付（只准备不发送）",
+   "current_stage": "2026-11-24 17:45 自检：4a HC 452/480（剩 28 片，预计 ~18:45 完成）；Stage 3 v2 全量 28/240 分片（0.47 片/min，当前速率外推 11-25 01:08，HC 腾出 22 核后应提前）；DELLY 待 HC 完成后以 NPAR=4 重跑。iowait 7%，load 35。",
+   "next_stage": "HC 完成→核对 480 片与 joint VCF 断言→启 DELLY(NPAR=4)，并视 I/O 把 v2 的 NPAR 从 6 上调；之后 4d 私有变异负荷 7v3 → treated_only 脱靶复核 → Stage 5 交付（只准备不发送）",
    "expected_tmux_session": "p46_stage4a_germline",
    "blocked_reason": "",
    "blocking_question": "",
-   "last_verified_at": "2026-11-24T15:45:00-05:00",
+   "last_verified_at": "2026-11-24T17:45:00-05:00",
    "completion_definition": "Complete only when custom_research_report_YYYYMMDD/ exists for all 10 samples and covers: (1) PPP1R2 target-site deletion status per clone with base-pair breakpoints and allele state (3 controls WT, Sample 1-4 single-allele, Sample 5-7 bi-allelic, cross-checked against the client's gel/Sanger expectation as the external calibration point); (2) genome-wide off-target evidence at the enumerated gRNA1/gRNA2 candidate sites, 7 treated vs 3 controls; (3) vector screen against both P31 maps (Cas9 was RNP this round, so vector sequence can only be carried over); (4) private-variant burden comparison treated vs controls with filter-impact audits; plus counts/QC, per-sample VCFs, PDF figures, report sections 1-9, and the pre-delivery self-audit. User review precedes any sending; the agent never sends."
   },
   {
