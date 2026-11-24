@@ -128,6 +128,35 @@
       "last_worker_started_at": "2026-11-24T01:30:01+00:00",
       "last_worker_finished_at": "2026-11-24T01:42:05+00:00",
       "last_worker_exit_code": 0
+    },
+    {
+      "active_project_id": "P47_Liu_Yuan_scRNA_raw_download",
+      "project_root": "/home/gao/projects_2026Q4/47_Liu_Yuan_scRNA",
+      "status": "armed",
+      "usage_limit_retry_offsets_seconds": "",
+      "reset_grace_seconds": 300,
+      "fallback_stale_seconds": 10800,
+      "min_transcript_idle_seconds": 1200,
+      "claude_binary": "/home/gao/.local/bin/claude",
+      "claude_session_id": "0eb561bf-0317-4118-867e-220e6142da99",
+      "session_cwd": "/home/gao",
+      "session_transcript": "/home/gao/.claude/projects/-home-gao/0eb561bf-0317-4118-867e-220e6142da99.jsonl",
+      "permission_mode": "auto",
+      "continuation_prompt": "Automated continuity resumption for active P47 raw-data download only. Read active_projects.json and /home/gao/projects_2026Q4/47_Liu_Yuan_scRNA/logs/download_watch.log; check tmux p47_download / p47_dlwatch and NIC throughput. Do NOT log in to the SFTP server or handle credentials yourself; restarts are done by the user-started watcher. When logs/download_COMPLETE exists, verify md5 results in the newest logs/download_genewiz_*.log, record inventory in the P47 plan, and mark the project complete. Formal analysis is NOT authorized. Never delete or overwrite downloaded data.",
+      "last_agent_heartbeat": "",
+      "last_agent_heartbeat_source": "",
+      "last_usage_limit_at": "",
+      "last_launch_at": "",
+      "last_worker_session": "",
+      "last_worker_log": "",
+      "last_worker_result": "",
+      "last_trigger": "",
+      "missing_tmux_observed_at": "",
+      "usage_episode_started_at": "",
+      "usage_reset_at": "",
+      "usage_last_attempt_at": "",
+      "last_worker_started_at": "",
+      "last_worker_finished_at": ""
     }
   ]
 }
