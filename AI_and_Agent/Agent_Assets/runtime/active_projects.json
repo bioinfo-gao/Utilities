@@ -73,12 +73,12 @@
    "project_root": "/home/gao/projects_2026Q4/46_park_wgs",
    "agent": "claude_code",
    "status": "running",
-   "current_stage": "2026-11-23 22:45 自检：4a HC 运行中 15/480 shard（~49 s/Mb，预计 11-24 16:00–18:00 完成）；identity v2 pileup 11/22 chr；Stage 3 排队等 identity；Manta 排队等 Stage 3。已完成 0/1/2b v2/2c/4c。",
+   "current_stage": "2026-11-23 23:45 自检：identity v2 完成（一致率 0.997–0.998，污染 0.12–0.26%）；Stage 3 运行中（主 runner p46_stage3_vector + runner B p46_stage3_vector_b，各 2 样本并行，预计 11-24 ~05:30 完成）；4a HC 38/480 shard（预计 11-24 16:00–18:00）；Manta 排队等 Stage 3。",
    "next_stage": "4a 完成后 → 4d 私有变异负荷 7 vs 3（注意 chr12p 组间拷贝差异混杂，见 plan §10.11）→ 12p BAF 互证 → treated_only 脱靶位点读段复核 → Stage 5 交付（report/delivery skill，只准备不发送）",
    "expected_tmux_session": "p46_stage4a_germline",
    "blocked_reason": "",
    "blocking_question": "",
-   "last_verified_at": "2026-11-23T22:45:00-05:00",
+   "last_verified_at": "2026-11-23T23:45:00-05:00",
    "completion_definition": "Complete only when custom_research_report_YYYYMMDD/ exists for all 10 samples and covers: (1) PPP1R2 target-site deletion status per clone with base-pair breakpoints and allele state (3 controls WT, Sample 1-4 single-allele, Sample 5-7 bi-allelic, cross-checked against the client's gel/Sanger expectation as the external calibration point); (2) genome-wide off-target evidence at the enumerated gRNA1/gRNA2 candidate sites, 7 treated vs 3 controls; (3) vector screen against both P31 maps (Cas9 was RNP this round, so vector sequence can only be carried over); (4) private-variant burden comparison treated vs controls with filter-impact audits; plus counts/QC, per-sample VCFs, PDF figures, report sections 1-9, and the pre-delivery self-audit. User review precedes any sending; the agent never sends."
   }
  ]
