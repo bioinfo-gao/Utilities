@@ -73,12 +73,12 @@
    "project_root": "/home/gao/projects_2026Q4/46_park_wgs",
    "agent": "claude_code",
    "status": "running",
-   "current_stage": "Stage 0 完成 (10/10, 2026-11-23 21:36)；Stage 1 全量完成 (21:39, analysis/stage1_ontarget_20261123)；Stage 0 收尾 MultiQC + 10x10 身份/污染矩阵运行中 (tmux p46_stage0_identity, scripts/13_stage0_identity_multiqc.sh)。用户 2026-11-23 21:48 再次授权'自动完成全流程'。",
-   "next_stage": "Stage 2b/2c/2d 逐位点脱靶证据 → Stage 3 载体筛查 → Stage 4 联合 call + SV + CNV + 私有变异负荷 → Stage 5 交付目录与报告（只准备不发送）。⚠ Sample_6 靶点 amplicon 样污染 + dup 34.7%、Sample_1/2 亚克隆需在报告专门处理；Stage 1 calibration 把 Sample_6 '不可判读' 计为 agrees=yes，须修正为 9/10 + 1 未定。",
-   "expected_tmux_session": "p46_stage0_identity",
+   "current_stage": "2026-11-23 22:15：Stage 0/1/2b(v2)/2c/4c 完成；运行中 p46_stage4a_germline (HC 22 路，预计 ~11-24 08:00)、p46_stage0_identity (v2)；排队 p46_stage3_vector(等 identity)、p46_stage4b_manta(等 Stage 3)。每小时 cron d9b3d6dc 自检。",
+   "next_stage": "4a 完成后 → 4d 私有变异负荷 7 vs 3（注意 chr12p 组间拷贝差异混杂，见 plan §10.11）→ 12p BAF 互证 → treated_only 脱靶位点读段复核 → Stage 5 交付（report/delivery skill，只准备不发送）",
+   "expected_tmux_session": "p46_stage4a_germline",
    "blocked_reason": "",
    "blocking_question": "",
-   "last_verified_at": "2026-11-23T21:50:00-05:00",
+   "last_verified_at": "2026-11-23T22:15:00-05:00",
    "completion_definition": "Complete only when custom_research_report_YYYYMMDD/ exists for all 10 samples and covers: (1) PPP1R2 target-site deletion status per clone with base-pair breakpoints and allele state (3 controls WT, Sample 1-4 single-allele, Sample 5-7 bi-allelic, cross-checked against the client's gel/Sanger expectation as the external calibration point); (2) genome-wide off-target evidence at the enumerated gRNA1/gRNA2 candidate sites, 7 treated vs 3 controls; (3) vector screen against both P31 maps (Cas9 was RNP this round, so vector sequence can only be carried over); (4) private-variant burden comparison treated vs controls with filter-impact audits; plus counts/QC, per-sample VCFs, PDF figures, report sections 1-9, and the pre-delivery self-audit. User review precedes any sending; the agent never sends."
   }
  ]
