@@ -121,7 +121,7 @@
       "last_worker_log": "/home/gao/Utilities/AI_and_Agent/Agent_Assets/runtime/claude_code_active_project_autostart_logs/P46_Yeji_Park_10sample_CRISPR_dual_cut_wgs_20261124T013001Z.jsonl",
       "last_worker_result": "completed_or_stopped",
       "last_trigger": "stale_active_fallback",
-      "missing_tmux_observed_at": "",
+      "missing_tmux_observed_at": "2026-11-25T03:30:01+00:00",
       "usage_episode_started_at": "",
       "usage_reset_at": "",
       "usage_last_attempt_at": "",
