@@ -73,12 +73,12 @@
    "project_root": "/home/gao/projects_2026Q4/46_park_wgs",
    "agent": "claude_code",
    "status": "running",
-   "current_stage": "2026-11-25 10:48：按用户反馈改为复制/计算流水线（scripts/27_stage4b_delly_pipelined.sh，tmux p46_stage4b_delly）：1 路生产者持续复制 + 4 路消费者在 SSD 上算，SSD 上限 4 个 BAM(约 280GB)。实测单路顺序复制 340 MiB/s（3 路并发时仅 76），HDD 不再是瓶颈。计算速度待第一个 DISC_DONE 实测。",
-   "next_stage": "DELLY 三相完成 → 3 项计算复核（脱靶读段/接头断点/载体拷贝数归一）+ Stage1 定标表改 9/10 → Stage 5 交付目录与报告（report/delivery skill，只准备不发送）",
+   "current_stage": "2026-11-25 14:45：DELLY 发现相首两样本完成（Ctr_1 用时 223 min 出 45,043 SV；Ctr_2 14:33 完成），Ctr_3 在 SV annotation、Sample_1 在 assembly、Sample_2 14:40 起跑。实测 3.7 h/样本、4 路并行 ⇒ 发现相 ETA ~22:00，基因分型相 ~11-26 00:30-01:00。SSD 暂存按设计跑完即删（已回收 2 个，余 1.1T）。",
+   "next_stage": "发现相完成→merge→基因分型相→p46_chain_after_delly 自动跑复核5 → 余下复核 → Stage 5 报告（只准备不发送）",
    "expected_tmux_session": "p46_stage4b_delly",
    "blocked_reason": "",
    "blocking_question": "",
-   "last_verified_at": "2026-11-25T10:48:00-05:00",
+   "last_verified_at": "2026-11-25T14:45:00-05:00",
    "completion_definition": "Complete only when custom_research_report_YYYYMMDD/ exists for all 10 samples and covers: (1) PPP1R2 target-site deletion status per clone with base-pair breakpoints and allele state (3 controls WT, Sample 1-4 single-allele, Sample 5-7 bi-allelic, cross-checked against the client's gel/Sanger expectation as the external calibration point); (2) genome-wide off-target evidence at the enumerated gRNA1/gRNA2 candidate sites, 7 treated vs 3 controls; (3) vector screen against both P31 maps (Cas9 was RNP this round, so vector sequence can only be carried over); (4) private-variant burden comparison treated vs controls with filter-impact audits; plus counts/QC, per-sample VCFs, PDF figures, report sections 1-9, and the pre-delivery self-audit. User review precedes any sending; the agent never sends."
   },
   {
