@@ -132,7 +132,7 @@
     {
       "active_project_id": "P47_Liu_Yuan_scRNA_raw_download",
       "project_root": "/home/gao/projects_2026Q4/47_Liu_Yuan_scRNA",
-      "status": "armed",
+      "status": "disarmed",
       "usage_limit_retry_offsets_seconds": "",
       "reset_grace_seconds": 300,
       "fallback_stale_seconds": 10800,

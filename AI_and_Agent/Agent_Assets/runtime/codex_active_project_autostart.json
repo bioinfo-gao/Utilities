@@ -3,6 +3,37 @@
   "description": "Codex continuation metadata. Active state remains exclusively in active_projects.json; every running project whose SSOT 'agent' is codex must be armed here or the controller fails loudly rather than omitting it.",
   "entries": [
     {
+      "active_project_id": "P47_Liu_Yuan_scRNA_raw_download",
+      "project_root": "/home/gao/projects_2026Q4/47_Liu_Yuan_scRNA",
+      "status": "blocked",
+      "fallback_stale_seconds": 10800,
+      "codex_binary": "/home/gao/.positron-server/extensions/openai.chatgpt-26.5908.31748-linux-x64/bin/linux-x86_64/codex",
+      "codex_session_id": "",
+      "continuation_prompt": "P47 is blocked pending user input. Do not run an expression or allele pipeline until the user clarifies whether the endpoint is expression response only or supplies separate sequence-based genotyping, confirms target/control mappings and biological replicate/clone relationships for all 8 samples, and explains whether the two GENEWIZ GEX pools are separate GEM/library batches or include bridge samples. Read docs/P47_research_plan_and_review_1125.md and active_projects.json after the user replies. FRP reads synthetic probe DNA and cannot provide original transcript edit bases. Keep outputs internal and never send externally.",
+      "last_agent_heartbeat": "2026-11-25T15:07:23+00:00",
+      "last_agent_heartbeat_source": "P47_data_preflight_blocked_on_design",
+      "last_usage_limit_at": "",
+      "last_launch_at": "",
+      "last_worker_session": "",
+      "last_worker_log": "",
+      "last_worker_result": "blocked_on_user_input",
+      "last_trigger": "",
+      "missing_tmux_observed_at": "",
+      "usage_limit_retry_offsets_seconds": [
+        10800,
+        14400,
+        18000
+      ],
+      "reset_grace_seconds": 300,
+      "min_transcript_idle_seconds": 1200,
+      "usage_episode_started_at": "",
+      "usage_reset_at": "",
+      "usage_last_attempt_at": "",
+      "last_worker_started_at": "",
+      "last_worker_finished_at": "",
+      "last_worker_exit_code": null
+    },
+    {
       "active_project_id": "P42_fullcohort_repeat_resolve",
       "project_root": "/home/gao/projects_2026Q4/42_Vedita_18_wgs_advanced_analysis",
       "status": "armed",
