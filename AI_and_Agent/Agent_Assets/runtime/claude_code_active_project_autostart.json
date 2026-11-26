@@ -157,6 +157,30 @@
       "usage_last_attempt_at": "",
       "last_worker_started_at": "",
       "last_worker_finished_at": ""
+    },
+    {
+      "active_project_id": "P47_Liu_Yuan_scRNA_round1_descriptive_by_CC",
+      "project_root": "/home/gao/projects_2026Q4/47_Liu_Yuan_scRNA",
+      "status": "armed",
+      "usage_limit_retry_offsets_seconds": [
+        10800,
+        14400,
+        18000
+      ],
+      "reset_grace_seconds": 300,
+      "fallback_stale_seconds": 10800,
+      "min_transcript_idle_seconds": 1200,
+      "claude_binary": "/home/gao/.local/bin/claude",
+      "expected_tmux_session": "p47_round1_cc",
+      "continuation_prompt": "P47 round-1 描述性分析：检查 tmux p47_round1_cc 与 /mnt/ex_8T_SSD/projects_2026Q4/47_Liu_Yuan_scRNA/logs/20_chain_round1_1125.log。链若已 CHAIN_DONE 则核对 output_results/round1_descriptive_1125/18_self_audit.csv 全 PASS 并写内部 round-1 报告；链若中断则从失败的那一步续跑。不得产出任何跨条件 p 值/FDR，不得对外发送任何材料。",
+      "missing_tmux_observed_at": "2026-11-26T01:00:01+00:00",
+      "last_launch_at": "2026-11-26T00:30:01+00:00",
+      "last_worker_session": "claude_autoresume_P47_Liu_Yuan_scRNA_round1_descriptive_by_CC_20261126T003001Z",
+      "last_trigger": "stale_active_fallback",
+      "last_agent_heartbeat": "2026-11-26T00:30:01+00:00",
+      "last_agent_heartbeat_source": "autostart_worker_started",
+      "last_worker_started_at": "2026-11-26T00:30:01+00:00",
+      "last_worker_log": "/home/gao/Utilities/AI_and_Agent/Agent_Assets/runtime/claude_code_active_project_autostart_logs/P47_Liu_Yuan_scRNA_round1_descriptive_by_CC_20261126T003001Z.jsonl"
     }
   ]
 }
