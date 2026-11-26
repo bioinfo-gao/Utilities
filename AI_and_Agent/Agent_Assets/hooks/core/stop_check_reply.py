@@ -100,11 +100,21 @@ def main():
         msg = rec.get("message") or {}
         said.append(text_of(msg))
         for b in msg.get("content") or []:
-            if isinstance(b, dict) and b.get("type") == "tool_use" \
-               and b.get("name") in ("Bash", "BashOutput"):
+            if not (isinstance(b, dict) and b.get("type") == "tool_use"):
+                continue
+            name = b.get("name") or ""
+            if name in ("Bash", "BashOutput"):
                 cmd = (b.get("input") or {}).get("command") or ""
                 if cmd:
                     commands.append(cmd)
+            # 回读不止 Bash：MCP 工具（Gmail / Dropbox / GitHub …）同样是回读。
+            # 1126 误报根因：Gmail 的 search_threads + list_drafts 实跑且输出同现于回复,
+            # 但此处只收 Bash ⇒ 判据看不到,把「已回读」误判成「未回读」。
+            # 记成 "<工具名> <参数里的查询串>",让 CLAIM_KINDS 的 evid_pat 能照常匹配。
+            elif name.startswith("mcp__") or name in ("WebFetch", "WebSearch"):
+                inp = b.get("input") or {}
+                q = " ".join(str(inp.get(k, "")) for k in ("query", "url", "prompt", "db_op"))
+                commands.append(f"{name} {q}".strip())
 
     said2, md_written = [], []
     for rec in recs[start2:]:
