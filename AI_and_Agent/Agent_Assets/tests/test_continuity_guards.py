@@ -37,12 +37,28 @@ with tempfile.TemporaryDirectory() as tmp:
     assert run(ADAPTERS["codex"], state) == {"continue": True}
     assert run(ADAPTERS["antigravity"], state) == {}
 
+    # 真实 SSOT 词汇是 "running"（2026-11-26 回归：原夹具只用 "active"，生产从未出现该值，测试绿而生产静默）
+    for status in ("running", "active"):
+        state.write_text(json.dumps({"schema_version": 1, "projects": [{
+            "id": "fixture", "status": status, "agent": "claude_code",
+            "expected_tmux_session": "definitely-not-running", "next_stage": "fixture next stage",
+        }]}))
+        assert run(ADAPTERS["claude"], state)["decision"] == "block", status
+        assert run(ADAPTERS["codex"], state)["decision"] == "block", status
+        assert run(ADAPTERS["antigravity"], state)["decision"] == "continue", status
+
+    # Claude 的 Stop hook 不因别的 Agent 的项目卡住本 Agent
     state.write_text(json.dumps({"schema_version": 1, "projects": [{
-        "id": "fixture", "status": "active", "expected_tmux_session": "definitely-not-running",
-        "next_stage": "fixture next stage",
+        "id": "other", "status": "running", "agent": "codex",
+        "expected_tmux_session": "definitely-not-running", "next_stage": "x",
     }]}))
-    assert run(ADAPTERS["claude"], state)["decision"] == "block"
-    assert run(ADAPTERS["codex"], state)["decision"] == "block"
-    assert run(ADAPTERS["antigravity"], state)["decision"] == "continue"
+    assert run(ADAPTERS["claude"], state) == {}
+
+    # blocked / complete 不触发
+    state.write_text(json.dumps({"schema_version": 1, "projects": [{
+        "id": "b", "status": "blocked", "agent": "claude_code",
+        "expected_tmux_session": "definitely-not-running", "next_stage": "x",
+    }]}))
+    assert run(ADAPTERS["claude"], state) == {}
 
 print("continuity guard adapter tests passed")

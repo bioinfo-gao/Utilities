@@ -324,7 +324,26 @@ def worker_command(entry: dict) -> tuple[list[str], str]:
             entry["project_root"])
 
 
+REQUIRED_WORKER_FIELDS = {
+    "claude_code": ("claude_binary", "claude_session_id", "session_cwd", "continuation_prompt"),
+    "codex": ("codex_binary", "codex_session_id", "project_root", "continuation_prompt"),
+}
+
+
 def launch(project_id: str, config: dict, entry: dict, trigger: str) -> None:
+    # 2026-11-26：P47 条目缺 claude_session_id，worker 在 tmux 里 KeyError 静默死亡，
+    # 而这里照样记 worker_launched ⇒ 两次"已拉起"实为零动作。缺字段必须当场报警、不假装启动。
+    missing = [k for k in REQUIRED_WORKER_FIELDS.get(AGENT, ()) if not entry.get(k)]
+    if missing:
+        reason = f"autostart entry {project_id} ({AGENT}) cannot launch: missing {missing}"
+        mail = "mailer_missing"
+        if MAILER.is_file():
+            result = subprocess.run([str(MAILER), f"🚨 [SEVERE] {project_id}: autostart misconfigured ({AGENT})", "-"],
+                                    input=reason + "\n", text=True, capture_output=True, timeout=45, check=False)
+            mail = f"email_exit={result.returncode}"
+        append_event({"at": stamp(), "event": "launch_config_error", "project": project_id,
+                      "missing": missing, "trigger": trigger, "mail": mail})
+        return
     token = now().strftime("%Y%m%dT%H%M%SZ")
     prefix = "codex" if AGENT == "codex" else "claude"
     session = f"{prefix}_autoresume_{project_id}_{token}"[:90]

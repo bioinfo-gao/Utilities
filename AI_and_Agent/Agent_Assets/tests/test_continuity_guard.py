@@ -48,7 +48,7 @@ with tempfile.TemporaryDirectory() as tmp:
     assert invoke(state, work / "state", mailer) == "CONTINUITY_GUARD_OK: no active project is missing its expected tmux session"
 
     state.write_text(json.dumps({"projects": [{
-        "id": "fixture", "status": "active", "expected_tmux_session": "definitely-not-running",
+        "id": "fixture", "status": "running", "expected_tmux_session": "definitely-not-running",
         "next_stage": "fixture next stage",
     }]}))
     pending = invoke(state, work / "state", mailer)
@@ -67,7 +67,7 @@ with tempfile.TemporaryDirectory() as tmp:
     state.write_text(json.dumps({"projects": [{"id": "done", "status": "complete"}]}))
     assert invoke(state, work / "state", mailer) == "CONTINUITY_GUARD_OK: no active project is missing its expected tmux session"
     state.write_text(json.dumps({"projects": [{
-        "id": "fixture", "status": "active", "expected_tmux_session": "definitely-not-running",
+        "id": "fixture", "status": "running", "expected_tmux_session": "definitely-not-running",
         "next_stage": "fixture next stage",
     }]}))
     renewed = invoke(state, work / "state", mailer, grace_seconds=0)

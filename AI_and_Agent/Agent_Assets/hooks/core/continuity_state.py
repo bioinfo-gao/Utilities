@@ -19,6 +19,7 @@ DEFAULT_STATE = Path(
     "/home/gao/Utilities/AI_and_Agent/Agent_Assets/runtime/active_projects.json"
 )
 SAFE_SESSION = re.compile(r"^[A-Za-z0-9_.-]+$")
+ACTIVE_STATUSES = frozenset({"running", "active"})
 
 
 def _state_path() -> Path:
@@ -40,7 +41,7 @@ def _session_exists(name: str) -> bool:
         return False
 
 
-def continuity_violation() -> str | None:
+def continuity_violation(agent: str | None = None) -> str | None:
     """Return a blocking reason when an autonomous project is idle.
 
     A missing or invalid central state is fail-closed: silently allowing a turn
@@ -59,7 +60,12 @@ def continuity_violation() -> str | None:
 
     idle: list[str] = []
     for project in projects:
-        if not isinstance(project, dict) or project.get("status") != "active":
+        # SSOT 词汇是 running/blocked/complete；"active" 仅为旧写法兼容。
+        # 2026-11-26 修：原只认 "active"，而 SSOT 从未用过该值 ⇒ guard 与 Stop hook 自建成起对全部项目静默。
+        if not isinstance(project, dict) or project.get("status") not in ACTIVE_STATUSES:
+            continue
+        # agent 给定时只看本 Agent 的项目（Stop hook 不得因别的 Agent 的项目卡住本 Agent）；cron guard 传 None 看全部。
+        if agent is not None and project.get("agent") != agent:
             continue
         project_id = str(project.get("id", "unnamed"))
         session = project.get("expected_tmux_session")

@@ -14,7 +14,7 @@ def main() -> None:
         json.load(sys.stdin)
     except json.JSONDecodeError:
         pass
-    violation = continuity_violation()
+    violation = continuity_violation(agent="claude_code")
     if violation:
         print(json.dumps({"decision": "block", "reason": violation}, ensure_ascii=False))
 
