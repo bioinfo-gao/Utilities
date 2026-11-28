@@ -52,6 +52,7 @@
 | gnomAD / bcftools annotate | [gnomad_af_only_rarity.md](gnomad_af_only_rarity.md) | 用 2017 年 hg19-liftover 的 `af-only-gnomad` 当"是否在 gnomAD"的判据，且把 `absent` 当 `rare` ⇒ **已交付候选名单里约一半是常见多态**；零报错、退出码 0、表格全对 |
 | Manta | [manta.md](manta.md) | ① `libexec` 脚本 shebang 是 `python2` 而本机 PATH 没有 ⇒ `getChromDepth_*_catChromDepth` 反复重试、没有 VCF，真因只在 `pyflow_tasks_stderr_log.txt`；符号链接垫片修复。② 默认 `graphNodeMaxEdgeCount=10` 会**静默跳过**两端边数都>10 的候选边 = 自动回避重复区，客户要求 unmasked 时必改（P41） |
 | IGV 无头截图 / Xvfb | [igv_headless.md](igv_headless.md) | bioconda 的 `xorg-x11-server-xvfb-cos7` 缺 `libcrypto.so.10` 起不来，改用 conda-forge **`xorg-xvfb-server`**；纯 `-Djava.awt.headless` 不行（HeadlessException），必须有虚拟 X 显示；附可用配方（P41） |
+| LibreOffice / OnlyOffice 远程开服务器文件（Windows） | [../Windows/remote_desktop/xrdp_windows_to_linux_server.md](../Windows/remote_desktop/xrdp_windows_to_linux_server.md) | **LibreOffice 的 "Remote Files → SSH" 在 Windows 版根本不存在**（该后端靠 GIO/GVFS，只在 Linux 编译）：下拉框里有 "SSH"、参数全填对、点 OK —— **两个窗格全空、Open 灰掉、零报错**，而**服务器 `auth.log` 连一条连接记录都没有**。"我以前能用"多半是当年在 Ubuntu 桌面上。OnlyOffice 桌面版同样**不支持 SSH/SFTP**（只认 WebDAV 云盘）。⇒ 判据可推广：**客户端连不上先看服务端日志有没有收到连接，零记录 = 客户端压根没发**，别再查认证/防火墙/路径。出路：xrdp 远程桌面（零安装）或 SSHFS-Win 映射盘符。另记 Ubuntu 静默陷阱：`~/.xsession` 只在 `/etc/X11/Xsession.options` 含 `allow-user-xsession` 时才被采用，否则无声忽略 |
 
 ## 横向索引：「各自版本都对，组合起来不能用」
 
